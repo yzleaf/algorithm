@@ -77,7 +77,7 @@ public class Solution {
 
         List<Integer>[] buckets = new ArrayList[nums.length + 1];
 
-        return -1;
+        return new int[] {-1};
     }
 
 }
