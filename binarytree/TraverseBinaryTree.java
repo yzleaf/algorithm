@@ -1,19 +1,9 @@
 package binarytree;
 
-import javax.swing.tree.TreeNode;
 import java.util.*;
 
 public class TraverseBinaryTree {
 
-    public class TreeNode {
-        public int val;
-        public TreeNode left;
-        public TreeNode right;
-        public TreeNode(int val) {
-            this.val = val;
-            this.left = this.right = null;
-        }
-    }
     // 1. Preorder 根左右
     // Non-recursion
     public List<Integer> preorderTraversal(TreeNode root) {
@@ -114,8 +104,8 @@ public class TraverseBinaryTree {
             }
             else {
                 // postorder
-                stack.push(top);
-                checkedSet.add(top);
+                stack.push(top); // 二次进栈
+                checkedSet.add(top); // 添加进set后，再次出栈时才可以输出
                 if (top.right != null) {
                     stack.push(top.right);
                 }
