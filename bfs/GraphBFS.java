@@ -19,7 +19,7 @@ public class GraphBFS {
                 return false;
             }
 
-            Map<Integer, Set<Integer>> graph = initializeGraph(n, edges); // 每个点，所有相邻点
+            Map<Integer, Set<Integer>> graph = initializeGraph(n, edges); // 每个点 <-> 所有相邻点
 
             Queue<Integer> queue = new LinkedList<>();
             Set<Integer> hash = new HashSet<>();
@@ -39,6 +39,7 @@ public class GraphBFS {
             }
 
             return (hash.size() == n); // 是否所有点都联通了
+            // 如果n个点都联通，且edge为n-1，就是树
         }
     }
 
