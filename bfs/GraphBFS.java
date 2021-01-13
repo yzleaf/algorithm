@@ -23,8 +23,8 @@ public class GraphBFS {
 
             Queue<Integer> queue = new LinkedList<>();
             Set<Integer> hash = new HashSet<>();
-            // 0号节点先进入
-            queue.offer(0);
+
+            queue.offer(0); // 0号节点先进入
             hash.add(0);
 
             while (!queue.isEmpty()) {
