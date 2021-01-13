@@ -1,5 +1,7 @@
 package binarytree;
 
+import datastructure.TreeNode;
+
 public class ResultTypeProb {
 
     // 1. Balanced Binary Tree 返回是否是AVL

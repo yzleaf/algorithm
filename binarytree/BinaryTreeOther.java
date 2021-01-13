@@ -1,5 +1,7 @@
 package binarytree;
 
+import datastructure.TreeNode;
+
 import java.util.*;
 
 public class BinaryTreeOther {

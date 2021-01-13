@@ -1,6 +1,7 @@
 package bfs;
 
-import binarytree.TreeNode;
+import datastructure.TreeNode;
+import datastructure.ListNode;
 
 import java.util.*;
 
@@ -126,5 +127,138 @@ public class BinaryTreeBFS {
             return root;
         }
     }
+
+    // 3. Binary Tree Level Order Traversal II
+    // 给出一棵二叉树，返回其节点值从底向上的层次序遍历（按从叶节点所在层到根节点所在的层遍历，然后逐层从左往右遍历）
+    public class BFSBottomSolution {
+        public List<List<Integer>> levelOrderBottom(TreeNode root) {
+
+            List<List<Integer>> result = new ArrayList<>();
+
+            if (root == null) {
+                return result;
+            }
+
+            Queue<TreeNode> queue = new LinkedList<TreeNode>();
+            queue.offer(root); // 进队列
+
+            while (!queue.isEmpty()) {
+                // 每一层级的操作
+                List<Integer> level  = new ArrayList<Integer>();
+                int size = queue.size();
+                for (int i = 0; i < size; i++) {
+                    TreeNode head = queue.poll(); // 取出队列头元素
+                    level.add(head.val);
+
+                    // 取下一层级的进队列
+                    if (head.left != null) {
+                        queue.offer(head.left);
+                    }
+                    if (head.right != null) {
+                        queue.offer(head.right);
+                    }
+                }
+                result.add(level);
+            }
+
+            Collections.reverse(result); // reverse所有元素
+            return result;
+        }
+    }
+
+    // 4. 二叉树的锯齿形层次遍历 · Binary Tree Zigzag Level Order Traversal
+    public class BFSZigzagSolution {
+        /**
+         * @param root: A Tree
+         * @return A list of lists of integer include the zigzag level order traversal of its nodes' values.
+         */
+        public List<List<Integer>> levelOrderZigzag(TreeNode root) {
+
+            List<List<Integer>> result = new ArrayList<>();
+
+            if (root == null) {
+                return null;
+            }
+
+            Queue<TreeNode> queue = new LinkedList<TreeNode>();
+            queue.offer(root); // 进队列
+
+            boolean isForward = true; // 正反向输出标志
+
+            while (!queue.isEmpty()) {
+                List<Integer> level = new ArrayList<>();
+                int size = queue.size();
+                for (int i = 0; i < size; i++) {
+                    TreeNode head = queue.poll(); // 取出队列头元素
+                    level.add(head.val);
+
+                    // 取下一层级的进队列
+                    if (head.left != null) {
+                        queue.offer(head.left);
+                    }
+                    if (head.right != null) {
+                        queue.offer(head.right);
+                    }
+                }
+
+                if (!isForward) {
+                    Collections.reverse(level); // 翻转
+                }
+                result.add(level);
+
+                isForward = !isForward;
+
+            }
+
+        return result;
+        }
+    }
+
+    // 5. 将二叉树按照层级转化为链表 · Convert Binary Tree to Linked Lists by Depth
+    // 输入: {1,2,3,4}
+    // 输出: [1->null,2->3->null,4->null]
+    public class BinaryTreeToLists {
+        /**
+         * @param root the root of binary tree
+         * @return a lists of linked list
+         */
+        public List<ListNode> binaryTreeToLists(TreeNode root) {
+            List<ListNode> result = new ArrayList<ListNode>();
+
+            if (root == null)
+                return result;
+
+            Queue<TreeNode> queue = new LinkedList<TreeNode>();
+            queue.offer(root);
+
+            ListNode dummy = new ListNode(0); // 用来指向头节点
+            ListNode lastNode = null;
+
+            while (!queue.isEmpty()) {
+                dummy.next = null;
+                lastNode = dummy;
+
+                int size = queue.size();
+                for (int i = 0; i < size; i++) {
+                    TreeNode head = queue.poll();
+                    lastNode.next = new ListNode(head.val); // 第一次进来dummy和last node同时变，指向头节点
+                                                            // 后面只有last node会变
+                    lastNode = lastNode.next; // 不断向后
+
+                    if (head.left != null) {
+                        queue.offer(head.left);
+                    }
+                    if (head.right != null) {
+                        queue.offer(head.right);
+                    }
+                }
+
+                result.add(dummy.next);
+            }
+
+            return result;
+        }
+    }
+
 
 }

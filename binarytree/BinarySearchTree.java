@@ -1,5 +1,7 @@
 package binarytree;
 
+import datastructure.TreeNode;
+
 public class BinarySearchTree {
 
     // 1. Validate Binary Search Tree
