@@ -198,6 +198,200 @@ public class GraphBFS {
         }
     }
 
+    // 5. 课程表 Course Schedule
+    // n门课需要选，记为0到n-1. 要学习课程0你需要先学习课程1，表示为[0,1]
+    // 给定n门课以及他们的先决条件，判断是否可能完成所有课程？
+    public class CourseScheduleSolution {
+        /**
+         * @param numCourses a total of n courses
+         * @param prerequisites a list of prerequisite pairs
+         * @return true if can finish all courses or false
+         */
+        public boolean canFinish(int numCourses, int[][] prerequisites) {
+            List[] edges = new ArrayList[numCourses];
+            int[] inDegree = new int[numCourses];
 
+            for (int i = 0; i < numCourses; i++) {
+                edges[i] = new ArrayList<Integer>();
+            }
+
+            // 建立图
+            for (int i = 0; i < prerequisites.length; i++) {
+                inDegree[prerequisites[i][0]]++; // 第一个点为原始课程，要修这门需要先修其他的，所以多一门其他课程这门课入度+1
+                edges[prerequisites[i][1]].add(prerequisites[i][0]); // 在其他的先修课程列表中添加了这门课（即其他先修课修完可以修这门课）
+            }
+
+            Queue<Integer> queue = new LinkedList<>();
+            for (int i = 0; i < inDegree.length; i++) { // 入度为0，没有先修课，先进队列
+                if (inDegree[i] == 0) {
+                    queue.offer(i);
+                }
+            }
+
+            int countCourses = 0;
+            while (!queue.isEmpty()) {
+                int course = queue.poll();
+                countCourses++; // 修完course这门课，count+1
+                int n = edges[course].size(); // course是先修课，修完可以修其他哪些课
+                for (int i = 0; i < n; i++) {
+                    int pointer = (int) edges[course].get(i); // 可以修的下一门课
+                    inDegree[pointer]--;
+                    if (inDegree[pointer] == 0) {
+                        queue.add(pointer);
+                    }
+                }
+            }
+
+            return countCourses == numCourses; // 是否全部修完
+        }
+    }
+
+    // 6. 安排课程 Course Schedule II
+    // 给你课程的总数量和一些前置课程的需求，返回你为了学完所有课程所安排的学习顺序
+    public class CourseSchedule2Solution {
+        /**
+         * @param numCourses a total of n courses
+         * @param prerequisites a list of prerequisite pairs
+         * @return the course order
+         */
+        public int[] findOrder(int numCourses, int[][] prerequisites) {
+            List[] edges = new ArrayList[numCourses];
+            int[] inDegree = new int[numCourses];
+
+            for (int i = 0; i < numCourses; i++) {
+                edges[i] = new ArrayList<Integer>();
+            }
+
+            for (int i = 0; i < prerequisites.length; i++) {
+                inDegree[prerequisites[i][0]]++;
+                edges[prerequisites[i][1]].add(prerequisites[i][0]);
+            }
+
+            Queue<Integer> queue = new LinkedList<>();
+            for (int i = 0; i < inDegree.length; i++) { // 入度为0，没有先修课，先进队列
+                if (inDegree[i] == 0) {
+                    queue.offer(i);
+                }
+            }
+
+            int countCourses = 0;
+            int[] order = new int[numCourses];
+
+            while (!queue.isEmpty()) {
+                int course = queue.poll();
+                order[countCourses] = course;
+                countCourses++; // 修完course这门课，count+1
+
+                int n = edges[course].size(); // course是先修课，修完可以修其他哪些课
+                for (int i = 0; i < n; i++) {
+                    int pointer = (int) edges[course].get(i); // 可以修的下一门课
+                    inDegree[pointer]--;
+                    if (inDegree[pointer] == 0) {
+                        queue.add(pointer);
+                    }
+                }
+            }
+
+            if (countCourses == numCourses) {
+                return order;
+            }
+
+            return new int[0];
+        }
+    }
+
+    // 7. 序列重构 Sequence Reconstruction
+    // 444
+    // 判断是否序列org能唯一地由seqs重构得出
+    // 重构：一个最短的序列使得所有seqs里的序列都是它的子序列
+    // 序列seqs [1,2], [1,3], [2,3] 可以唯一重构出 org[1,2,3]
+    public class SequenceReconstructionSolution {
+        /**
+         * @param org: a permutation of the integers from 1 to n
+         * @param seqs: a list of sequences
+         * @return true if it can be reconstructed only one or false
+         */
+        public boolean sequenceReconstruction(int[] org, int[][] seqs) {
+            Map<Integer, Set<Integer>> graph = buildGraph(seqs);
+            List<Integer> topoOrder = getTopoOrder(graph);
+
+            if (topoOrder == null || topoOrder.size() != org.length) {
+                return false;
+            }
+            for (int i = 0; i < org.length; i++) { // 比较每一位数据
+                if (org[i] != topoOrder.get(i)) {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        // Integer A -> 在它后面的所有数集合
+        private Map<Integer, Set<Integer>> buildGraph(int[][] seqs) {
+            Map<Integer, Set<Integer>> graph = new HashMap<>();
+            for (int[] seq : seqs) { // 把所有点放入Map
+                for (int i = 0; i < seq.length; i++) {
+                    if (!graph.containsKey(seq[i])) { // 如果不包含当前点就添加进graph
+                        graph.put(seq[i], new HashSet<Integer>());
+                    }
+                }
+            }
+            for (int[] seq : seqs) {
+                for (int i = 1; i < seq.length; i++) {
+                    graph.get(seq[i - 1]).add(seq[i]); // 取到基准点，把相邻的后一个点添加进去
+                }
+            }
+            return graph;
+        }
+        private Map<Integer, Integer> getInDegrees(Map<Integer, Set<Integer>> graph) {
+            Map<Integer, Integer> inDegrees = new HashMap<>();
+
+            for (Integer node : graph.keySet()) { // 遍历所有key
+                inDegrees.put(node, 0); // 设置每个点的入度为0
+            }
+            for (Integer node : graph.keySet()) {
+                for (Integer neighbor : graph.get(node)) { // 遍历在node点后面的所有邻居
+                    inDegrees.put(neighbor, inDegrees.get(neighbor) + 1); // 邻居inDegree+1，表示node在邻居前面
+                }
+            }
+            return inDegrees;
+        }
+
+        private List<Integer> getTopoOrder(Map<Integer, Set<Integer>> graph) {
+            Map<Integer, Integer> inDegrees = getInDegrees(graph);
+            Queue<Integer> queue = new LinkedList<>();
+            List<Integer> topoOrder = new ArrayList<>();
+
+            for (Integer node : graph.keySet()) { // 遍历所有key
+                if (inDegrees.get(node) == 0) { // 入度为0，可直接添加至队列
+                    queue.offer(node);
+                    topoOrder.add(node);
+                }
+            }
+
+            while (!queue.isEmpty()) {
+                if (queue.size() > 1) { // 队列里同时存在2个以上元素，重构序列（拓扑排序）就不唯一了
+                    return null;
+                }
+
+                Integer node = queue.poll();
+                for (Integer neighbor : graph.get(node)) { // node进队列后，邻居入度-1
+                    inDegrees.put(neighbor, inDegrees.get(neighbor) - 1);
+                    if (inDegrees.get(neighbor) == 0) {
+                        queue.offer(neighbor);
+                        topoOrder.add(neighbor);
+                    }
+                }
+            }
+
+//            if (graph.size() == topoOrder.size()) {
+//                return topoOrder;
+//            }
+//
+//            return null;
+            return topoOrder;
+        }
+
+    }
 
 }
