@@ -218,4 +218,90 @@ public class MatrixBFS {
         }
     }
 
+    // 4. Build Post Office II
+    // 给出一个二维的网格，每一格可以代表墙2 ，房子1，以及空0。在网格中找到一个位置去建立邮局，使得所有的房子到邮局的距离和是最小的
+    // 返回所有房子到邮局的最小距离和，如果没有地方建立邮局，则返回-1
+    public class PostOffice {
+
+        public final int EMPTY = 0;
+        public final int HOUSE = 1;
+        public final int WALL = 2;
+
+        public int shortestDistance(int[][] grid) {
+
+            if (grid == null || grid.length == 0 || grid[0].length == 0) {
+                return -1;
+            }
+
+            int ans = Integer.MAX_VALUE;
+
+            // 遍历每一个点，如果是空地，计算到房子的距离和->最后比较返回最小
+            for (int i = 0; i < grid.length; i++) {
+                for (int j = 0; j < grid[0].length; j++) {
+                    if (grid[i][j] == EMPTY) {
+                        ans = Math.min(ans, bfs(grid, i ,j));
+                    }
+                }
+            }
+
+            return (ans == Integer.MAX_VALUE) ? -1 : ans;
+        }
+        private int bfs(int[][] grid, int x, int y) {
+            Queue<Coordinate> queue = new LinkedList<>();
+            boolean[][] visited = new boolean[grid.length][grid[0].length];
+
+            Coordinate coor = new Coordinate(x, y);
+            queue.offer(coor);
+            visited[x][y] = true;
+
+            int[] dx = {1, -1, 0, 0};
+            int[] dy = {0, 0, 1, -1};
+
+            int sum = 0; // 距离总和
+            int step = 0; // 空地往外走的步数
+
+            while (!queue.isEmpty()) {
+                step++;
+                int size = queue.size();
+                for (int i = 0; i < size; i++) {
+                    Coordinate curCoor = queue.poll(); // 当前层的所有点
+                    for (int direction = 0; direction < 4; direction++) {
+                        Coordinate nextCoor = new Coordinate(curCoor.x + dx[direction],
+                                                             curCoor.y + dy[direction]);
+
+                        if (isValid(nextCoor, grid, visited)) {
+                            visited[nextCoor.x][nextCoor.y] = true;
+                            if (grid[nextCoor.x][nextCoor.y] == HOUSE) {
+                                sum += step; // 所有房子到当前点的和
+                            }
+                            if (grid[nextCoor.x][nextCoor.y] == EMPTY) {
+                                queue.offer(nextCoor);
+                            }
+                        }
+                    } // 4 direction
+                } // level size
+            } // while
+
+            // 检查是否有当前邮局到不了的房子
+            for (int i = 0; i < grid.length; i++) {
+                for (int j = 0; j < grid[0].length; j++) {
+                    if (grid[i][j] == 1 && !visited[i][j]) {
+                        return Integer.MAX_VALUE;
+                    }
+                }
+            }
+            return sum;
+        }
+        private boolean isValid(Coordinate coor, int[][] grid, boolean[][] visited) {
+            if (coor.x < 0 || coor.x >= grid.length ||
+                coor.y < 0 || coor.y >= grid[0].length) {
+                return false;
+            }
+            if (visited[coor.x][coor.y] = true) {
+                return false;
+            }
+
+            return grid[coor.x][coor.y] == EMPTY;
+        }
+    }
 }
