@@ -228,4 +228,45 @@ public class Combination {
             }
         }
     }
+
+    // 5. 分割回文串 · Palindrome Partitioning
+    // 给定字符串s, 需要将它分割成一些子串, 使得每个子串都是回文串.
+    // 返回所有分割方案的子串
+    public class PalindromPartitionSolution {
+
+        public List<List<String>> partition(String s) {
+            List<List<String>> result = new ArrayList<>();
+            if (s == null || s.length() == 0) {
+                return result;
+            }
+
+            List<String> partition = new ArrayList<String>(); // 一种分割方案里的所有子串
+            helper(s, 0, partition, result);
+
+            return result;
+        }
+        private void helper(String s, int startIndex, List<String> partition, List<List<String>> result) {
+            if (startIndex == s.length()) {
+                result.add(new ArrayList<String>(partition));
+                return;
+            }
+            for (int i = startIndex; i < s.length(); i++) {
+                String subStr = s.substring(startIndex, i + 1); // 左闭右开区间[start, end)
+                if (isPalindrom(subStr)) {
+                    partition.add(subStr);
+                    helper(s, i + 1, partition, result);
+                    partition.remove(partition.size() - 1);
+                }
+            }
+        }
+        private boolean isPalindrom(String s) {
+            for (int i = 0, j = s.length() - 1; i < j; i++, j--) {
+                if (s.charAt(i) != s.charAt(j)) {
+                    return false;
+                }
+            }
+            return true;
+        }
+    }
+    // 还可用DP方法
 }
