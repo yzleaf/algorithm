@@ -45,6 +45,7 @@ public class Combination {
     }
 
     // 2. subsets2
+    // 给定一个可能具有重复数字的列表，返回其所有可能的子集
     public class Subsets2Solution {
         // 方法1，每个数选或不选构成类似二叉树结果
         public List<List<Integer>> subsetsWithDup(int[] nums) {
@@ -111,6 +112,119 @@ public class Combination {
                 subset.add(nums[i]);
                 helper(nums, i + 1, subset, results);
                 subset.remove(subset.size() - 1); // 删掉刚加进来的数
+            }
+        }
+    }
+
+    // 3. Combination Sum
+    // 给定一个候选数字的集合candidates和一个目标值target. 找到candidates中所有的和为target的组合.
+    // 在同一个组合中,candidates中的某个数字不限次数地出现
+    public class CombinationSum1Solution {
+        // 方法2，按元素个数，遍历每一层
+        public  List<List<Integer>> combinationSum(int[] candidates, int target) {
+            List<List<Integer>> result = new ArrayList<>();
+
+            if (candidates == null || candidates.length == 0) {
+                return result;
+            }
+
+            List<Integer> combination = new ArrayList<>(); // 每一个符合要求的list
+            Arrays.sort(candidates);
+            helper(candidates, 0, target, combination, result);
+
+            return result;
+        }
+        private void helper(int[] candidates, int startIndex, int target,
+                       List<Integer> combination, List<List<Integer>> result) {
+            // 目标target每次减去当前加入的数值
+            if (target == 0) {
+                result.add(new ArrayList<Integer>(combination));
+                return;
+            }
+            for (int i = startIndex; i < candidates.length; i++) {
+                if (candidates[i] > target) { // 因为数组升序排列，如果>，可直接跳出循环
+                    break;
+                }
+                // 去除candidates数组中的重复元素：[1,2,2'] -> [1,2] [1,2']选择第一个
+                if (i != startIndex && candidates[i] == candidates[startIndex]) {
+                    continue;
+                }
+
+                combination.add(candidates[i]);
+                helper(candidates, i, target - candidates[i], combination, result);
+                combination.remove(combination.size() - 1);
+            }
+        }
+
+        // 方法1 选或者不选
+        public List<List<Integer>> combinationSum1(int[] candidates, int target) {
+
+            List<List<Integer>> result = new ArrayList<>();
+            Arrays.sort(candidates);
+
+            dfs(candidates, 0, target, new ArrayList<Integer>(), result);
+            return result;
+        }
+
+        private void dfs(int[] candidates, int index, int target, List<Integer> combination, List<List<Integer>> results) {
+            if (index == candidates.length) {
+                if (target == 0) {
+                    results.add(new ArrayList<Integer>(combination));
+                }
+                return;
+            }
+
+            if (target < 0) {
+                return;
+            }
+
+            // 不选这个数，从index+1开始，target不变
+            dfs(candidates, index + 1, target, combination, results);
+            // 去除重复元素
+            if (index > 0 && candidates[index] == candidates[index - 1]) {
+                return;
+            }
+            combination.add(candidates[index]);
+            // 当前元素可选多次
+            dfs(candidates, index, target - candidates[index], combination, results);
+            combination.remove(combination.size() - 1);
+        }
+    }
+
+    // 4. Combination Sum II
+    // 给定一个数组 num 和一个整数 target. 找到 num 中所有的数字之和为 target 的组合.
+    // 在同一个组合中, num 中的每一个数字仅能被使用一次.
+    public class CombinationSum2Solution {
+        public List<List<Integer>> combinationSum2(int[] candidates, int target) {
+            List<List<Integer>> result = new ArrayList<>();
+
+            if (candidates == null || candidates.length == 0) {
+                return result;
+            }
+
+            List<Integer> combination = new ArrayList<>();
+            Arrays.sort(candidates);
+            helper(candidates, 0 , target, combination, result);
+
+            return result;
+        }
+        private void helper(int[] candidates, int startIndex, int target,
+                       List<Integer> combination, List<List<Integer>> result) {
+            if (target == 0) {
+                result.add(new ArrayList<>(combination));
+                return;
+            }
+
+            for (int i = startIndex; i < candidates.length; i++) {
+                if (candidates[i] > target) {
+                    break;
+                }
+                if (i != startIndex && candidates[i] == candidates[startIndex]) { // 去除重复元素
+                    continue;
+                }
+                combination.add(candidates[i]);
+                helper(candidates, i + 1, target - candidates[i], combination, result);
+                combination.remove(combination.size() - 1);
             }
         }
     }
