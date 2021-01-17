@@ -2,6 +2,8 @@ package binarysearch;
 
 public class TemplateBinarySearch {
 
+    // 二分法模板
+
     /**
      * @param nums: The integer array.
      * @param target: Target to find.
