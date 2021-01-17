@@ -87,16 +87,16 @@ public class BinaryTreeOther {
             if (node == null) {
                 return;
             }
-            // if是为了剪枝，如果node<k1，左子树都不管
+            // if是为了剪枝，如果node<k1，node左子树都不管
             if (node.val > k1) {
-                travel(node.left, k1, k2); // 不断递归跑到底（直至左子树null）
+                travel(node.left, k1, k2); // 左
             }
             if (node.val >= k1 && node.val <= k2) {
-                results.add(node.val);
+                results.add(node.val); // 根
             }
-            // if是为了剪枝，如果node>k2，右子树都不管
+            // if是为了剪枝，如果node>k2，node右子树都不管
             if (node.val < k2) {
-                travel(node.right, k1, k2);
+                travel(node.right, k1, k2); // 右
             }
         }
     }
@@ -109,7 +109,9 @@ public class BinaryTreeOther {
          * @return The root of the new binary search tree.
          */
         public TreeNode insertNode(TreeNode root, TreeNode node) {
-            if (root == null) { // 最后一层，叶子节点往下，返回自己在这一层插入
+            // 从大的层面来说，空树，直接返回待插入的节点
+            // 从小的层面来说，最后一层，叶子节点往下，返回自己在这一层插入
+            if (root == null) {
                 return node;
             }
 
