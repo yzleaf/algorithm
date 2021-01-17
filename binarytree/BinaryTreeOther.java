@@ -7,6 +7,9 @@ import java.util.*;
 public class BinaryTreeOther {
 
     // 1. Binary Search Tree Iterator
+    // 设计实现一个带有下列属性的二叉查找树的迭代器：next()返回BST中下一个最小的元素
+    // 元素按照递增的顺序被访问（比如中序遍历）
+    // next()和hasNext()的询问操作要求均摊时间复杂度是O(1)
     public class BSTIterator {
         private Stack<TreeNode> stack;
 
@@ -45,7 +48,7 @@ public class BinaryTreeOther {
 
 
     // 2. Inorder Successor in Binary Search Tree
-    // 找后继节点（大于当前节点的最小值）
+    // 找该节点的中序遍历后继节点（大于当前节点的最小值），如果没有返回null
     public class InorderSuccessorSolution {
 
         public TreeNode inorderSuccessor(TreeNode root, TreeNode p) {
@@ -86,7 +89,7 @@ public class BinaryTreeOther {
             }
             // if是为了剪枝，如果node<k1，左子树都不管
             if (node.val > k1) {
-                travel(node.left, k1, k2);
+                travel(node.left, k1, k2); // 不断递归跑到底（直至左子树null）
             }
             if (node.val >= k1 && node.val <= k2) {
                 results.add(node.val);
