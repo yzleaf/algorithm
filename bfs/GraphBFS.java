@@ -31,8 +31,8 @@ public class GraphBFS {
 
             while (!queue.isEmpty()) {
                 int node = queue.poll();
-                for (Integer neighbor: graph.get(node)) { // 取到node的所有相邻节点
-                    if (hash.contains(neighbor)) {
+                for (Integer neighbor: graph.get(node)) { // 取到当前node的所有相邻节点
+                    if (hash.contains(neighbor)) { // hash表里包含，表示之前访问过
                         continue;
                     }
                     hash.add(neighbor);
@@ -40,7 +40,7 @@ public class GraphBFS {
                 }
             }
 
-            return (hash.size() == n); // 是否所有点都联通了
+            return (hash.size() == n); // 是否n个点都进入hash，即所有点都联通了
             // 如果n个点都联通，且edge为n-1，就是树
         }
 
@@ -62,7 +62,7 @@ public class GraphBFS {
     }
 
     // 2. Clone Graph
-
+    // 返回一个经过深度拷贝的新图. 新图和原图具有同样的结构, 并且对新图的任何改动不会对原图造成任何影响
     public class CloneGraphSolution {
 
         public UndirectedGraphNode cloneGraph(UndirectedGraphNode node) {
@@ -75,16 +75,17 @@ public class GraphBFS {
 
             // copy nodes. store the old->new mapping information in a hash map
             HashMap<UndirectedGraphNode, UndirectedGraphNode> mapping = new HashMap<>();
-            for (UndirectedGraphNode n : nodes) {
+            for (UndirectedGraphNode n : nodes) { // 遍历原始表的所有点
                 mapping.put(n, new UndirectedGraphNode(n.label));
             }
 
             // copy neighbors(edges).
-            for (UndirectedGraphNode n : nodes) {
-                UndirectedGraphNode newNode = mapping.get(n); // 获得新的node(只有val，neighbor为空)
+            for (UndirectedGraphNode n : nodes) { // 遍历原始表的所有点
+                UndirectedGraphNode newNode = mapping.get(n); // 根据原始node获得新的node(只有val，neighbor为空)
+
                 for (UndirectedGraphNode neighbor : n.neighbors) { // 遍历当前node的所有邻居
-                    UndirectedGraphNode newNeighbor = mapping.get(neighbor);
-                    newNode.neighbors.add(newNeighbor); // 当前node的邻居里添加新的邻居
+                    UndirectedGraphNode newNeighbor = mapping.get(neighbor); // 根据原始neighbor获得新的neighbor
+                    newNode.neighbors.add(newNeighbor); // 新的node的邻居里添加新的邻居
                 }
             }
 
@@ -93,21 +94,22 @@ public class GraphBFS {
 
         private ArrayList<UndirectedGraphNode> getNodes(UndirectedGraphNode node) {
             Queue<UndirectedGraphNode> queue = new LinkedList<UndirectedGraphNode>();
-            HashSet<UndirectedGraphNode> set = new HashSet<>();
+            HashSet<UndirectedGraphNode> hash = new HashSet<>();
 
             queue.offer(node);
-            set.add(node);
+            hash.add(node);
+
             while (!queue.isEmpty()) {
                 UndirectedGraphNode head = queue.poll();
                 for (UndirectedGraphNode neighbor : head.neighbors) {
-                    if (!set.contains(neighbor)) {
+                    if (!hash.contains(neighbor)) {
                         queue.offer(neighbor);
-                        set.add(neighbor);
+                        hash.add(neighbor);
                     }
                 }
             }
 
-            return new ArrayList<UndirectedGraphNode>(set); // 构造包含指定collection元素
+            return new ArrayList<UndirectedGraphNode>(hash); // 构造包含指定collection元素
         }
     }
 
@@ -131,10 +133,10 @@ public class GraphBFS {
 
             // BFS分层遍历，找到即为最近的
             Queue<UndirectedGraphNode> queue = new LinkedList<UndirectedGraphNode>();
-            Set<UndirectedGraphNode> set = new HashSet<UndirectedGraphNode>();
+            Set<UndirectedGraphNode> hash = new HashSet<UndirectedGraphNode>();
 
             queue.offer(node);
-            set.add(node);
+            hash.add(node);
 
             while (!queue.isEmpty()) {
                 UndirectedGraphNode head = queue.poll();
@@ -142,9 +144,9 @@ public class GraphBFS {
                     return head;
                 }
                 for (UndirectedGraphNode neighbor : head.neighbors) {
-                    if (!set.contains(neighbor)) {
+                    if (!hash.contains(neighbor)) {
                         queue.offer(neighbor);
-                        set.add(neighbor);
+                        hash.add(neighbor);
                     }
                 }
             }
@@ -154,8 +156,9 @@ public class GraphBFS {
     }
 
     // 4. 拓扑排序 Topological Sorting
+    // 针对给定的有向图找到任意一种拓扑排序的顺序
     // 对于图中的每一条有向边 A -> B , 在拓扑排序中A一定在B之前.
-    public class topSortSolution {
+    public class TopSortSolution {
 
         // 步骤1.从队列中获取一个入度为0的顶点
         // 步骤2.获取该顶点边，将边的另一端顶点入度减一，如果为0，也入队列
@@ -202,11 +205,7 @@ public class GraphBFS {
     // n门课需要选，记为0到n-1. 要学习课程0你需要先学习课程1，表示为[0,1]
     // 给定n门课以及他们的先决条件，判断是否可能完成所有课程？
     public class CourseScheduleSolution {
-        /**
-         * @param numCourses a total of n courses
-         * @param prerequisites a list of prerequisite pairs
-         * @return true if can finish all courses or false
-         */
+
         public boolean canFinish(int numCourses, int[][] prerequisites) {
             List[] edges = new ArrayList[numCourses];
             int[] inDegree = new int[numCourses];
@@ -237,7 +236,7 @@ public class GraphBFS {
                     int pointer = (int) edges[course].get(i); // 可以修的下一门课
                     inDegree[pointer]--;
                     if (inDegree[pointer] == 0) {
-                        queue.add(pointer);
+                        queue.offer(pointer);
                     }
                 }
             }

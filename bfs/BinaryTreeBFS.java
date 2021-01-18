@@ -1,14 +1,14 @@
 package bfs;
 
-import datastructure.TreeNode;
-import datastructure.ListNode;
+import datastructure.*;
 
 import java.util.*;
 
 public class BinaryTreeBFS {
 
-    // 1. 给出一棵二叉树，返回其节点值的层次遍历（逐层从左往右访问）
+    // 1. Binary Tree Level Order Traversal
     // 102
+    // 给出一棵二叉树，返回其节点值的层次遍历（逐层从左往右访问）
     public class BFSSolution {
         public List<List<Integer>> levelOrder(TreeNode root) {
             List<List<Integer>> result = new ArrayList<>();
@@ -46,6 +46,14 @@ public class BinaryTreeBFS {
     // 2. Binary Tree Serialization
     // 297
     // serialize a binary tree to a string
+
+    // 二叉树 {3,9,20,#,#,15,7}，表示如下的树结构：
+    //	  3
+    //	 / \
+    //	9  20
+    //	  /  \
+    //	 15   7
+    // 它将被序列化为 {3,9,20,#,#,15,7}
     class SerializeSolution {
 
         public String serialize(TreeNode root) {
@@ -56,10 +64,10 @@ public class BinaryTreeBFS {
             ArrayList<TreeNode> array = new ArrayList<TreeNode>();
             array.add(root);
 
-            // 把二叉树放入数组中，随着元素不断放入size会不断增大
+            // 把二叉树按层次从左到右依次放入数组中，随着元素不断放入size会不断增大
             for (int i = 0; i < array.size(); i++) {
                 TreeNode node = array.get(i);
-                if (node == null) { // 因为是空，就不会继续往下，添加它的左右子树了
+                if (node == null) { // 因为是空，就不会继续往下，添加它的左右子树了（null节点）
                     continue;
                 }
                 array.add(node.left);
@@ -75,7 +83,6 @@ public class BinaryTreeBFS {
 
             StringBuilder sb = new StringBuilder();
             sb.append("{");
-
             sb.append(array.get(0).val);
             for (int i = 1; i < array.size(); i++) {
                 if (array.get(i) == null) {
@@ -106,7 +113,7 @@ public class BinaryTreeBFS {
             TreeNode root = new TreeNode(Integer.parseInt(vals[0]));
             array.add(root);
 
-            int index = 0; // 记录二叉树里node的index
+            int index = 0; // 记录二叉树里node的index（两个child对应一个node）
             boolean isLeftChild = true; // 一个node赋值一个left孩子后要翻转
 
             for (int i = 1; i < vals.length; i++) {
@@ -171,6 +178,7 @@ public class BinaryTreeBFS {
 
     // 4. 二叉树的锯齿形层次遍历 · Binary Tree Zigzag Level Order Traversal
     // 103
+    // 先从左往右，下一层再从右往左，层与层之间交替进行
     public class BFSZigzagSolution {
         /**
          * @param root: A Tree
@@ -211,22 +219,18 @@ public class BinaryTreeBFS {
                 result.add(level);
 
                 isForward = !isForward;
-
             }
 
-        return result;
+            return result;
         }
     }
 
     // 5. 将二叉树按照层级转化为链表 · Convert Binary Tree to Linked Lists by Depth
-
+    // 如果一棵二叉树有 D 层，要创建 D 条链表
     // 输入: {1,2,3,4}
     // 输出: [1->null,2->3->null,4->null]
     public class BinaryTreeToLists {
-        /**
-         * @param root the root of binary tree
-         * @return a lists of linked list
-         */
+
         public List<ListNode> binaryTreeToLists(TreeNode root) {
             List<ListNode> result = new ArrayList<ListNode>();
 
@@ -257,13 +261,11 @@ public class BinaryTreeBFS {
                         queue.offer(head.right);
                     }
                 }
-
                 result.add(dummy.next);
             }
 
             return result;
         }
     }
-
 
 }
