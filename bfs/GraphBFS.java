@@ -205,7 +205,7 @@ public class GraphBFS {
     // n门课需要选，记为0到n-1. 要学习课程0你需要先学习课程1，表示为[0,1]
     // 给定n门课以及他们的先决条件，判断是否可能完成所有课程？
     public class CourseScheduleSolution {
-
+        
         public boolean canFinish(int numCourses, int[][] prerequisites) {
             List[] edges = new ArrayList[numCourses];
             int[] inDegree = new int[numCourses];
