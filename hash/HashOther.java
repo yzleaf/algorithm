@@ -89,6 +89,7 @@ public class HashOther {
     // 输出 : 4
     // 解释 : 这个最长的连续序列是 [1, 2, 3, 4]. 返回所求长度 4
     public class LongestConsecutiveSolution {
+
         public int longestConsecutive(int[] nums) {
             HashSet<Integer> hash = new HashSet<>();
             for (int i = 0; i < nums.length; i++) {
@@ -97,20 +98,24 @@ public class HashOther {
 
             int longest = 0;
             for (int i = 0; i < nums.length; i++) {
-                // 因为找连续的序列，所以只需要看是否存在+1 和 -1
-                int down = nums[i] - 1;
-                while (hash.contains(down)) {
-                    hash.remove(down); // 避免i遍历到其他位置的时候有这个相邻的数重复计算
-                    down--;
-                }
+                if (hash.contains(nums[i])){
+                    hash.remove(nums[i]);
 
-                int up = nums[i] + 1;
-                while (hash.contains(up)) {
-                    hash.remove(up);
-                    up++;
-                }
+                    // 因为找连续的序列，所以只需要看是否存在+1 和 -1
+                    int down = nums[i] - 1;
+                    while (hash.contains(down)) {
+                        hash.remove(down); // 避免i遍历到其他位置的时候有这个相邻的数重复计算
+                        down--;
+                    }
 
-                longest = Math.max(longest, up - down - 1); // 最后跳出循环后的数up+1 down-1，所以个数为up-down-1
+                    int up = nums[i] + 1;
+                    while (hash.contains(up)) {
+                        hash.remove(up);
+                        up++;
+                    }
+
+                    longest = Math.max(longest, up - down - 1); // 最后跳出循环后的数up+1 down-1，所以个数为up-down-1
+                }
             }
 
             return longest;
