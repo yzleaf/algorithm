@@ -107,7 +107,6 @@ public class HashOther {
                         hash.remove(down); // 避免i遍历到其他位置的时候有这个相邻的数重复计算
                         down--;
                     }
-
                     int up = nums[i] + 1;
                     while (hash.contains(up)) {
                         hash.remove(up);
