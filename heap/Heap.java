@@ -162,7 +162,25 @@ public class Heap {
 
             return dummy.next;
         }
-        // 方法3
+
+        // 方法3 divide and conquer
+        // 不断向下二分lists，最后是不断向上merge两个lists
+        public ListNode mergeKLists3(List<ListNode> lists) {
+            if (lists.size() == 0) {
+                return null;
+            }
+            return mergeHelper(lists, 0, lists.size() - 1);
+        }
+        private ListNode mergeHelper(List<ListNode> lists, int start, int end) {
+            if (start == end) {
+                return lists.get(start);
+            }
+
+            int mid = start + (end - start) / 2;
+            ListNode left = mergeHelper(lists, start, mid);
+            ListNode right = mergeHelper(lists, mid + 1, end);
+            return merge(left, right);
+        }
     }
 
     // 4. 优秀成绩 · High Five
