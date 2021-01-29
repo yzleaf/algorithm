@@ -160,7 +160,7 @@ public class Partition {
             if (k >= left) {
                 return partition(nums, left, end, k);
             }
-            return nums[k];
+            return nums[k]; // k在right和left之间，k位置一定是最后所在的位置
         }
     }
 

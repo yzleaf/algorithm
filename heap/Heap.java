@@ -41,10 +41,10 @@ public class Heap {
 
     // 2. Top k largest Number II
     // 实现两个函数：不断add数据，取前K个最大的数
-    public class TopKLargestSolution {
+    public class TopKLargestSolution2 {
         private int maxSize;
         private Queue<Integer> minheap;
-        public TopKLargestSolution(int k) {
+        public TopKLargestSolution2(int k) {
             minheap = new PriorityQueue<>();
             maxSize = k;
         }
@@ -323,5 +323,166 @@ public class Heap {
 
             return result;
         }
+    }
+
+    // 7. 数据流中位数 · data stream median
+    // 数字是不断进入数组的，在每次添加一个新的数进入数组的同时返回当前新数组的中位数
+    // 不同于数学的中位数，这里中位数是排序后数组的中间值，如果有数组中有n个数，则中位数为A[(n-1)/2]
+    public class DataStreamMedianSolution {
+        // 用 maxheap 保存左半部分的数，用 minheap 保存右半部分的数
+        // 把所有的数一左一右的加入到每个部分。左边部分最大的数就一直都是 median
+        private PriorityQueue<Integer> maxHeap, minHeap;
+        private int numOfElements = 0;// 判断奇偶性 确认在哪个堆中加入数
+
+        public int[] median(int[] nums) {
+            int cnt = nums.length;
+            maxHeap = new PriorityQueue<>(cnt, Collections.reverseOrder());
+            minHeap = new PriorityQueue<>(cnt);
+            int[] ans = new int[cnt];
+            for (int i = 0; i < cnt; i++) {
+                addNumber(nums[i]);
+                ans[i] = getMedian();
+            }
+            return ans;
+        }
+        private void addNumber(int value) {
+            maxHeap.offer(value);
+            if (numOfElements % 2 == 0) { // 每两次add就会判断左右两边堆顶元素大小
+                if (minHeap.isEmpty()) {
+                    numOfElements++;
+                    return;
+                }
+                else if (maxHeap.peek() > minHeap.peek()) { // 为了保证右边的元素比左边大
+                    Integer maxHeapRoot = maxHeap.poll();
+                    Integer minHeapRoot = minHeap.poll();
+                    maxHeap.offer(minHeapRoot);
+                    minHeap.offer(maxHeapRoot);
+                }
+            } else { // 如果是奇数，说明原来不平衡了，max多一个，要让max减一个，min加一个
+                minHeap.offer(maxHeap.poll());
+            }
+            numOfElements ++;
+        }
+        private int getMedian() {
+            return maxHeap.peek();
+        }
+    }
+
+    // 8. 前K大数 · Top k Largest Numbers
+    // 在一个数组中找到前K大的数
+    public class TopkLargestSolution1 {
+        // 方法1 堆排序
+        public int[] topK(int[] nums, int k) {
+            PriorityQueue<Integer> minHeap = new PriorityQueue<>(k);
+
+            for (int i = 0; i < nums.length; i++) {
+                minHeap.offer(nums[i]);
+                if (minHeap.size() > k) {
+                    minHeap.poll();
+                }
+            }
+
+            int[] result = new int[k];
+            for (int i = 0; i < k; i++) {
+                result[k - i - 1] = minHeap.poll();
+            }
+
+            return result;
+        }
+
+        // 方法2 quick select
+        public int[] topK2(int[] nums, int k) {
+            // 第k大，是从小到大第nums.length-k的下标的数
+            quickSelect(nums, 0, nums.length - 1, nums.length - k);
+
+            int[] result = new int[k];
+            for (int i = nums.length - 1, j = 0; i < k; i--, j++) { // 输出后半部分大于k的数
+                result[j] = nums[i];
+            }
+
+            return result;
+        }
+        private void quickSelect(int[] nums, int start, int end, int k) {
+            if (start >= end) {
+                return;
+            }
+
+            int left = start, right = end;
+            int pivot = nums[start + (end - start)/2];
+
+            while (left <= right) {
+                // 如果数组里的数是一样的，nums[left]<=pivot的话，left和right不会换，之后会一直反复调用这个函数没有出口
+                while (left <= right && nums[left] < pivot) {
+                    left ++;
+                }
+                while (left <= right && nums[right] > pivot) {
+                    right --;
+                }
+                if (left <= right) {
+                    int temp = nums[left];
+                    nums[left] = nums[right];
+                    nums[right] = temp;
+
+                    left++;
+                    right--;
+                }
+            }
+
+            if (k <= right) {
+                quickSelect(nums, start, right, k);
+            }
+            if (k >= left) {
+                quickSelect(nums, left, end, k);
+            }
+            return;
+        }
+    }
+
+    // 9. Kth Smallest Number in Sorted Matrix
+    // 在一个排序矩阵中找从小到大的第 k 个整数
+    // 排序矩阵的定义为：每一行递增，每一列也递增
+    public class kthSmallestInMatrixSolution {
+        class Pair {
+            public int x, y, val;
+            public Pair(int x, int y, int val) {
+                this.x = x;
+                this.y = y;
+                this.val = val;
+            }
+        }
+        // 方法1 最小堆
+        // 定义一个小根堆, 起始仅仅放入第一行第一列的元素.
+        // 循环k次, 每一次取出一个元素, 然后把该元素右方以及下方的元素放入堆中, 第k次取出的元素即为答案
+        public int kthSmallest(int[][] matrix, int k) {
+            // 向右和向下两个坐标
+            int[] dx = new int[]{0, 1};
+            int[] dy = new int[]{1, 0};
+
+            int row = matrix.length;
+            int col = matrix[0].length;
+            boolean[][] record = new boolean[row][col];
+            PriorityQueue<Pair> minHeap = new PriorityQueue<>(k, (a, b) -> a.val - b.val);
+
+            minHeap.offer(new Pair(0, 0, matrix[0][0])); // 添加第一个元素
+
+            for (int i = 0; i < k - 1; i++) { // 取出k-1个元素后，堆顶就是第k个
+                Pair curr = minHeap.poll();
+                for (int j = 0; j < 2; j++) { // 向右和向下两个坐标
+                    int nextX = curr.x + dx[j];
+                    int nextY = curr.y + dy[j];
+                    Pair next = new Pair(nextX, nextY, 0); // 判断以后再赋值，避免出现越界为空的情况
+                    if (nextX < row && nextY < col && !record[nextX][nextY]) {
+                        record[nextX][nextY] = true;
+                        next.val = matrix[nextX][nextY];
+                        minHeap.offer((next));
+                    }
+                }
+            }
+
+            return minHeap.peek().val;
+        }
+
+        // 方法2  二分
+        // 从左下角开始，目标值更大->往右找，目标值更小->往上找
     }
 }
