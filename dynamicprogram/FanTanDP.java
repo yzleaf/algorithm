@@ -242,6 +242,49 @@ public class FanTanDP {
         }
     }
 
+    // 4. Frog Jump
+    // 403
+    // 一只青蛙正要过河，这条河分成了 x 个单位，每个单位可能存在石头，青蛙可以跳到石头上，但它不能跳进水里
+    // 刚开始时青蛙在第一块石头上，假设青蛙第一次跳只能跳一个单位的长度
+    // 如果青蛙本次跳 k 个单位，那么它下一次只能跳 k - 1 ，k 或者 k + 1 个单位
 
+    // 给出石头的位置为 [0,1,3,5,6,8,12,17]
+    // 总共8块石头。第一块石头在 0 位置，第二块石头在 1 位置，第三块石头在 3 位置，最后一块石头在 17 位置。
+    // 返回 true。
+    // 青蛙可以通过跳 1 格到第二块石头，跳 2 格到第三块石头，跳 2 格到第四块石头，跳 3 格到第六块石头，跳 4 格到第七块石头，最后跳 5 格到第八块石头
+    public class FrogJumpSolution {
+        // 采用散列表（hashmap），对于{key:value}键值对，key表示石头的位置，value是step的集合，step表示青蛙上次跳动到这里时用的步数（可以从多个点跳到这）
+        // 每块石头，已知跳到这里用了step步，那么就看从该位置跳step-1、step和step+1能不能跳到新的石头，如果可以，在新的石头的value处加入这个步数
+        public boolean canCross(int[] stones) {
+            // 输入已经默认了石子的数量 ≥ 2 且 < 1100；第一个石子的位置永远是0，所以不需要做corner判断
+
+            // 石头位置 -> 上次跳到这个步数集合
+            Map<Integer, HashSet<Integer>> dp = new HashMap<>();
+            for (int i = 0; i < stones.length; i++) {
+                dp.put(stones[i], new HashSet<Integer>());
+            }
+            dp.get(stones[0]).add(0); // 一开始在第一块石头上，上次的步数应该为0
+
+            for (int i = 0; i < stones.length - 1; i++) {
+                int stone = stones[i];
+                for (int step : dp.get(stone)) {
+                    // step-1
+                    if (dp.containsKey(stone + step - 1) && step > 1) {
+                        dp.get(stone + step - 1).add(step - 1);
+                    }
+                    // step
+                    if (dp.containsKey(stone + step)) {
+                        dp.get(stone + step).add(step);
+                    }
+                    // step+1
+                    if (dp.containsKey(stone + step + 1)) {
+                        dp.get(stone + step + 1).add(step + 1);
+                    }
+                }
+            }
+
+            return dp.get(stones[stones.length - 1]).size() > 0; // 最后一个石头的step是否有数
+        }
+    }
 
 }

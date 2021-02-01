@@ -19,6 +19,8 @@ public class MatrixBFS {
         int[] deltaX = {0, 1, -1, 0};
         int[] deltaY = {1, 0, 0, -1};
 
+        boolean[][] visited; // 矩阵中的点是否被遍历处理过
+
         /**
          * @param grid a boolean 2D matrix
          * @return an integer
@@ -33,19 +35,19 @@ public class MatrixBFS {
 
             int islands = 0;
             int row = grid.length, column = grid[0].length;
-            boolean[][] visited = new boolean[row][column];
+            visited = new boolean[row][column];
 
             for (int i = 0; i < row; i++) {
                 for (int j = 0; j < column; j++) {
                     if (grid[i][j] && !visited[i][j]) { // gird[][]为1且未被访问过
-                        bfs(grid, i, j, visited);
+                        bfs(grid, i, j);
                         islands++;
                     }
                 }
             }
             return islands;
         }
-        private void bfs(boolean[][] grid, int x, int y, boolean[][] visited) {
+        private void bfs(boolean[][] grid, int x, int y) {
             Queue<Coordinate> queue = new LinkedList<>();
 
             queue.offer(new Coordinate(x, y)); // 当前点进队列，进行BFS
@@ -56,7 +58,7 @@ public class MatrixBFS {
                 for (int direction = 0; direction < 4; direction++) { // 遍历这个点的四个方向
                     int newX = coor.x + deltaX[direction];
                     int newY = coor.y + deltaY[direction];
-                    if (!isValid(grid, newX, newY, visited)) {
+                    if (!isValid(grid, newX, newY)) {
                         continue;
                     }
                     queue.offer(new Coordinate(newX, newY));
@@ -65,7 +67,7 @@ public class MatrixBFS {
             }
 
         }
-        private boolean isValid(boolean[][] grid, int x, int y, boolean[][] visited) {
+        private boolean isValid(boolean[][] grid, int x, int y) {
             int row = grid.length, column = grid[0].length;
             if (x < 0 || x >= row || y < 0 || y >= column) {
                 return false;
@@ -78,7 +80,7 @@ public class MatrixBFS {
     }
 
     // 2. 僵尸矩阵 Zombie in Matrix
-    // 给一个二维网格，每一个格子都有一个值，2 代表墙，1 代表僵尸，0 代表人类(数字 0, 1, 2)
+    // 给一个二维网格，每一个格子都有一个值，2 代表墙，1 代表僵尸，0 代表人类（数字 0, 1, 2）
     // 僵尸每天可以将上下左右最接近的人类感染成僵尸，但不能穿墙。将所有人类感染为僵尸需要多久，如果不能感染所有人则返回 -1。
     public class ZombieSolution {
         public int PEOPLE = 0;
@@ -88,10 +90,6 @@ public class MatrixBFS {
         public int[] deltaX = {1, 0, 0, -1};
         public int[] deltaY = {0, 1, -1, 0};
 
-        /**
-         * @param grid a 2D integer grid
-         * @return an integer
-         */
         public int zombie(int[][] grid) {
             if (grid == null || grid.length == 0 || grid[0].length == 0) {
                 return 0;
@@ -121,7 +119,7 @@ public class MatrixBFS {
             int days = 0;
             while (!queue.isEmpty()) {
                 days++;
-                int size = queue.size(); // 分层次bfs
+                int size = queue.size(); // 分层次bfs（因为要求天数）
                 for (int i = 0; i < size; i++) {
                     Coordinate zombie = queue.poll();
                     for (int direction = 0; direction < 4; direction++) { // 四个方向移动
@@ -158,6 +156,7 @@ public class MatrixBFS {
     }
 
     // 3. 骑士的最短路线 Knight Shortest Path
+    // 给定骑士在棋盘上的 初始 位置(一个2进制矩阵 0 表示空 1 表示有障碍物）
     // 找到到达终点的最短路线，返回路线的长度。如果骑士不能到达则返回-1
     public class KnightShortestSolution {
 
@@ -177,32 +176,34 @@ public class MatrixBFS {
             }
 
             Queue<Coordinate> queue = new LinkedList<Coordinate>();
-            Map<Integer, Integer> distance = new HashMap<Integer, Integer>();
 
             int row = grid.length, column = grid[0].length;
             queue.offer(source);
-            distance.put(source.x * column + source.y, 0); // 利用x * column + y，每个点会对应一个distance
 
+            int steps = 0; // 记录步数
             while (!queue.isEmpty()) {
-                Coordinate point = queue.poll();
-                if (point.x == destination.x && point.y == destination.y) {
-                    return distance.get(point.x * column + point.y);
-                }
-
-                for (int direction = 0; direction < 8; direction++) {
-                    int adjX = point.x + dx[direction];
-                    int adjY = point.y + dy[direction];
-                    if (!isValid(adjX, adjY, grid)) {
-                        continue;
-                    }
-                    if (distance.containsKey(adjX * column + adjY)) { // 之前已经踩过这个点了
-                        continue;
+                int size = queue.size();
+                for (int i = 0; i < size; i++) {
+                    Coordinate point = queue.poll();
+                    if (point.x == destination.x && point.y == destination.y) {
+                        return steps;
                     }
 
-                    distance.put(adjX * column + adjY, distance.get(adjX * column + adjY) + 1); // 距离+1
-                    queue.offer(new Coordinate(adjX, adjY));
+                    for (int direction = 0; direction < 8; direction++) {
+                        int adjX = point.x + dx[direction];
+                        int adjY = point.y + dy[direction];
+                        if (!isValid(adjX, adjY, grid)) {
+                            continue;
+                        }
+
+                        // 走过这个点，置为不可再到达
+                        grid[adjX][adjY] = true;
+                        queue.offer(new Coordinate(adjX, adjY));
+                    }
                 }
-            }
+                steps++; // 步数加1，到下一次运动
+
+            } // while
 
             return -1;
         }
@@ -214,7 +215,7 @@ public class MatrixBFS {
             if (y < 0 || y >= grid[0].length) {
                 return false;
             }
-            return !grid[x][y]; // 0：可以踩 1：不能踩
+            return (grid[x][y] == false); // 0：可以踩 1：不能踩
         }
     }
 
@@ -235,7 +236,7 @@ public class MatrixBFS {
 
             int ans = Integer.MAX_VALUE;
 
-            // 遍历每一个点，如果是空地，计算到房子的距离和->最后比较返回最小
+            // 遍历每一个点，如果是空地，计算到房子的距离和->最后比较，返回最小
             for (int i = 0; i < grid.length; i++) {
                 for (int j = 0; j < grid[0].length; j++) {
                     if (grid[i][j] == EMPTY) {
@@ -246,6 +247,7 @@ public class MatrixBFS {
 
             return (ans == Integer.MAX_VALUE) ? -1 : ans;
         }
+        // 返回所有房子到当前点的距离和
         private int bfs(int[][] grid, int x, int y) {
             Queue<Coordinate> queue = new LinkedList<>();
             boolean[][] visited = new boolean[grid.length][grid[0].length];

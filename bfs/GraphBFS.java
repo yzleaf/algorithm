@@ -221,7 +221,7 @@ public class GraphBFS {
             }
 
             Queue<Integer> queue = new LinkedList<>();
-            for (int i = 0; i < inDegree.length; i++) { // 入度为0，没有先修课，先进队列
+            for (int i = 0; i < inDegree.length; i++) { // 入度为0，没有先修课的课程，先进队列
                 if (inDegree[i] == 0) {
                     queue.offer(i);
                 }
@@ -231,7 +231,7 @@ public class GraphBFS {
             while (!queue.isEmpty()) {
                 int course = queue.poll();
                 countCourses++; // 修完course这门课，count+1
-                int n = edges[course].size(); // course是先修课，修完可以修其他哪些课
+                int n = edges[course].size(); // course是先修课，修完可以修其他哪些课（这些课的indgree减一）
                 for (int i = 0; i < n; i++) {
                     int pointer = (int) edges[course].get(i); // 可以修的下一门课
                     inDegree[pointer]--;
@@ -267,7 +267,7 @@ public class GraphBFS {
             }
 
             Queue<Integer> queue = new LinkedList<>();
-            for (int i = 0; i < inDegree.length; i++) { // 入度为0，没有先修课，先进队列
+            for (int i = 0; i < inDegree.length; i++) { // 入度为0，没有先修课的课程，先进队列
                 if (inDegree[i] == 0) {
                     queue.offer(i);
                 }
@@ -304,6 +304,7 @@ public class GraphBFS {
     // 判断是否序列org能唯一地由seqs重构得出
     // 重构：一个最短的序列使得所有seqs里的序列都是它的子序列
     // 序列seqs [1,2], [1,3], [2,3] 可以唯一重构出 org[1,2,3]
+    // 序列seqs [1,2], [1,3] 不能唯一重构[1,2,3]，因为还有[1,3,2]
     public class SequenceReconstructionSolution {
         /**
          * @param org: a permutation of the integers from 1 to n
@@ -311,12 +312,14 @@ public class GraphBFS {
          * @return true if it can be reconstructed only one or false
          */
         public boolean sequenceReconstruction(int[] org, int[][] seqs) {
+            // 先构建出唯一的序列，再比较是否和给定的org相同
             Map<Integer, Set<Integer>> graph = buildGraph(seqs);
             List<Integer> topoOrder = getTopoOrder(graph);
 
             if (topoOrder == null || topoOrder.size() != org.length) {
                 return false;
             }
+
             for (int i = 0; i < org.length; i++) { // 比较每一位数据
                 if (org[i] != topoOrder.get(i)) {
                     return false;
@@ -328,7 +331,7 @@ public class GraphBFS {
         // Integer A -> 在它后面的所有数集合
         private Map<Integer, Set<Integer>> buildGraph(int[][] seqs) {
             Map<Integer, Set<Integer>> graph = new HashMap<>();
-            for (int[] seq : seqs) { // 把所有点放入Map
+            for (int[] seq : seqs) { // 把所有seqs中的点都放入Map
                 for (int i = 0; i < seq.length; i++) {
                     if (!graph.containsKey(seq[i])) { // 如果不包含当前点就添加进graph
                         graph.put(seq[i], new HashSet<Integer>());
@@ -370,6 +373,7 @@ public class GraphBFS {
 
             while (!queue.isEmpty()) {
                 if (queue.size() > 1) { // 队列里同时存在2个以上元素，重构序列（拓扑排序）就不唯一了
+                                        // 因为不知道要出哪一个（这两个没有先后）
                     return null;
                 }
 
