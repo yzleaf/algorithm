@@ -84,7 +84,7 @@ public class Combination {
 
         // 方法2，按元素个数，遍历每一层
         public List<List<Integer>> subsetsWithDup2(int[] nums) {
-            List<List<Integer>> results = new ArrayList<List<Integer>>();
+            List<List<Integer>> results = new ArrayList<>();
             if (nums == null) {
                 return results;
             }
@@ -94,12 +94,12 @@ public class Combination {
             }
             Arrays.sort(nums);
 
-            List<Integer> subset = new ArrayList<Integer>();
-            helper(nums, 0, subset, results);
+            List<Integer> subset = new ArrayList<>();
+            dfs(nums, 0, subset, results); // 从index=0开始的子集
 
             return results;
         }
-        private void helper(int[] nums, int startIndex, List<Integer> subset, List<List<Integer>> results) {
+        private void dfs(int[] nums, int startIndex, List<Integer> subset, List<List<Integer>> results) {
             results.add(new ArrayList<Integer>(subset));
 
             // 把剩余的所有元素依次添加到不同的subset里
@@ -110,7 +110,7 @@ public class Combination {
                     continue;
                 }
                 subset.add(nums[i]);
-                helper(nums, i + 1, subset, results);
+                dfs(nums, i + 1, subset, results);
                 subset.remove(subset.size() - 1); // 删掉刚加进来的数
             }
         }
