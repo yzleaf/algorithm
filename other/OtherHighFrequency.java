@@ -116,4 +116,38 @@ public class OtherHighFrequency {
             return s.substring(0, p) + (s.length() - 1 - p) + s.charAt(s.length() - 1);
         }
     }
+
+    // 4. identify celebrity
+    // 所有人都认识A，A只认识自己，A是celebrity
+    public class FindCelebritySolution {
+        // 遍历所有人，如果i认识candidate，那么i肯定不是名人；如果i不认识candidate，那么candidate肯定不是名人
+        public int findCelebrity(int n) {
+            int candidate = 0;
+            for (int i = 1; i < n; i++) {
+                // 如果candidate认识i，candidate肯定不是名人，赋值i继续往后看
+                // 最后得到不认识index=i之后所有人的candidate
+                if (knows(candidate, i)) {
+                    candidate = i;
+                }
+            }
+
+            for (int i = 0; i < candidate; i++) { // 第一次循环中index=i之前的没有检查
+                if (knows(candidate, i) || !knows(i, candidate)) {
+                    return -1;
+                }
+            }
+            for (int i = candidate + 1; i < n; i++) { // 第一次循环中只确认candidate不认index=i之后的人，这里要确认这些人认识candidate
+                if (!knows(i, candidate)) {
+                    return -1;
+                }
+            }
+
+            return candidate;
+        }
+
+        private boolean knows(int a, int b) { // a是否认识b
+            return true;
+        }
+    }
+
 }

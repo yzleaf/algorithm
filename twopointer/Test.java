@@ -42,9 +42,11 @@ public class Test {
 //        List<String> d = Arrays.asList("ale","apple","monkey","plea");
 //        String s7Res = solution.findLongestWord(s7, d);
 //        System.out.println(s7Res);
-        HashMap<Integer, Integer> hash = new HashMap<>();
-        hash.put(0,1);
-        System.out.println(hash.get(0));
-        System.out.println(hash.get(2));
+        String str1 = "\t\n\t\taaa";
+        String str2 = "aaa\t\t\taaabbbccc";
+        String[] str3 = str1.split("n");
+        System.out.println(str2.replaceAll("\t", ""));
+        System.out.println(str2.lastIndexOf('\t'));
+        System.out.println("------");
     }
 }
