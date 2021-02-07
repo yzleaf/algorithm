@@ -9,7 +9,7 @@ public class BinaryTreeBFS {
     // 1. Binary Tree Level Order Traversal
     // 102
     // 给出一棵二叉树，返回其节点值的层次遍历（逐层从左往右访问）
-    public class BFSSolution {
+    public class BFSLevelSolution {
         public List<List<Integer>> levelOrder(TreeNode root) {
             List<List<Integer>> result = new ArrayList<>();
 

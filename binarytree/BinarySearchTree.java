@@ -175,4 +175,34 @@ public class BinarySearchTree {
         }
     }
 
+    // 4. Convert BST to Greater Tree
+    // High Frequency
+    // 使原始BST上每个节点的值都更改为在原始树中大于等于该节点值的节点值之和(包括该节点)
+    // 输入 : {5,2,13}
+    //              5
+    //            /   \
+    //           2     13
+    // 输出 : {18,20,13}
+    //             18
+    //            /   \
+    //          20     13
+    public class GreaterTreeSolution {
+        // 考查的是二叉树的中序遍历，由于要将节点累加上大于等于它的所有值，所以要优先遍历右子树，得到所有大于等于当前值的和。
+        // 然后更新当前节点的值，再搜索左子树的值。
+        // 右根左
+        int sum = 0;
+        public TreeNode convertBST(TreeNode root) {
+            travel(root);
+            return root;
+        }
+        private void travel(TreeNode cur) {
+            if (cur == null) {
+                return;
+            }
+            travel(cur.right);
+            sum += cur.val;
+            cur.val = sum; // 更新当前节点的值
+            travel(cur.left);
+        }
+    }
 }
