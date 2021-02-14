@@ -141,7 +141,7 @@ public class Partition {
             int pivot = nums[(start + end) / 2];
 
             while (left <= right) {
-                while (left <= right && nums[left] < pivot) {
+                while (left <= right && nums[left] < pivot) { // 如果用nums<=pivot，整个数组元素相等时候，不交换，最后一直递归
                     left++;
                 }
                 while (left <= right && nums[right] > pivot) {
