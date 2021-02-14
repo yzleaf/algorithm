@@ -8,21 +8,21 @@ public class Permutation {
     // 给定一个数字列表，返回其所有可能的排列
     // 假设没有重复数字
     public class Permute1Solution {
+        List<List<Integer>> result;
 
         public List<List<Integer>> permute(int[] nums) {
-            List<List<Integer>> result = new ArrayList<>();
+            result = new ArrayList<>();
             if (nums == null || nums.length == 0) {
                 return result;
             }
 
             boolean[] visited = new boolean[nums.length];
             List<Integer> permutation = new ArrayList<>();
-            helper(nums, visited, permutation, result);
+            helper(nums, visited, permutation);
 
             return result;
         }
-        private void helper(int[] nums, boolean[] visited, List<Integer> permutation,
-                       List<List<Integer>> result) {
+        private void helper(int[] nums, boolean[] visited, List<Integer> permutation) {
 
             if (permutation.size() == nums.length) {
                 result.add(new ArrayList<Integer>(permutation));
@@ -36,7 +36,7 @@ public class Permutation {
 
                 permutation.add(nums[i]);
                 visited[i] = true;
-                helper(nums, visited, permutation, result);
+                helper(nums, visited, permutation);
 
                 permutation.remove(permutation.size() - 1);
                 visited[i] = false;
@@ -45,22 +45,31 @@ public class Permutation {
     }
 
     // 2. 带重复元素的排列 · Permutations II
+    // 输入：[1,2,2]
+    // 输出：
+    // [
+    //  [1,2,2],
+    //  [2,1,2],
+    //  [2,2,1]
+    // ]
     public class Permute2Solution {
+        List<List<Integer>> result;
+
         public List<List<Integer>> permute(int[] nums) {
-            List<List<Integer>> result = new ArrayList<>();
+            result = new ArrayList<>();
             if (nums == null || nums.length == 0) {
                 return result;
             }
 
-            Arrays.sort(nums);
+            Arrays.sort(nums); // 排序为了后续去除重复元素
+
             boolean[] visited = new boolean[nums.length];
             List<Integer> permutation = new ArrayList<>();
-            helper(nums, visited, permutation, result);
+            helper(nums, visited, permutation);
 
             return result;
         }
-        private void helper(int[] nums, boolean[] visited, List<Integer> permutation,
-                            List<List<Integer>> result) {
+        private void helper(int[] nums, boolean[] visited, List<Integer> permutation) {
 
             if (permutation.size() == nums.length) {
                 result.add(new ArrayList<Integer>(permutation));
@@ -79,7 +88,7 @@ public class Permutation {
 
                 permutation.add(nums[i]);
                 visited[i] = true;
-                helper(nums, visited, permutation, result);
+                helper(nums, visited, permutation);
 
                 permutation.remove(permutation.size() - 1);
                 visited[i] = false;
@@ -91,22 +100,40 @@ public class Permutation {
     // n个皇后放置在n*n的棋盘上，皇后彼此之间不能相互攻击
     // 给定一个整数n，返回所有不同的n皇后问题的解决方案
     // 每个解决方案包含一个明确的n皇后放置布局，其中“Q”和“.”分别表示一个皇后和一个空位置。
+    // 输入:4
+    // 输出:
+    // [
+    //  // Solution 1
+    //  [".Q..",
+    //   "...Q",
+    //   "Q...",
+    //   "..Q."
+    //  ],
+    //  // Solution 2
+    //  ["..Q.",
+    //   "Q...",
+    //   "...Q",
+    //   ".Q.."
+    //  ]
+    // ]
     public class NQueensSolution {
+        List<List<String>> result;
+
         List<List<String>> solveNQueens(int n) {
-            List<List<String>> result = new ArrayList<>();
+            result = new ArrayList<>();
             if (n <= 0) {
                 return result;
             }
 
             List<Integer> cols = new ArrayList<>();
-            search(result, cols, n);
+            search(cols, n);
 
             return result;
         }
         // 已经放置了n个皇后，cols表示每个皇后所在的列
         // n皇后一定在n行
-        private void search(List<List<String>> result, List<Integer> cols, int n) {
-            if (cols.size() == n) { // 已经放置完成一种方法
+        private void search(List<Integer> cols, int n) {
+            if (cols.size() == n) { // 已经放置完成一种方案
                 result.add(draw(cols));
                 return;
             }
@@ -117,7 +144,7 @@ public class Permutation {
                 }
                 // 如果合法，放在当前位置，递归下一行的皇后
                 cols.add(colIndex);
-                search(result, cols, n);
+                search(cols, n);
                 cols.remove(cols.size() - 1);
             }
         }
@@ -148,7 +175,5 @@ public class Permutation {
             return drawRes;
         }
     }
-
-
 
 }
