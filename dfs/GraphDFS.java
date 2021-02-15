@@ -12,8 +12,10 @@ public class GraphDFS {
         // .1 从end到start做一次BFS，并且把离end的距离都保存在distance中
         // .2 在从start到end做一次DFS，每走一步必须确保离end的distance越来越近
 
+        List<List<String>> ladders;
+
         public List<List<String>> findLadders(String start, String end, Set<String> dict) {
-            List<List<String>> ladders = new ArrayList<List<String>>();
+            ladders = new ArrayList<List<String>>();
             if (dict == null || dict.size() == 0) {
                 return ladders;
             }
@@ -30,27 +32,28 @@ public class GraphDFS {
             bfs(map, distance, end, start, dict);
 
             List<String> path = new ArrayList<>(); // 每一条路径
-
             // start -> end的dfs，输出
-            dfs(map, distance, start, end, ladders, path);
+            dfs(map, distance, start, end, path);
 
             return ladders;
         }
 
         private void dfs(Map<String, List<String>> map, Map<String, Integer> distance,
-                         String current, String end,
-                         List<List<String>> ladders, List<String> path) {
+                         String current, String end, List<String> path) {
+
             path.add(current);
+
             if (current.equals(end)) { // 已到终点
                 ladders.add(new ArrayList<String>(path));
             } else {
                 for (String next : map.get(current)) { // 当前点邻居满足条件的所有都可以再递归dfs
                     if (distance.containsKey(next) && // BFS中distance和map是同步更新的，可以删除这行
                             distance.get(current) == distance.get(next) + 1) { // 保证是最短路径
-                        dfs(map, distance, next, end, ladders, path);
+                        dfs(map, distance, next, end, path);
                     }
                 }
             }
+
             path.remove(path.size() - 1); // 和add配套，必须都要执行（相当于要回到上一层parent节点进行下一个next操作）
 
         }
@@ -72,17 +75,18 @@ public class GraphDFS {
                 for (String next : nextList) {
                     map.get(next).add(current); // 所有next的列表中都要加入current
                     if (!distance.containsKey(next)) {
-                        distance.put(next, distance.get(current) + 1); // current离String start(即target end点)的距离+1
+                        distance.put(next, distance.get(current) + 1); // next = current离String start(即target end点)的距离+1
                         // 先从current=0开始
                         queue.offer(next);
                     }
-                    // 如果是contain情况，说明之前节点BFS处理过，不用再管
+                    // 如果是contain情况，说明之前节点BFS处理过（距离肯定更短），不用再管
                 }
             } // while
         }
 
         private List<String> expand(String s, Set<String> dict) { // 经过一次变换得到的string列表
             List<String> expansions = new ArrayList<String>();
+
             for (int i = 0; i < s.length(); i++) {
                 for (char ch = 'a'; ch <= 'z'; ch++) {
                     if (ch != s.charAt(i)) { // 变换当前字母

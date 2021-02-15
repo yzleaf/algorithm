@@ -57,8 +57,10 @@ public class Array {
     }
 
     // 3. Intersection of Two Arrays
-    // 结果中的每个元素必须是唯一的。
+    // 求两个数组的交集，结果中的每个元素必须是唯一的。
     // 结果需要为升序。
+    // 输入: nums1 = [1, 2, 2, 1], nums2 = [2, 2],
+    // 输出: [2]
     public class IntersectionSolution {
         // 方法1 hashset
         public int[] intersection1(int[] nums1, int[] nums2) {
@@ -97,7 +99,7 @@ public class Array {
             Arrays.sort(nums2);
 
             int i = 0, j = 0, index = 0;
-            int[] temp = new int[nums1.length]; // 交集，小于任一个数组长度，无所谓取哪个
+            int[] temp = new int[nums1.length]; // 放交集的数组，小于任一个数组长度，无所谓取哪个
             while (i < nums1.length && j < nums2.length) {
                 if (nums1[i] == nums2[j]) {
                     if (index == 0 || temp[index-1] != nums1[i]) { // 去除重复点
@@ -209,9 +211,9 @@ public class Array {
                            Integer.MAX_VALUE;
 
             if (halfKthA < halfKthB) {
-                return findKth(A, startOfA + k/2, B, startOfB, k - k/2);
+                return findKth(A, startOfA + k/2, B, startOfB, k - k/2); // A的靠右部分 B的靠左部分
             } else {
-                return findKth(A, startOfA, B, startOfB + k/2, k - k/2);
+                return findKth(A, startOfA, B, startOfB + k/2, k - k/2); // A的靠左部分 B的靠右部分
             }
         }
     }

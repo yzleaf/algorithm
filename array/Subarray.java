@@ -40,7 +40,7 @@ public class Subarray {
             int result = Integer.MIN_VALUE;
             for (int i = 0; i < nums.length; i++) {
                 sum += nums[i];
-                result = Math.max(result, sum - prefixSumMinSoFar); // 到目前为止最大的差值
+                result = Math.max(result, sum - prefixSumMinSoFar); // 到目前为止最大的差值（某一区间和的最大值=sum-prefixSumMinSoFar）
                 prefixSumMinSoFar = Math.min(sum, prefixSumMinSoFar); // 更新最小的prefix sum 为下一个“到目前为止”做准备
             }
 
@@ -99,7 +99,7 @@ public class Subarray {
             Map<Integer, Integer> hash = new HashMap<>();
             // 前缀和数组会多出一个不取任何数，当前的前缀和为0
             int[] prefixSum = new int[nums.length + 1];
-            hash.put(0, -1); // index为-1，前缀和为0
+            hash.put(0, -1); // (sum, index), index为-1，前缀和为0
                              // 这个数据存在的意义在于如果一个序列从开头到当前最小，则左边起始位是-1 + 1 = 0
             int sum = 0;
             prefixSum[0] = 0;
@@ -113,7 +113,7 @@ public class Subarray {
                 }
 
                 hash.put(sum, i);
-                prefixSum[i + 1] = sum; // 放置前缀和
+                prefixSum[i + 1] = sum; // 放置前缀和, 用来排序的数组
             }
 
             // 对前缀和数组排序
@@ -130,7 +130,7 @@ public class Subarray {
                     right = prefixSum[i + 1];
                 }
             }
-            if (hash.get(left) < hash.get(right)) {
+            if (hash.get(left) < hash.get(right)) { // 根据sum得到index
                 result[0] = hash.get(left) + 1;
                 result[1] = hash.get(right);
             } else { // >=

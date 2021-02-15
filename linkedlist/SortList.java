@@ -18,7 +18,7 @@ public class SortList {
 
             ListNode right = sortList(mid.next);
             mid.next = null;
-            ListNode left = sortList(head);
+            ListNode left = sortList(head); // 左半边，要先让mid.next为null
 
             return merge(left, right);
         }
@@ -56,10 +56,12 @@ public class SortList {
     }
 
     // 2. convert sorted list to balanced bst
+    // 109
     // 给出一个所有元素以升序排序的单链表，将它转换成一棵高度平衡的二叉搜索树
     public class SortedListToBSTSolution {
         // O(nlogn)
         public TreeNode sortedListToBST(ListNode head) {
+
             return buildTree(head, null);
         }
 
@@ -104,16 +106,17 @@ public class SortList {
             return length;
         }
 
-        public TreeNode buildTree(int left, int right) {
+        public TreeNode buildTree(int left, int right) { // 当前链表左端点 右端点
             if (left > right) {
                 return null;
             }
             int mid = (left + right) / 2;
-            TreeNode root = new TreeNode(0);
+            TreeNode root = new TreeNode(0); // 先用0把BST构建起来，后续再换数
             // 左根右
             root.left = buildTree(left, mid - 1);
             root.val = globalHead.val;
             globalHead = globalHead.next; // 当前层head往后走一步，BST中序遍历根节点的值和链表升序对应上
+                                          // 先构建好BST的中序遍历结构，再按顺序globalHead的顺序把值填上去
             root.right = buildTree(mid + 1, right);
             return root;
         }

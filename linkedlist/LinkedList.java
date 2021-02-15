@@ -16,10 +16,12 @@ public class LinkedList {
          */
         // .1 iteration
         public ListNode reverse(ListNode head) {
-            //prev表示前继节点
+            // prev表示原来链表中，当前节点的前继节点
             ListNode prev = null;
+
+            // head和prev同时往后走
             while (head != null) {
-                //temp记录下一个节点，head是当前节点
+                // temp记录下一个节点，head是当前节点
                 ListNode temp = head.next;
                 head.next = prev;
                 prev = head;
@@ -47,6 +49,7 @@ public class LinkedList {
     // 将这个链表从头指针开始每k个翻转一下
     // 链表元素个数不是k的倍数，最后剩余的不用翻转
     public class ReverseKGroupSolution {
+        // 方法1难理解一点
         public ListNode reverseKGroup(ListNode head, int k) {
 
             ListNode dummy = new ListNode(0); // 指向整个链表的head节点
@@ -114,26 +117,27 @@ public class LinkedList {
             ListNode curr = head;
 
             while (curr != null) {
-                // get the tail node in a k-group
+                // 1. get the tail node in a k-group
                 int count = 1;
-                ListNode tail = curr;
+                ListNode tail = curr; // curr是每k-group的起始点
                 while (tail != null && count < k) {
                     tail = tail.next;
                     count++;
                 }
-                // if the rest nodes length is less than k
-                // then remains the same
+                // 退出while循环的时候只有tail不空，count等于k，就翻转
+
+                // 退出while循环的时候tail空了，即表示剩余node数量小于k，不翻转，所以直接退出
                 if (tail == null) {
                     break;
                 }
 
-                // do the k-group reverse
+                // 2. do the k-group reverse
                 //     prev   (before reversed)     next
                 //      |             |              |
                 // 2 -> 1   ->    (3  ->  4)    ->   5
                 //                 |      |
                 //                curr   tail
-                ListNode next = tail.next;
+                ListNode next = tail.next; // 先存储k group后续的一个node
                 reverse(curr, k);
 
                 //     prev   (after reversed)     next
@@ -185,6 +189,7 @@ public class LinkedList {
             if (head == null) {
                 return null;
             }
+            // 原始node -> 新node，当前node复制完成时加入map
             Map<RandomListNode, RandomListNode> map = new HashMap<>();
             RandomListNode dummy = new RandomListNode(0);
             RandomListNode pre = dummy;
@@ -193,7 +198,8 @@ public class LinkedList {
             // pre和newNode指向新的链表
 
             while (head != null) {
-                if (map.containsKey(head)) {
+                // 复制当前node
+                if (map.containsKey(head)) { // 复制随机指针的时候可能已经新建过，这时候map中就可能contain了
                     newNode = map.get(head);
                 } else {
                     newNode = new RandomListNode(head.label);
@@ -201,17 +207,17 @@ public class LinkedList {
                 }
                 pre.next = newNode; // 与上一个节点连接
 
-                if (head.random != null) {
+                if (head.random != null) { // 复制random指向
                     if (map.containsKey(head.random)) {
-                        newNode.random = map.get(newNode.random);
+                        newNode.random = map.get(head.random);
                     } else {
-                        newNode.random = new RandomListNode(newNode.label);
+                        newNode.random = new RandomListNode(head.random.label);
                         map.put(head.random, newNode.random);
                     }
                 }
 
                 pre = newNode; // pre往后走一步到现在新增的这个head节点
-                head = head.next; // head往后走一步
+                head = head.next; // 原链表head往后走一步
             }
             return dummy.next;
         }
@@ -238,7 +244,7 @@ public class LinkedList {
         }
         private void copyRandom(RandomListNode head) {
             while (head != null) {
-                if (head.next.random != null) { // 新建的newNode
+                if (head.next.random != null) { // 新建的newNode是否有random
                     head.next.random = head.random.next;
                 }
                 head = head.next.next;
@@ -286,6 +292,10 @@ public class LinkedList {
 
     // 5. Intersection of Two Linked Lists
     // 找到两个单链表最开始的交叉节点
+    // Input:
+    // 1->2->3->4->5->6->7->8->9->10->11->12->13->null
+    // 6->7->8->9->10->11->12->13->null
+    // Output: Intersected at 6
     public class GetIntersectionNode {
         public ListNode getIntersectionNode(ListNode headA, ListNode headB) {
             if (headA == null || headB == null) {
