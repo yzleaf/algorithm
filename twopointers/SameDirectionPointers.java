@@ -15,14 +15,17 @@ public class SameDirectionPointers {
 
             int[] sums = new int[nums.length - k + 1];
             for (int i = 0; i < k; i++) { // 第一个前k个数的前缀和
-                sums[0] += sums[i];
+                sums[0] += nums[i];
             }
+
             for (int i = 1; i < sums.length; i++) {
                 // 减去头部元素，加上尾部元素
                 sums[i] = sums[i-1] - nums[i-1] + nums[i+k-1];
             }
 
             return sums;
+
+            // 两个指针，一个指向新数组sums，一个指向原数组nums
         }
     }
 
@@ -33,7 +36,7 @@ public class SameDirectionPointers {
         // 原数组指针向后扫，遇到非0的数就赋值给新数组的指针位置，并将新数组指针向后移动
         public void moveZeroes(int[] nums) {
             int left = 0, right = 0;
-            while (right < nums.length) {
+            while (right < nums.length) { // 只复制非0的数，复制结束后剩下的就是0
                 if (nums[right] != 0) {
                     nums[left] = nums[right];
                     left++;
@@ -65,7 +68,7 @@ public class SameDirectionPointers {
             }
 
             int resultNumber = 0;
-            for (Integer num : hash) {
+            for (Integer num : hash) { // hash表自动合并后，把hash表里的元素复制出来
                 nums[resultNumber] = num;
                 resultNumber++;
             }
@@ -80,7 +83,8 @@ public class SameDirectionPointers {
             }
 
             Arrays.sort(nums);
-            // 把不相等的数全部放到数组的最前面
+
+            // 把不相等的数全部放到nums数组的最前面
             int newIndex = 0;
             for (int i = 0; i < nums.length; i++) {
                 if (nums[i] != nums[newIndex]) { // newIndex是新放入数组的数，当前i是否与之相等（重复）
@@ -88,7 +92,7 @@ public class SameDirectionPointers {
                     nums[newIndex] = nums[i];
                 }
             }
-            return newIndex + 1;
+            return newIndex + 1; // 个数
         }
     }
 

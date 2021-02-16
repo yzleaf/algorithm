@@ -1,7 +1,5 @@
 package twopointers;
 
-import array.Array;
-
 import java.util.*;
 
 public class OppositeDirectionPointers {
@@ -27,6 +25,7 @@ public class OppositeDirectionPointers {
                 while (end >= 0 && !Character.isLetterOrDigit(s.charAt(end))) {
                     end--;
                 }
+
                 // 将字符串中的字母全部转换为小写，非字母不受影响
                 if (Character.toLowerCase(s.charAt(start)) != Character.toLowerCase(s.charAt(end))) {
                     return false;
@@ -52,8 +51,8 @@ public class OppositeDirectionPointers {
 
             offset = offset % str.length;
             reverse(str, 0, str.length - 1);
-            reverse(str, 0, offset - 1);
-            reverse(str, offset, str.length - 1);
+            reverse(str, 0, offset - 1); // 前半边翻转
+            reverse(str, offset, str.length - 1); // 后半边翻转
         }
         private void reverse(char[] str, int start, int end) {
             for (int i = start, j = end; i < j; i++, j--) {
@@ -92,9 +91,6 @@ public class OppositeDirectionPointers {
                 nums.set(j, temp);
             }
         }
-
-
-
     }
 
 }

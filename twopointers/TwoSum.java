@@ -59,9 +59,8 @@ public class TwoSum {
                     break;
                 }
             }
-            int[] ans = new int[2];
-            ans[0] = i;
-            ans[1] = j;
+
+            int[] ans = {i, j};
             Arrays.sort(ans);
             return ans;
         }
@@ -207,7 +206,7 @@ public class TwoSum {
                     if (S[left] + S[right] > S[i]) {
                         result += (right - left); // 这个区间里的所有数都可以组成三角形
                         right --;
-                    } else {
+                    } else { // <= 要把最小的边往上加
                         left ++;
                     }
                 }
@@ -233,7 +232,7 @@ public class TwoSum {
                 if (nums[left] + nums[right] <= target) {
                     result += right - left;
                     left ++;
-                } else { // >
+                } else { // > 把大的数往下减
                     right --;
                 }
             }
@@ -335,9 +334,9 @@ public class TwoSum {
             }
             return (int)nearest;
         }
-    }
-    public class ThreeSumCLosetSolution2AsTwoClosest {
-        public int threeSumClosest(int[] nums, int target) {
+
+        // 方法2 类似TwoClosest
+        public int threeSumClosest2(int[] nums, int target) {
             Arrays.sort(nums);
             if (nums == null || nums.length < 3) {
                 return 0;
@@ -428,6 +427,7 @@ public class TwoSum {
     // 给定一个排序后的整数数组，找到两个数的 差 等于目标值。
     // 返回一个包含两个数字的列表[num1, num2], 使得num1与num2的差为target，同时num1必须小于num2
     public class TwoSumDifferenceSolution {
+        // i和j同方向，都向右
         // num[j]-num[i]< target时，说明j太小，于是我们将j++，直到num[j]-num[i] >= target
         // 若num[j]-num[i] > target，我们将i++
         // 若num[j]-num[i] = target说明我们找到答案
@@ -440,7 +440,7 @@ public class TwoSum {
             int j = 1;
             // j指针只往后走一遍，整体复杂度O(n)
             for (int i = 0; i < nums.length; i++) {
-                // 上一轮i，在j-1时候差值<target，j时候差值>target
+                // 上一轮i，在j-1时候差值<target，j时候差值>target（while循环做的工作）
                 // 这一轮i增大了，j-1位置只有可能差值更小于target，因此j之前的位置都不可能
                 j = Math.max(j, i + 1);
                 while (j < nums.length && nums[j] - nums[i] < target) {

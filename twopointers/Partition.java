@@ -154,10 +154,10 @@ public class Partition {
                 }
             }
 
-            if (k <= right) {
+            if (k <= right) { // 在左半边
                 return partition(nums, start, right, k);
             }
-            if (k >= left) {
+            if (k >= left) { // 在右半边
                 return partition(nums, left, end, k);
             }
             return nums[k]; // k在right和left之间，k位置一定是最后所在的位置
@@ -165,7 +165,7 @@ public class Partition {
     }
 
     // 3. Partition Array by Odd and Even
-    // 分割一个整数数组，使得奇数在前偶数在后
+    // 分割一个整数数组，使得奇数在前 偶数在后
     public class PartitionArrayOddEvenSolution {
         // 头指针定位到从前到后的第一个偶数，尾指针定位到从后到前的第一个奇数，两者交换即可
         // 直到尾指针在头之前前面
@@ -336,7 +336,7 @@ public class Partition {
             while (index < len) {
                 int temp = colors[index] - 1; // 因为数组下标从0开始，所以需要-1
 
-                if (colors[index] <= 0) { // 当前已经计数的位，直接跳过
+                if (colors[index] <= 0) { // 当前是用来计数的位，直接跳过
                     index++;
                 } else { // 当前是color，需要计数
                     if (colors[temp] <= 0) { // 对应的位置已经计数
@@ -346,12 +346,13 @@ public class Partition {
                     } else { // 对应的位置还没用来计数，需要保存和交换这个位置的数
                         swap(colors, index, temp);
                         colors[temp] = -1;
+                        // index没有变化，下次还是看这个index的数据
                     }
                 }
             }
 
             // 倒着输出
-            int i = len - 1; // i是输出位置的下标
+            int i = len - 1; // i是输出颜色个数的颜色下标
             while (k > 0) { // k个数，k肯定在最后面
                 for (int j = 0; j > colors[k - 1]; j--) {
                     colors[i] = k;
