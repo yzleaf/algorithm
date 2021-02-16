@@ -136,23 +136,25 @@ public class LRU {
                 return -1;
             }
 
-            // 如果存在，删除当前节点
+            // 如果存在
+            // 先删除当前节点
             Node curr = hash.get(key);
             curr.prev.next = curr.next;
             curr.next.prev = curr.prev;
 
-            // 当前节点添加到末尾（因为最近使用）
+            // 再当前节点添加到末尾（因为最近使用）
             addToTail(curr);
 
             return curr.value;
         }
 
         public void set(int key, int value) {
-            if (get(key) != -1) { // 存在node，直接移到末尾（get函数可以实现移到末尾）
-                hash.get(key).value = value; // 更新value
+            if (get(key) != -1) { // .1 缓存中存在node，直接移到末尾（get函数可以实现移到末尾）
+                hash.get(key).value = value; // 更改value值
                 return;
             }
 
+            // .2 缓存中不存在node，要新建且放入队尾
             if (hash.size() == capacity) { // 存储空间已满，需要先删除头节点，再添加尾节点（后面一起操作）
                 hash.remove(head.next.key);
                 head.next = head.next.next;
@@ -169,7 +171,7 @@ public class LRU {
 
 
         private void addToTail(Node curr) { // 把当前节点添加到末尾
-            // current和prev连起来
+            // current和tail的prev连起来
             curr.prev = tail.prev;
             curr.prev.next = curr;
             // current和tail连起来

@@ -6,27 +6,31 @@ public class HashOther {
     // 1. Anagrams
     // 给出一个字符串数组S，找到其中所有的乱序字符串(Anagram)
     // 如果是乱序字符串：那么他存在一个字母集合相同，但顺序不同的字符串也在S中
+    // 输入:["lint", "intl", "inlt", "code"]
+    // 输出:["lint", "inlt", "intl"]
     public class AnagramsSolution {
-        // 方法1 排序
+        // 方法1 排序+Hashmap
         public List<String> anagrams(String[] strs) {
             List<String> result = new ArrayList<>();
             if (strs == null || strs.length == 0) {
                 return result;
             }
 
-            // Map存放排序后的String -> 所有拥有这些字母的String
+            // Map存放：排序后的String -> 所有拥有这些字母的原始String
             Map<String, ArrayList<String>> map = new HashMap<>();
             for (int i = 0; i < strs.length; i++) {
-                // string转化为char array排序
+                // string转化为char array并按字母排序
                 char[] arr = strs[i].toCharArray();
                 Arrays.sort(arr);
                 String s = String.valueOf(arr);
 
                 // 所有拥有相同字母的string排序后就一致了
-                if (!map.containsKey(s)) {
-                    // 如果没有包括这个排序的string 需要新建
-                    map.put(s, new ArrayList<String>());
-                }
+
+//                if (!map.containsKey(s)) {
+//                    // 如果没有包括这个排序的string 需要新建
+//                    map.put(s, new ArrayList<String>());
+//                }
+                map.putIfAbsent(s, new ArrayList<String>());
                 // 找到String对应的value并且添加当前字符串（拥有相同的排序string，即乱序字符串）
                 map.get(s).add(strs[i]);
             }
@@ -51,15 +55,16 @@ public class HashOther {
             Map<Integer, ArrayList<String>> map = new HashMap<>();
 
             for (String str : strs) {
-                int[] count = new int[26]; // 记录每个字母出现的次数，判读是不是相同的乱序字符串
+                int[] count = new int[26]; // 记录每个字母出现的次数，判断是不是相同的乱序字符串
                 for (int i = 0; i < str.length(); i++) {
                     count[str.charAt(i) - 'a'] ++;
                 }
 
                 int hash = getHash(count);
-                if (!map.containsKey(hash)) { // 没包含，要新建
-                    map.put(hash, new ArrayList<String>());
-                }
+//                if (!map.containsKey(hash)) { // 没包含，要新建
+//                    map.put(hash, new ArrayList<String>());
+//                }
+                map.putIfAbsent(hash, new ArrayList<String>());
                 map.get(hash).add(str);
             }
 
