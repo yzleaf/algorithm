@@ -14,7 +14,7 @@ public class Heap {
         // 既然求第n小的丑数，可以采用最小堆来解决。每次弹出堆中最小的丑数，然后检查它分别乘以2、3和 5后的数是否生成过，如果是第一次生成，那么就放入堆中。第n个弹出的数即为第n小的丑数。
         public int nthUglyNumber(int n) {
             Queue<Long> minheap = new PriorityQueue<>(); // 默认最小堆
-            Set<Long> seen = new HashSet<>();
+            Set<Long> seen = new HashSet<>(); // 当前丑数是否生成过
 
             minheap.offer(1L); // 添加第一个丑数1
             seen.add(1L);
@@ -94,7 +94,7 @@ public class Heap {
 
             for (int i = 0; i < lists.size(); i++) {
                 if (lists.get(i) != null) {
-                    minHeap.add(lists.get(i)); // lists里的第i串链表的head
+                    minHeap.offer(lists.get(i)); // lists里的第i串链表的head
                 }
             }
             
@@ -106,7 +106,7 @@ public class Heap {
                 tail.next = head;
                 tail = head; // tail往下走到当前head
                 if (head.next != null) {
-                    minHeap.offer((head.next));
+                    minHeap.offer(head.next);
                 }
             }
 
@@ -198,9 +198,11 @@ public class Heap {
             Map<Integer, PriorityQueue<Integer>> hash = new HashMap<>(); // 每个学生 -> 所有课的成绩
 
             for (Record r : results) {
-                if (!hash.containsKey(r.id)) {
-                    hash.put(r.id, new PriorityQueue<Integer>()); // 每个学生ID对应的成绩组成一个堆
-                }
+//                if (!hash.containsKey(r.id)) {
+//                    hash.put(r.id, new PriorityQueue<Integer>()); // 每个学生ID对应的成绩组成一个堆
+//                }
+                hash.putIfAbsent(r.id, new PriorityQueue<Integer>()); // 每个学生ID对应的成绩组成一个堆
+
                 PriorityQueue<Integer> minHeap = hash.get(r.id);
                 if (minHeap.size() < 5) {
                     minHeap.offer(r.score);
@@ -245,10 +247,10 @@ public class Heap {
                 @Override
                 public int compare(Point a, Point b) {
                     int diff = getDistance(b, origin) - getDistance(a, origin);
-                    if (diff == 0) { // 距离相等，取x近的（所以最大堆大的进）
+                    if (diff == 0) { // 距离相等，取x近的（所以最大堆大的进）（diff此时为距离差）
                         diff = b.x - a.x;
                     }
-                    if (diff == 0) { // 距离相等，x也相等，取y近的
+                    if (diff == 0) { // 距离相等且x也相等，取y近的（diff此时为x值差）
                         diff = b.y - a.y;
                     }
                     return diff;
@@ -299,8 +301,8 @@ public class Heap {
             PriorityQueue<Element> minHeap = new PriorityQueue<>(arrays.length,
                                                                  (a, b) -> (a.val - b.val));
             // 每一行的第一个数（最小值）进heap
-            for (int i = 0; i < arrays.length; i++) {
-                if (arrays[i].length > 0) {
+            for (int i = 0; i < arrays.length; i++) { // 行数
+                if (arrays[i].length > 0) { // 每行的列数
                     Element ele = new Element(i, 0, arrays[i][0]);
                     minHeap.offer(ele);
                     totalSize += arrays[i].length; // 每一行的总个数相加
@@ -313,6 +315,7 @@ public class Heap {
                 Element ele = minHeap.poll();
                 result[index] = ele.val;
                 index++;
+
                 // 所在行的下一个元素进堆
                 if (ele.col + 1 < arrays[ele.row].length) { // 所在行的元素个数
                     ele.col++;
@@ -358,7 +361,7 @@ public class Heap {
                     maxHeap.offer(minHeapRoot);
                     minHeap.offer(maxHeapRoot);
                 }
-            } else { // 如果是奇数，说明原来不平衡了，max多一个，要让max减一个，min加一个
+            } else { // 如果是奇数，说明原来不平衡了，max多一个，此时数应该先进minHeap（在下一轮的时候判断两边谁大确认最终位置）
                 minHeap.offer(maxHeap.poll());
             }
             numOfElements ++;
@@ -373,7 +376,7 @@ public class Heap {
     public class TopkLargestSolution1 {
         // 方法1 堆排序
         public int[] topK(int[] nums, int k) {
-            PriorityQueue<Integer> minHeap = new PriorityQueue<>(k);
+            PriorityQueue<Integer> minHeap = new PriorityQueue<>(k+1);
 
             for (int i = 0; i < nums.length; i++) {
                 minHeap.offer(nums[i]);
@@ -384,7 +387,7 @@ public class Heap {
 
             int[] result = new int[k];
             for (int i = 0; i < k; i++) {
-                result[k - i - 1] = minHeap.poll();
+                result[k - i - 1] = minHeap.poll(); // 从后往前
             }
 
             return result;
@@ -396,7 +399,7 @@ public class Heap {
             quickSelect(nums, 0, nums.length - 1, nums.length - k);
 
             int[] result = new int[k];
-            for (int i = nums.length - 1, j = 0; i < k; i--, j++) { // 输出后半部分大于k的数
+            for (int i = nums.length - 1, j = 0; j < k; i--, j++) { // 输出后半部分大于k的数
                 result[j] = nums[i];
             }
 
@@ -451,7 +454,7 @@ public class Heap {
             }
         }
         // 方法1 最小堆
-        // 定义一个小根堆, 起始仅仅放入第一行第一列的元素.
+        // 定义一个小根堆, 起始仅仅放入第一行第一列[0][0]的元素.
         // 循环k次, 每一次取出一个元素, 然后把该元素右方以及下方的元素放入堆中, 第k次取出的元素即为答案
         public int kthSmallest(int[][] matrix, int k) {
             // 向右和向下两个坐标
@@ -474,7 +477,7 @@ public class Heap {
                     if (nextX < row && nextY < col && !record[nextX][nextY]) {
                         record[nextX][nextY] = true;
                         next.val = matrix[nextX][nextY];
-                        minHeap.offer((next));
+                        minHeap.offer(next);
                     }
                 }
             }
@@ -483,6 +486,7 @@ public class Heap {
         }
 
         // 方法2  二分
+        // 起始数区间是[0][0] - [n][m]，二分查找中间的数mid排多少位
         // 从左下角开始，目标值更大->往右找，目标值更小->往上找
     }
 }

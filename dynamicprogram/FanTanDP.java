@@ -103,7 +103,7 @@ public class FanTanDP {
             // 按宽度升序排列
             // 如果宽度一样，则按高度降序排列（因为如果高度升序的话，会把相同宽度的信封这个数组也算作一个增加的序列，但实际上宽度相同是不能嵌套的）
             Arrays.sort(envelopes, (a, b) -> a[0] != b[0] ? a[0] - b[0]
-                                                          : b[1] - a[0]);
+                                                          : b[1] - a[1]);
 
             // 对高度数组寻找 LIS
             int[] height = new int[n];
