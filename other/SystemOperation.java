@@ -27,7 +27,7 @@ public class SystemOperation {
             while (i < n) {
                 if (head == tail) { // queue空
                     head = 0;
-                    tail = read4(buffer); // 读取4个数，tail自动改
+                    tail = read4(buffer); // 读取4个数，tail自动改，返回的是剩余个数
                     if (tail == 0) { // 没有数了
                         break;
                     }
@@ -138,7 +138,7 @@ public class SystemOperation {
                     pathLength[depth + 1] = pathLength[depth] + name.length() + 1; // 当前深度文件夹长度 + 当前文件名长度 + "/"
                 }
             }
-            return result;
+            return result; // 返回的是长度
         }
     }
 

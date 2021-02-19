@@ -78,7 +78,7 @@ public class OtherHighFrequency {
 
             String[] result = new String[len];
             int[] prefix = new int[len]; // 每个单词的前缀字母个数
-            Map<String, Integer> count = new HashMap<>();
+            Map<String, Integer> count = new HashMap<>(); // 缩写 -> 该缩写的数量
 
             // .1 先按照基本方法得到缩写
             for (int i = 0; i < len; i++) {
@@ -92,6 +92,7 @@ public class OtherHighFrequency {
                 boolean unique = true;
                 for (int i = 0; i < len; i++) {
                     if (count.get(result[i]) > 1) {
+                        // 如果两个缩写相同，两个缩写都要改，所以原来的hash不用减1
                         prefix[i] ++;
                         result[i] = getAbbr(dict[i], prefix[i]);
                         count.put(result[i], count.getOrDefault(result[i], 0) + 1);
@@ -109,7 +110,7 @@ public class OtherHighFrequency {
 
         // 从第p个index开始的缩写
         private String getAbbr(String s, int p) {
-            if (p >= s.length() - 2) {
+            if (p >= s.length() - 2) { // 缩写如果没减小长度就不缩写
                 return s;
             }
 
@@ -125,13 +126,13 @@ public class OtherHighFrequency {
             int candidate = 0;
             for (int i = 1; i < n; i++) {
                 // 如果candidate认识i，candidate肯定不是名人，赋值i继续往后看
-                // 最后得到不认识index=i之后所有人的candidate
+                // 最后得到 index=i之前都不是名人 candidate是候选名人
                 if (knows(candidate, i)) {
                     candidate = i;
                 }
             }
 
-            for (int i = 0; i < candidate; i++) { // 第一次循环中index=i之前的没有检查
+            for (int i = 0; i < candidate; i++) { // 第一次循环中candidate会不断变化，index=i之前重新针对最后一次的candidate检查
                 if (knows(candidate, i) || !knows(i, candidate)) {
                     return -1;
                 }

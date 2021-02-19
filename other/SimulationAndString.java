@@ -5,6 +5,11 @@ import java.util.*;
 public class SimulationAndString {
     // 1. Moving Average from Data Stream
     // 给出一串整数流和窗口大小，计算滑动窗口中所有整数的平均值
+    // MovingAverage m = new MovingAverage(3);
+    // m.next(1) = 1 // 返回 1.00000
+    // m.next(10) = (1 + 10) / 2 // 返回 5.50000
+    // m.next(3) = (1 + 10 + 3) / 3 // 返回 4.66667
+    // m.next(5) = (10 + 3 + 5) / 3 // 返回 6.00000
     public class MovingAverageSolution {
         // 前缀和+滚动数组
         int id, size;
@@ -86,7 +91,8 @@ public class SimulationAndString {
     }
 
     // 4. 一次编辑距离 · edit distance ii
-    // 给定两个字符串 S 和 T, 判断T是否可以通过对S做刚好一次编辑得到，一下都是一次编辑
+    // 给定两个字符串 S 和 T, 判断T是否可以通过对S做刚好一次编辑得到。
+    // 以下都是一次编辑
     //     在S的任意位置插入一个字符
     //     删除S中的任意一个字符
     //     将S中的任意字符替换成其他字符
@@ -137,8 +143,8 @@ public class SimulationAndString {
             for (int i = 0; i < s.length(); i++) {
                 if (s.charAt(i) != t.charAt(i)) {
                     if (diff == 0) { // 长度相等，只能有一位不等
-                        return s.substring(i+1).equals(t.substring(i+1));
-                    } else { // 长度不等，添加一位，后面都相等
+                        return s.substring(i + 1).equals(t.substring(i + 1));
+                    } else { // ==1 长度不等，添加一位，后面都相等
                         return s.substring(i).equals(t.substring(i + 1));
                     }
                 }
