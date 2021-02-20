@@ -39,17 +39,17 @@ public class StringProblems {
 
             int sLength = s.length();
             int pLength = p.length();
-            int[] sum = new int[256];
+            int[] cnt = new int[256]; // 出现的次数
             for (char c : p.toCharArray()) { // 统计P的字母数
-                sum[c] ++;
+                cnt[c] ++;
             }
 
             int start = 0, end = 0, match = 0;
-            while (end < sLength) { // end结尾依次往后扫S数组
-                if (sum[s.charAt(end)] >= 1) { // S中找到与p匹配的一个字母
+            while (end < sLength) { // end结尾依次往后+1扫描S数组
+                if (cnt[s.charAt(end)] >= 1) { // S中找到与p匹配的一个字母
                     match ++;
                 }
-                sum[s.charAt(end)] --; // S中扫过的字母都应该有记录，个数减一个1（匹配就个数减1，不匹配变成-1再往下减）
+                cnt[s.charAt(end)] --; // S中扫过的字母都应该有记录，个数减一个1（匹配过一个就个数减1，不匹配变成-1再往下减）
                 end ++;
 
                 // 不断移动sliding window，还原start的数据
@@ -58,10 +58,11 @@ public class StringProblems {
                         result.add(start);
                     }
 
-                    if (sum[s.charAt(start)] >= 0) { // 有过匹配的数据，match要减回去，负数表示本来就没有匹配上的数据
+                    if (cnt[s.charAt(start)] >= 0) { // 有过匹配的数据（可能从1减到0，也有可能从其他数减1但还没到0），match要减回去
+                                                     // 没有匹配上的数据在之前做过操作会是0-1=-1，就不会进这个判断了
                         match --;
                     }
-                    sum[s.charAt(start)] ++; // 之前通过end扫过的字母记录过，现在还原回去
+                    cnt[s.charAt(start)] ++; // 之前通过end扫过的字母记录过，现在还原回去
 
                     start ++;
                 }

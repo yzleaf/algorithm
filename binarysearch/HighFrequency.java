@@ -9,21 +9,25 @@ public class HighFrequency {
     //     1代表这个数字大于你猜测的数
     //     0代表这个数字等于你猜测的数
     public class GuessNumberSolution {
+        public final int EQUAL = 0;
+        public final int GT = 1; // greater than
+        public final int LT = 1; // less than
+
         public int guessNumber(int n) {
             int start = 1, end = n;
 
             while (start + 1 < end) {
                 int mid = start + (end - start) / 2;
-                if (guess(mid) == 0) {
+                if (guess(mid) == EQUAL) {
                     return mid;
-                } else if (guess(mid) == 1) {
+                } else if (guess(mid) == GT) {
                     start = mid;
-                } else { // guess(mid) == -1
+                } else { // guess(mid) == LT (-1)
                     end = mid;
                 }
             }
 
-            if (guess(start) == 0) {
+            if (guess(start) == EQUAL) {
                 return start;
             } else { // guess(end) == 0)
                 return end;

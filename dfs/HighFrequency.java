@@ -34,6 +34,7 @@ public class HighFrequency {
             for (char c : phone[num].toCharArray()) { // 这个数字对应的每一个字母
                 dfs(index + 1, length, str + c, digits);
             }
+            // 增加的c会不断被替换，所以不用想list一样add和remove操作
         }
     }
 
@@ -73,7 +74,7 @@ public class HighFrequency {
 
             // .2 remain不继续分解的情况，即startNum和remain构成的一个答案
             path.add(remain);
-            dfs(remain, 1);
+            dfs(remain, 1); // 加入remain自己，余数为1
             path.remove(path.size() - 1);
         }
     }
@@ -111,7 +112,7 @@ public class HighFrequency {
                     dfs(num, target, i + 1, curStr + "-" + curNum, curCalResult - curNum, -curNum);
                 }
 
-                if (curNum == 0) { // 1006这种情况，遍历到第一个0时，在前面会添加这个0进dfs
+                if (curNum == 0) { // 1006这种情况，遍历到第一个0时，在前面的代码会添加这个0进dfs
                     // 但是在当前层不会再继续往后遍历了（即没有00或者006的情况出现）
                     break;
                 }

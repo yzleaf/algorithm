@@ -1,13 +1,12 @@
 package binarytree;
 
-import apple.laf.JRSUIUtils;
 import datastructure.*;
 
 import java.util.*;
 
 public class HighFrequency {
     // 1. binary tree flipping
-    // 给定一个二叉树，其中所有右节点要么是具有兄弟节点的叶节点(有一个共享相同父节点的左节点)或空白
+    // 给定一个二叉树，其中所有右节点，是兄弟节点且为叶节点或null
     // 将其倒置并将其转换为树，其中原来的右节点变为左叶子节点。返回新的根节点。
     // 父变为右子，兄弟变为左子
     public class UpsideDownBinaryTreeSolution {

@@ -35,6 +35,7 @@ public class HighFrequency {
                 bfs(board, row - 1, j); // 下边
             }
 
+            // 标记或还原结果
             for (int i = 0; i < row; i++) {
                 for (int j = 0; j < col; j++) {
                     if (board[i][j] == 'W') { // 还原回去

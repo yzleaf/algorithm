@@ -16,13 +16,13 @@ public class IntervalProblems {
                 addRange(result, lower, upper);
             }
 
-            addRange(result, lower, nums[0] - 1);
+            addRange(result, lower, nums[0] - 1); // lower -> 第一个数
 
             for (int i = 1; i < nums.length; i++) { // 前一个值到当前值的空隙
                 addRange(result, nums[i-1] + 1, nums[i] - 1);
             }
 
-            addRange(result, nums[nums.length-1] + 1, upper);
+            addRange(result, nums[nums.length-1] + 1, upper); // 最后一个数 -> upper
 
             return result;
         }
@@ -30,7 +30,7 @@ public class IntervalProblems {
             if (start > end) {
                 return;
             }
-            if (start == end) {
+            if (start == end) { // 添加这个数本身
                 ans.add(start + "");
                 return;
             }
