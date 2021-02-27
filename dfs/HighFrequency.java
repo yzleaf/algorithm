@@ -114,6 +114,7 @@ public class HighFrequency {
 
                 if (curNum == 0) { // 1006这种情况，遍历到第一个0时，在前面的代码会添加这个0进dfs
                     // 但是在当前层不会再继续往后遍历了（即没有00或者006的情况出现）
+                    // break出循环，不执行之后的分类操作
                     break;
                 }
             }
@@ -121,7 +122,7 @@ public class HighFrequency {
     }
 
     // 4. 单词矩阵 · Word Squares
-    // 给出一系列 不重复的单词，找出所有用这些单词能构成的 单词矩阵。
+    // 给出一系列不重复的单词，找出所有用这些单词能构成的 单词矩阵。
     // 一个有效的单词矩阵是指, 如果从第 k 行读出来的单词和第 k 列读出来的单词相同(0 <= k < max(numRows, numColumns))，那么就是一个单词矩阵.
     // b a l l
     // a r e a
@@ -141,7 +142,7 @@ public class HighFrequency {
             int size = words[0].length(); // 题目设定所有单词长度一致
 
             prefixes = new HashMap<>();
-            getPrefixes(prefixes, words);
+            getPrefixes(words);
 
             List<String> curWords = new ArrayList<>();
             for (int i = 0; i < words.length; i++) {
@@ -158,6 +159,7 @@ public class HighFrequency {
                 return;
             }
 
+            // 待添加单词所在行
             int rowNum = curWords.size();
             // 待添加单词的前缀
             StringBuilder prefix = new StringBuilder();
@@ -177,7 +179,7 @@ public class HighFrequency {
             }
         }
         // 得到 前缀->该前缀对应的所有单词
-        private void getPrefixes(Map<String, List<String>> prefixes, String[] words) {
+        private void getPrefixes(String[] words) {
             for (String word : words) {
                 for (int i = 0; i < word.length() - 1; i++) {
                     String curPrefix = word.substring(0, i + 1); // 随着for循环依次得到第一个字母；前两个字母；前三个字母
@@ -190,7 +192,7 @@ public class HighFrequency {
 
     // 5. 单词拆分II · Word Break II
     // 给一字串s和单词的字典dict,在字串中增加空格来构建一个句子，并且所有单词都来自字典。
-    // 返回所有有可能的句子。
+    // 返回所有可能的句子。
     // s = "catsanddog", dict = "cat", "cats", "and", "sand", "dog".
     // A solution is "cats and dog", "cat sand dog".
     public class WordBreakSolution {
