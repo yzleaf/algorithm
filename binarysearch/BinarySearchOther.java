@@ -3,6 +3,7 @@ package binarysearch;
 public class BinarySearchOther {
 
     // 1. Search a 2D Matrix
+    // 74
     // 每行中的整数从左到右是排序的
     // 每行的第一个数大于上一行的最后一个整数。
     public class SearchMatrix1Solution {
@@ -40,9 +41,8 @@ public class BinarySearchOther {
         }
     }
 
-
-
     // 2. Search a 2D Matrix II
+    // 240
     // 每行中的整数从左到右是排序的，每一列的整数从上到下是排序的。
     // 在每一行或每一列中没有重复的整数。
     // 返回这个值得出现次数
@@ -150,6 +150,7 @@ public class BinarySearchOther {
 
 
     // 5. Smallest Rectangle Enclosing Black Pixels
+    // 302
     // image: a binary matrix with '0'白色像素 and '1'黑色像素
     // x, y: the location of one of the black pixels
     // return 返回囊括所有黑色像素点的矩阵的最小面积
@@ -183,7 +184,7 @@ public class BinarySearchOther {
                 }
             }
             if (isEmptyColumn(image, start)) {
-                return end;
+                return end; // 原始给的为1的点
             }
 
             return start;

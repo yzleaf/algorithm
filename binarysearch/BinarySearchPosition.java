@@ -5,6 +5,7 @@ import com.sun.xml.internal.fastinfoset.tools.XML_SAX_StAX_FI;
 public class BinarySearchPosition {
 
     // 1. find bad version
+    // 278
     public class FirstBadVersionSolution {
 
         public boolean isBadVersion(int k) {
@@ -19,7 +20,7 @@ public class BinarySearchPosition {
             int start = 1, end = n;
             while (start + 1 < end) {
                 int mid = start + (end - start) / 2;
-                if (isBadVersion(mid)) {
+                if (isBadVersion(mid)) { // 先记录，不确定是不是第一个
                     end = mid;
                 } else {
                     start = mid;
@@ -33,8 +34,6 @@ public class BinarySearchPosition {
             return end;
         }
     }
-
-
 
     // 2. Search in a big sorted array
     // 给一个按照升序排序的非负整数数组。这个数组很大以至于你只能通过固定的接口 ArrayReader.get(k) 来访问第k个数
@@ -82,6 +81,7 @@ public class BinarySearchPosition {
     }
 
     // 3. Find Minimum in Rotated Sorted Array
+    // 153
     public class FindMinSolution {
         /**
          * @param nums: a rotated sorted array
@@ -106,8 +106,6 @@ public class BinarySearchPosition {
             return Math.min(nums[start], nums[end]);
         }
     }
-
-
 
     // 4. Maximum Number in Mountain Sequence
     // 在先增后减的序列中找最大值
@@ -136,15 +134,19 @@ public class BinarySearchPosition {
         }
     }
 
-
-
     // 5. Find Peak Element
+    // 162
     // 假定P是峰值的位置则满足A[P] > A[P-1]且A[P] > A[P+1]
     // 返回数组中任意一个峰值的位置
     public class FindPeakSolution {
-        // 数组满足条件 A[0] < A[1] && A[n-2] > A[n-1] （一定与峰值）
+        // 数组满足条件 A[0] < A[1] && A[n-2] > A[n-1] （一定有峰值）条件1
         public int findPeak(int[] A) {
-            int start = 0, end = A.length - 1 - 1;
+            if (A.length == 1) { // 只有一个数的时候，本身是peak
+                return 0;
+            }
+
+            // int start = 1, end = A.length - 1 - 1; 在条件1的情况下可以这样写
+            int start = 0, end = A.length - 1;
             while (start + 1 < end) {
                 int mid = start + (end - start) / 2;
                 if (A[mid] > A[mid - 1] && A[mid] > A[mid + 1]) { // A[mid]>A[mid-1] && A[mid]>A[mid+1] -> Peak
@@ -165,6 +167,7 @@ public class BinarySearchPosition {
     }
 
     // 6. Search in Rotated Sorted Array
+    // 33
     // 给定一个目标值进行搜索，如果在数组中找到目标值返回数组中的索引位置，否则返回-1
     public class SearchRotatedSortedArraySolution {
         // 方法1 先找到最小点，再来一次二分
@@ -182,14 +185,14 @@ public class BinarySearchPosition {
                     return mid;
                 }
 
-                if (A[start] < A[mid]) { // left part
+                if (A[start] < A[mid]) { // mid在left part
                     if (A[start] <= target && target <= A[mid]) {
                         end = mid;
                     } else { // 在left part, start不可能大于target
                         // 只有target > A[mid]
                         start = mid;
                     }
-                } else { // right part
+                } else { // mid在right part
                     if (A[mid] <= target && target <= A[end]) {
                         start = mid;
                     } else { // 在right part, end不可能小于target
