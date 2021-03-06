@@ -443,6 +443,7 @@ public class TwoSum {
                 // 上一轮i，在j-1时候差值<target，j时候差值>target（while循环做的工作）
                 // 这一轮i增大了，j-1位置只有可能差值更小于target，因此j之前的位置都不可能
                 j = Math.max(j, i + 1);
+                // j = i + 1; // 更好理解，但是复杂度会增加
                 while (j < nums.length && nums[j] - nums[i] < target) {
                     j ++; // 指针右移到num[j] - num[i] >= target
                 }

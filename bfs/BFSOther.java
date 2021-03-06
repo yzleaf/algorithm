@@ -7,6 +7,7 @@ import java.util.*;
 public class BFSOther {
 
     // 1. Connected Component in Undirected Graph
+    // 323
     // 找出无向图中所有的连通块，图中的每个节点包含一个label属性和一个邻接点的列表
     // 输入: {1,2,4#2,1,4#3,5#4,1,2#5,3} ------> 1和2/4相连，2和1/4相连，3和5相连...
     // 输出: [[1,2,4],[3,5]]
@@ -118,7 +119,7 @@ public class BFSOther {
                 return 0;
             }
 
-            Set<String> dictSet = new HashSet<>();
+            Set<String> dictSet = new HashSet<>(); // 把List转为Set更容易操作contains命令
             for (String str : dict) {
                 dictSet.add(str);
             }
@@ -126,7 +127,7 @@ public class BFSOther {
             Queue<String> queue = new LinkedList<>();
             queue.offer(start);
 
-            Set<String> visited = new HashSet<>();
+            Set<String> visited = new HashSet<>(); // 之前是否处理过该String
             int steps = 0;
 
             while (!queue.isEmpty()) {
@@ -146,7 +147,6 @@ public class BFSOther {
                         visited.add(nextWord);
                     }
                 }
-
             }
 
             return 0;

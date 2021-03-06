@@ -16,7 +16,7 @@ public class HighFrequency {
     //  X X X X
     //  X O X X
     public class SurroundedRegionsSolution {
-        // 先把从边界的O都标记为W，之后BFS把边界O能到达的O都标记为W（意味着所有W都是不能被X包围的）
+        // 先把边界的O都标记为W，之后BFS把边界O能到达的O都标记为W（意味着所有W都是不能被X包围的）
         // 最后把非W的地方就全都需要标记为 X
         public void surroundedRegions(char[][] board) {
             int row = board.length;
@@ -122,7 +122,6 @@ public class HighFrequency {
                     }
                 }
             }
-
         }
     }
 

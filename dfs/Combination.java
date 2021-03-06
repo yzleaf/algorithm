@@ -225,11 +225,16 @@ public class Combination {
                 return;
             }
 
+            // for循环理解为每次替换当前这个位置的数，构成一个新的数列
+            // [0 1 1 1 2 3 5]
+            // 刚开始会依次遍历数组，选出第一个数[0 ...] [1 ...] 因为1重复了，后续只有[2 ...] [3 ...] [5 ...] （确认一个数）
+            // 上面每个数组确认下来第一个数以后，开始试第二个数dfs，以第一组[0 ...]为例，派生出[0 1 ...] 因为1重复了，后续只有[0 2 ...] [0 3 ...] [0 5...] （确认两个数）
+            // 上面每个数组确认下来第二个数以后，开始试第三个数dfs，以第一组[0 1 ...]为例，派生出[0 1 1 ...] 因为1重复了，后续只有[0 1 2 ...] [ 0 1 3 ...] [0 1 5 ...] （确认三个数）
             for (int i = startIndex; i < candidates.length; i++) {
                 if (candidates[i] > target) {
                     break;
                 }
-                if (i != startIndex && candidates[i] == candidates[startIndex]) { // 去除重复元素
+                if (i != startIndex && candidates[i] == candidates[startIndex]) { // 去除重复元素 [1,2,2']只有[1,2]没有[1,2']
                     continue;
                 }
                 combination.add(candidates[i]);

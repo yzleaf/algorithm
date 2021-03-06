@@ -13,6 +13,7 @@ public class MatrixBFS {
     }
 
     // 1. 岛屿的个数 Number of Islands
+    // 200
     // 0 代表海，1 代表岛，如果两个 1 相邻，那么这两个 1 属于同一个岛。我们只考虑上下左右为相邻。
     public class NumIslandsSolution {
         // 四个方向移动的坐标：下，右，左，上
@@ -40,7 +41,7 @@ public class MatrixBFS {
             for (int i = 0; i < row; i++) {
                 for (int j = 0; j < column; j++) {
                     if (grid[i][j] && !visited[i][j]) { // gird[][]为1且未被访问过
-                        bfs(grid, i, j);
+                        bfs(grid, i, j); // 找到联通的岛屿并标记
                         islands++;
                     }
                 }
@@ -123,20 +124,20 @@ public class MatrixBFS {
                 for (int i = 0; i < size; i++) {
                     Coordinate zombie = queue.poll();
                     for (int direction = 0; direction < 4; direction++) { // 四个方向移动
-                        Coordinate adj = new Coordinate(zombie.x + deltaX[direction],
+                        Coordinate next = new Coordinate(zombie.x + deltaX[direction],
                                                         zombie.y + deltaY[direction]);
-                        if (!isValidPeople(adj, grid)) {
+                        if (!isValidPeople(next, grid)) {
                             continue;
                         }
 
-                        grid[adj.x][adj.y] = ZOMBIE;
+                        grid[next.x][next.y] = ZOMBIE;
                         people--;
 
-                        if (people == 0) {
+                        if (people == 0) { // 现存人数
                             return days;
                         }
 
-                        queue.offer(adj);
+                        queue.offer(next);
                     }
                 }
             } // while
@@ -196,13 +197,12 @@ public class MatrixBFS {
                             continue;
                         }
 
-                        // 走过这个点，置为不可再到达
+                        // 走过这个点，置为不可再到达，否则步数只会更大
                         grid[adjX][adjY] = true;
                         queue.offer(new Coordinate(adjX, adjY));
                     }
                 }
                 steps++; // 步数加1，到下一次运动
-
             } // while
 
             return -1;
@@ -229,13 +229,11 @@ public class MatrixBFS {
         public final int WALL = 2;
 
         public int shortestDistance(int[][] grid) {
-
             if (grid == null || grid.length == 0 || grid[0].length == 0) {
                 return -1;
             }
 
             int ans = Integer.MAX_VALUE;
-
             // 遍历每一个点，如果是空地，计算到房子的距离和->最后比较，返回最小
             for (int i = 0; i < grid.length; i++) {
                 for (int j = 0; j < grid[0].length; j++) {
@@ -244,7 +242,6 @@ public class MatrixBFS {
                     }
                 }
             }
-
             return (ans == Integer.MAX_VALUE) ? -1 : ans;
         }
         // 返回所有房子到当前点的距离和
@@ -266,18 +263,18 @@ public class MatrixBFS {
                 step++;
                 int size = queue.size();
                 for (int i = 0; i < size; i++) {
-                    Coordinate curCoor = queue.poll(); // 当前层的所有点
+                    Coordinate curr = queue.poll(); // 当前层的所有点
                     for (int direction = 0; direction < 4; direction++) {
-                        Coordinate nextCoor = new Coordinate(curCoor.x + dx[direction],
-                                                             curCoor.y + dy[direction]);
+                        Coordinate next = new Coordinate(curr.x + dx[direction],
+                                                         curr.y + dy[direction]);
 
-                        if (isValid(nextCoor, grid, visited)) {
-                            visited[nextCoor.x][nextCoor.y] = true;
-                            if (grid[nextCoor.x][nextCoor.y] == HOUSE) {
+                        if (isValid(next, grid, visited)) {
+                            visited[next.x][next.y] = true;
+                            if (grid[next.x][next.y] == HOUSE) {
                                 sum += step; // 所有房子到当前点的和
                             }
-                            if (grid[nextCoor.x][nextCoor.y] == EMPTY) {
-                                queue.offer(nextCoor);
+                            if (grid[next.x][next.y] == EMPTY) {
+                                queue.offer(next);
                             }
                         }
                     } // 4 direction
@@ -287,7 +284,7 @@ public class MatrixBFS {
             // 检查是否有当前邮局到不了的房子
             for (int i = 0; i < grid.length; i++) {
                 for (int j = 0; j < grid[0].length; j++) {
-                    if (grid[i][j] == 1 && !visited[i][j]) {
+                    if (grid[i][j] == HOUSE && !visited[i][j]) {
                         return Integer.MAX_VALUE;
                     }
                 }

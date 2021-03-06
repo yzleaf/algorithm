@@ -7,11 +7,12 @@ import java.util.*;
 public class GraphBFS {
 
     // 1. 图是否是树 Graph Valid Tree
+    // 261
     // n个node, edges无向边列表
     // 输入: n = 5   edges = [[0, 1], [0, 2], [0, 3], [1, 4]]
     // 输出: true.
     public class GraphValidTreeSolution {
-
+        // 如果n个点都联通，且edge为n-1，就是树
         public boolean validTree(int n, int[][] edges) {
             if (n == 0) {
                 return false;
@@ -62,15 +63,16 @@ public class GraphBFS {
     }
 
     // 2. Clone Graph
+    // 133
     // 返回一个经过深度拷贝的新图. 新图和原图具有同样的结构, 并且对新图的任何改动不会对原图造成任何影响
     public class CloneGraphSolution {
 
-        public UndirectedGraphNode cloneGraph(UndirectedGraphNode node) {
+        public UndirectedGraphNode cloneGraph(UndirectedGraphNode node) { // 传进来一个node，关系在外面已经建好了（类似于链表传进来一个head）
             if (node == null) {
                 return null;
             }
 
-            // BFS得到所有点nodes
+            // BFS得到所有点nodes，放入数组中
             ArrayList<UndirectedGraphNode> nodes = getNodes(node);
 
             // copy nodes. store the old->new mapping information in a hash map
@@ -82,9 +84,8 @@ public class GraphBFS {
             // copy neighbors(edges).
             for (UndirectedGraphNode n : nodes) { // 遍历原始表的所有点
                 UndirectedGraphNode newNode = mapping.get(n); // 根据原始node获得新的node(只有val，neighbor为空)
-
                 for (UndirectedGraphNode neighbor : n.neighbors) { // 遍历当前node的所有邻居
-                    UndirectedGraphNode newNeighbor = mapping.get(neighbor); // 根据原始neighbor获得新的neighbor
+                    UndirectedGraphNode newNeighbor = mapping.get(neighbor); // 根据原始neighbor获得新的neighbor，原始的neighbor是引用，所以要get的到具体的东西
                     newNode.neighbors.add(newNeighbor); // 新的node的邻居里添加新的邻居
                 }
             }
@@ -93,7 +94,7 @@ public class GraphBFS {
         }
 
         private ArrayList<UndirectedGraphNode> getNodes(UndirectedGraphNode node) {
-            Queue<UndirectedGraphNode> queue = new LinkedList<UndirectedGraphNode>();
+            Queue<UndirectedGraphNode> queue = new LinkedList<>();
             HashSet<UndirectedGraphNode> hash = new HashSet<>();
 
             queue.offer(node);
@@ -167,10 +168,11 @@ public class GraphBFS {
             ArrayList<DirectedGraphNode> order = new ArrayList<>();
 
             Map<DirectedGraphNode, Integer> inDegree = new HashMap<>(); // 记录每个点入度
-            // 统计入度inDegree
-            for (DirectedGraphNode node : graph) {
+
+            // .1 统计入度inDegree
+            for (DirectedGraphNode node : graph) { // 每个点->neighbor
                 for (DirectedGraphNode neighbor : node.neighbors) {
-                    if (inDegree.containsKey(neighbor)) { // 如果已存在，inDegree + 1
+                    if (inDegree.containsKey(neighbor)) { // 如果已存在，从别的点到这个neighbor的inDegree + 1
                         inDegree.put(neighbor, inDegree.get(neighbor) + 1);
                     } else { // 如果不存在，inDegree设置为1
                         inDegree.put(neighbor, 1);
@@ -179,6 +181,7 @@ public class GraphBFS {
             }
 
             Queue<DirectedGraphNode> queue = new LinkedList<>();
+            // .2 入度为0的先进队列
             for (DirectedGraphNode node : graph) {
                 if (!inDegree.containsKey(node)) { // 不存在，入度为0
                     queue.offer(node);
@@ -186,6 +189,7 @@ public class GraphBFS {
                 }
             }
 
+            // .3 修改入度，每次看是否有新的入度为0的点
             while (!queue.isEmpty()) {
                 DirectedGraphNode node = queue.poll();
                 for (DirectedGraphNode neighbor : node.neighbors) {
@@ -202,6 +206,7 @@ public class GraphBFS {
     }
 
     // 5. 课程表 Course Schedule
+    // 207
     // n门课需要选，记为0到n-1. 要学习课程0你需要先学习课程1，表示为[0,1]
     // 给定n门课以及他们的先决条件，判断是否可能完成所有课程？
     public class CourseScheduleSolution {
@@ -214,12 +219,13 @@ public class GraphBFS {
                 edges[i] = new ArrayList<Integer>();
             }
 
-            // 建立图
+            // 建立图 [0,1]: 1->0 先修1再修0
             for (int i = 0; i < prerequisites.length; i++) {
                 inDegree[prerequisites[i][0]]++; // 第一个点为原始课程，要修这门需要先修其他的，所以多一门其他课程这门课入度+1
                 edges[prerequisites[i][1]].add(prerequisites[i][0]); // 在其他的先修课程列表中添加了这门课（即其他先修课修完可以修这门课）
             }
 
+            // .1 入度为0的课先进队列
             Queue<Integer> queue = new LinkedList<>();
             for (int i = 0; i < inDegree.length; i++) { // 入度为0，没有先修课的课程，先进队列
                 if (inDegree[i] == 0) {
@@ -227,16 +233,18 @@ public class GraphBFS {
                 }
             }
 
+            // .2 修改入度，看是否有新的入度为0的课
             int countCourses = 0;
             while (!queue.isEmpty()) {
                 int course = queue.poll();
                 countCourses++; // 修完course这门课，count+1
                 int n = edges[course].size(); // course是先修课，修完可以修其他哪些课（这些课的indgree减一）
                 for (int i = 0; i < n; i++) {
-                    int pointer = (int) edges[course].get(i); // 可以修的下一门课
-                    inDegree[pointer]--;
-                    if (inDegree[pointer] == 0) {
-                        queue.offer(pointer);
+                    int next = (int) edges[course].get(i); // 可以修的下一门课
+                    inDegree[next]--;
+
+                    if (inDegree[next] == 0) {
+                        queue.offer(next);
                     }
                 }
             }
@@ -246,6 +254,7 @@ public class GraphBFS {
     }
 
     // 6. 安排课程 Course Schedule II
+    // 210
     // 给你课程的总数量和一些前置课程的需求，返回你为了学完所有课程所安排的学习顺序
     public class CourseSchedule2Solution {
         /**
@@ -283,10 +292,10 @@ public class GraphBFS {
 
                 int n = edges[course].size(); // course是先修课，修完可以修其他哪些课
                 for (int i = 0; i < n; i++) {
-                    int pointer = (int) edges[course].get(i); // 可以修的下一门课
-                    inDegree[pointer]--;
-                    if (inDegree[pointer] == 0) {
-                        queue.add(pointer);
+                    int next = (int) edges[course].get(i); // 可以修的下一门课
+                    inDegree[next]--;
+                    if (inDegree[next] == 0) {
+                        queue.add(next);
                     }
                 }
             }
@@ -328,7 +337,7 @@ public class GraphBFS {
             return true;
         }
 
-        // Integer A -> 在它后面的所有数集合
+        // Integer A -> 在它后面相邻数的集合
         private Map<Integer, Set<Integer>> buildGraph(int[][] seqs) {
             Map<Integer, Set<Integer>> graph = new HashMap<>();
             for (int[] seq : seqs) { // 把所有seqs中的点都放入Map
