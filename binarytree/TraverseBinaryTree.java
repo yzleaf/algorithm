@@ -7,6 +7,7 @@ import java.util.*;
 public class TraverseBinaryTree {
 
     // 1. Preorder 根左右
+    // 144
     public class PreOrder {
 
         // .1 Non-recursion
@@ -69,6 +70,7 @@ public class TraverseBinaryTree {
     }
 
     // 2. Inorder 左根右
+    // 94
     public class InOrder {
         public List<Integer> inorderTraversal(TreeNode root) {
             Stack<TreeNode> stack = new Stack<TreeNode>();
@@ -96,6 +98,7 @@ public class TraverseBinaryTree {
 
 
     // 3. Postorder 左右根
+    // 145
     public class PostOrder {
         public List<Integer> postorderTraversal(TreeNode root) {
             Stack<TreeNode> stack = new Stack<TreeNode>();

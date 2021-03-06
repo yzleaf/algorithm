@@ -23,7 +23,7 @@ public class HighFrequency {
             }
 
             // 左子树不空的情况
-            TreeNode newRoot = dfs(cur.left); // 原树最后的一个左节点，也是新树的根节点
+            TreeNode newRoot = dfs(cur.left); // 原树最后的一个左节点，也是新树的根节点（newRoot一直没有操作没有变化过）
 
             cur.left.right = cur; // 父变为右子
             cur.left.left = cur.right; // 兄弟变为左子
@@ -35,7 +35,8 @@ public class HighFrequency {
     }
 
     // 2. 二叉树叶子顺序遍历 · binary tree leaves order traversal
-    // 收集并移除每一个层次的所有叶子，重复直到树为空。
+    // 收集并移除每一个层次的所有叶子（从最外层开始，叶子可能不在一层），重复直到树为空。
+    // 与107(bfs)不同
     public class FindLeavesSolution {
 
         Map<Integer, List<Integer>> depth; // 存放每一个深度的叶子节点
@@ -97,6 +98,7 @@ public class HighFrequency {
     }
 
     // 4. 二叉树垂直遍历 · Binary Tree Vertical Order Traversal
+    // 314
     // 逐列从上到下。如果两个节点在同一行和同一列中，则顺序应 从左到右。
     // 输入： {3,9,8,4,0,1,7}
     // 输出：[[4],[9],[3,0,1],[8],[7]]
@@ -118,7 +120,8 @@ public class HighFrequency {
                 return result;
             }
 
-            Map<Integer, List<Integer>> colToNode = new TreeMap<>((a, b) -> a - b); // col号和对应node的值
+            // 第几col列 -> 所有node值
+            Map<Integer, List<Integer>> colToNode = new TreeMap<>((a, b) -> a - b); // col从小到大排列
             Queue<Integer> colQueue = new LinkedList<>();
             Queue<TreeNode> NodeQueue = new LinkedList<>();
 
@@ -152,6 +155,7 @@ public class HighFrequency {
     }
 
     // 5. 二叉树中的最大路径和 · Binary Tree Maximum Path Sum
+    // 124
     // 给出一棵二叉树，寻找一条路径使其路径和最大，路径可以在任一节点中开始和结束（路径和为两个节点之间所在路径上的节点权值之和）
     public class MaxPathSumSolution {
         // 挑选左右子树最大值是分治
@@ -198,6 +202,6 @@ public class HighFrequency {
 
             return curMax;
         }
-        // 用dp思量来理解就是，保存了从当前点开始到底的最大sum
+        // 用dp思想来理解就是，保存了从当前点开始到底的最大sum
     }
 }

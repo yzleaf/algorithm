@@ -7,6 +7,7 @@ import java.util.*;
 public class TraverseAndDivideConquer {
 
     // 1. Maximum Depth of Binary Tree
+    // 104
     // 给定一个二叉树，找出其最大深度
     public class MaxDepthSolution {
         // divide conquer
@@ -41,6 +42,7 @@ public class TraverseAndDivideConquer {
     }
 
     // 2. Binary Tree Paths
+    // 257
     // 给一棵二叉树，找出从根节点到叶子节点的所有路径
     // 输入：{1,2,3,#,5}
     // 输出：["1->2->5","1->3"]
@@ -62,7 +64,7 @@ public class TraverseAndDivideConquer {
             for (String path: rightPaths) {
                 paths.add(root.val + "->" + path);
             }
-            // if root is a leaf
+            // if root is a leaf 单一叶子节点，无法进入上面的循环
             if (paths.size() == 0) {
                 paths.add("" + root.val);
             }

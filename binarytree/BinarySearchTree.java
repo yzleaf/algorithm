@@ -5,6 +5,7 @@ import datastructure.*;
 public class BinarySearchTree {
 
     // 1. Validate Binary Search Tree
+    // 98
     public class ValidBSTSolution {
 
         public class ResultType {
@@ -52,7 +53,7 @@ public class BinarySearchTree {
         public boolean isValidBST2(TreeNode root) {
             return divConq(root, Long.MIN_VALUE, Long.MAX_VALUE);
         }
-        private boolean divConq(TreeNode root, long min, long max){
+        private boolean divConq(TreeNode root, long min, long max){ // 当前subtree的root，最小值min，最大值max
             if (root == null){
                 return true;
             }
@@ -66,6 +67,7 @@ public class BinarySearchTree {
     }
 
     // 2. Convert Binary Search Tree to Doubly Linked List
+    // 426
     // 将一个二叉查找树按照中序遍历转换成双向链表
     public class BSTDoublyListSolution {
 
@@ -78,7 +80,7 @@ public class BinarySearchTree {
             }
         }
         // 采用分治法
-        // 把当前root连接上left子树的最后一个节点，连接上right子树的第一个节点
+        // 左根右：把当前root连接上left子树的最后一个节点，连接上right子树的第一个节点
         public DoublyListNode bstToDoublyList(TreeNode root) {
             if (root == null) {
                 return null;
@@ -123,8 +125,27 @@ public class BinarySearchTree {
 
 
     // 3. Flatten Binary Tree to Linked List 用前序遍历
+    // 114
     // 将一棵二叉树按照前序遍历拆解成为一个 假链表
-    // 假链表：用二叉树的 right 指针，来表示链表中的 next 指针。
+    // 假链表：用二叉树的 right 指针，来表示链表中的 next 指针
+    //     1
+    //    / \
+    //   2   5
+    //  / \   \
+    // 3   4   6
+    //
+    // 1
+    //  \
+    //   2
+    //    \
+    //     3
+    //      \
+    //       4
+    //        \
+    //         5
+    //          \
+    //           6
+
     public class FlattenBinaryTreeSolution {
         // traverse
         private TreeNode lastNode = null;
@@ -176,7 +197,7 @@ public class BinarySearchTree {
     }
 
     // 4. Convert BST to Greater Tree
-    // High Frequency
+    // 538 High Frequency
     // 使原始BST上每个节点的值都更改为在原始树中大于等于该节点值的节点值之和(包括该节点)
     // 输入 : {5,2,13}
     //              5
