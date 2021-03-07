@@ -4,6 +4,7 @@ import java.util.*;
 
 public class TwoSum {
     // 1. Two Sum
+    // 1
     // 给一个整数数组，找到两个数使得他们的和等于一个给定的数 target
     // 返回两个数的下标
     public class TwoSum1Solution {
@@ -67,6 +68,7 @@ public class TwoSum {
     }
 
     // 2. Two Sum - Input array is sorted
+    // 167
     // 给定一个已经 按升序排列 的数组，找到两个数使他们加起来的和等于特定数。
     // 函数应该返回这两个数的下标，index1必须小于index2。注意返回的值不是 0-based。
     public class TwoSumSortedSolution {
@@ -204,7 +206,7 @@ public class TwoSum {
                 right = i - 1;
                 while (left < right) {
                     if (S[left] + S[right] > S[i]) {
-                        result += (right - left); // 这个区间里的所有数都可以组成三角形
+                        result += (right - left); // 这个区间里的所有数和这个right都可以组成三角形
                         right --;
                     } else { // <= 要把最小的边往上加
                         left ++;
@@ -217,6 +219,7 @@ public class TwoSum {
     }
 
     // 6. Two Sum - Less than or equal to target
+    // 1099
     // 给定一个整数数组，找出这个数组中有多少对的和是小于或等于目标值
     // 返回对数
     public class TwoSumLessThanTargetSolution {
@@ -230,7 +233,7 @@ public class TwoSum {
             int left = 0, right = nums.length - 1;
             while (left < right) {
                 if (nums[left] + nums[right] <= target) {
-                    result += right - left;
+                    result += right - left; // 区间内所有数和这个left都满足
                     left ++;
                 } else { // > 把大的数往下减
                     right --;
@@ -381,12 +384,12 @@ public class TwoSum {
             Arrays.sort(nums);
 
             for (int i = 0; i < nums.length - 3; i++) {
-                if (i > 0 && nums[i] == nums[i - 1]) {
+                if (i > 0 && nums[i] == nums[i - 1]) { // 去重第一个数
                     continue;
                 }
 
                 for (int j = i + 1; j < nums.length - 2; j++) {
-                    if (j > i + 1 && nums[j] == nums[j - 1]) {
+                    if (j > i + 1 && nums[j] == nums[j - 1]) { // 去重第二个数
                         continue;
                     }
 
@@ -409,10 +412,10 @@ public class TwoSum {
 
                             left ++;
                             right --;
-                            while (left < right && nums[left] == nums[left - 1]) {
+                            while (left < right && nums[left] == nums[left - 1]) { // 去重第三个数
                                 left ++;
                             }
-                            while (left < right && nums[right] == nums[right + 1]) {
+                            while (left < right && nums[right] == nums[right + 1]) { // 去重第四个数
                                 right --;
                             }
                         }
@@ -442,8 +445,8 @@ public class TwoSum {
             for (int i = 0; i < nums.length; i++) {
                 // 上一轮i，在j-1时候差值<target，j时候差值>target（while循环做的工作）
                 // 这一轮i增大了，j-1位置只有可能差值更小于target，因此j之前的位置都不可能
-                j = Math.max(j, i + 1);
-                // j = i + 1; // 更好理解，但是复杂度会增加
+                j = Math.max(j, i + 1); // j = i + 1; // 更好理解，但是复杂度会增加
+
                 while (j < nums.length && nums[j] - nums[i] < target) {
                     j ++; // 指针右移到num[j] - num[i] >= target
                 }

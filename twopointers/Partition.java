@@ -32,20 +32,12 @@ public class Partition {
     }
 
     // 2. Kth Largest Element
+    // 215
     // 在数组中找到第 k 大的元素
     // 时间复杂度为O(n)，空间复杂度为O(1)
     // Input: [3,2,3,1,2,4,5,5,6] and k = 4 （有相同的数据，也是按下标算k，不是不同数的第k个）
     // Output: 4
     public class KthLargestSolution {
-//        public int kthLargestElement(int k, int[] nums) {
-//            if (nums == null || nums.length == 0 || k < 1 || k > nums.length) {
-//                return -1;
-//            }
-//            return partition(nums, 0, nums.length - 1, ***);
-//        }
-//        private int pertition(int[] nums, int start, int end, int k) {
-//
-//        }
 
         public int findKthLargest(int[] nums, int k) {
             // PriorityQueue<Integer> pq = new PriorityQueue<>();
@@ -56,7 +48,7 @@ public class Partition {
             //     }
             // }
             // return pq.peek();
-            if (nums == null || nums.length == 0 || k < 1 || k > nums.length){
+            if (nums == null || nums.length == 0 || k < 1 || k > nums.length) {
                 return -1;
             }
             // 第k大，是从小到大第nums.length-k的下标的数
@@ -131,7 +123,7 @@ public class Partition {
             }
             return nums[left];
         }
-
+        // 模板
         private int partition3(int[] nums, int start, int end, int k) {
             if (start >= end) {
                 return nums[k];
@@ -277,6 +269,7 @@ public class Partition {
     }
 
     // 6. Sort Colors
+    // 75
     // 给定一个包含红，白，蓝且长度为 n 的数组，将数组元素进行分类使相同颜色的元素相邻，并按照红、白、蓝的顺序进行排序。
     // 使用整数 0，1 和 2 分别代表红，白，蓝。
     public class SortColorsSolution {
@@ -289,7 +282,7 @@ public class Partition {
             int right = nums.length - 1;
             int mid = 0;
 
-            // left和right，分别指示0-1边界和1-2边界。left左边（不含left）全为0，right右边（不含right）全为2
+            // left和right，分别指示0-1边界和1-2边界。left左边（不含left）全为0，right右边（不含right）全为2。即left指向第一个为1的数，right指向最后一个为1或0的数
             // 第三个指针mid从left起向right移动，边扫描边实时更新两个边界
             while (mid <= right) { // mid > right时停止遍历
                 if (nums[mid] == 0) {
@@ -401,6 +394,5 @@ public class Partition {
             sort(colors, start, right, colorFrom, colorMid);
             sort(colors, left, end, colorMid + 1, colorTo);
         }
-
     }
 }

@@ -30,6 +30,7 @@ public class SameDirectionPointers {
     }
 
     // 2. Move Zeroes
+    // 283
     // 将0移动到数组的最后面，非零元素保持原数组的顺序
     public class MoveZeroesSolution {
         // 使用两个指针，left为新数组的指针，right为原数组的指针
@@ -53,6 +54,7 @@ public class SameDirectionPointers {
     }
 
     // 3. Remove Duplicate Numbers in Array
+    // 26
     // 在原数组上去除重复的元素
     // 返回去除重复元素之后的数组（放在开头，顺序无所谓）和元素个数
     public class RemoveDuplicateSolution {

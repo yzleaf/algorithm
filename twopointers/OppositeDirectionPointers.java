@@ -4,6 +4,7 @@ import java.util.*;
 
 public class OppositeDirectionPointers {
     // 1. Valid Palindrome
+    // 125
     // 给定一个字符串，判断其是否为一个回文串。只考虑字母和数字
     // 忽略大小写，所有符号
     public class PalindromeSolution {
@@ -15,6 +16,7 @@ public class OppositeDirectionPointers {
             int start = 0, end = s.length() - 1;
 
             while (start < end) {
+                // 每次都会先跳过符号到字母/数字
                 while (start < s.length() && !Character.isLetterOrDigit(s.charAt(start))) {
                     start++;
                 }
@@ -39,6 +41,7 @@ public class OppositeDirectionPointers {
     }
 
     // 2. Rotate String
+    // 796
     // 给定一个字符串（以字符数组的形式给出）和一个偏移量，根据偏移量原地旋转字符串(从左向右旋转)。
     // 原地旋转（O(1)空间复杂度，所以用翻转三次的方法）
     // 输入:  str="abcdefg", offset = 3
