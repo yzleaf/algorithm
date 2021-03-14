@@ -11,7 +11,7 @@ public class LRU {
     //     set(key, value) 写入数据：如果key还没有在缓存中，则写入其数据值。当缓存达到上限，它应该在写入新数据之前删除最近最少使用的数据用来腾出空闲位置
     // 返回每次 get 的数据
 
-    // .1 单链表方法
+    // .1 单链表方法（更难一点）
     public class LRUCacheSolution {
 
         class ListNode {
@@ -117,7 +117,7 @@ public class LRU {
         }
 
         private int capacity;
-        private Map<Integer, Node> hash;
+        private Map<Integer, Node> hash; // key -> Node
         private Node head;
         private Node tail;
 
@@ -161,7 +161,7 @@ public class LRU {
                 head.next.prev = head;
             }
 
-            // 添加新节点至末尾
+            // 添加新节点至末尾（存储空间没满，直接添加）
             Node newInsert = new Node(key, value);
             hash.put(key, newInsert);
             addToTail(newInsert);
@@ -171,7 +171,7 @@ public class LRU {
 
 
         private void addToTail(Node curr) { // 把当前节点添加到末尾
-            // current和tail的prev连起来
+            // current和tail的prev连起来（最后一个实际存在的元素）
             curr.prev = tail.prev;
             curr.prev.next = curr;
             // current和tail连起来

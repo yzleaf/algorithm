@@ -5,6 +5,7 @@ import java.util.*;
 public class Combination {
 
     // 1. Subsets
+    // 78
     // 给定一个含不同整数的集合，返回其所有的子集
     // 时间复杂度：O(n * 2^n) 一共 2^n个状态，每种状态需要O(n)的时间来构造子集。
     // 空间复杂度：O(n) 临时数组的空间代价是 O(n)，递归时栈空间的代价为 O(n)。（不考虑返回空间的情况下）
@@ -47,6 +48,7 @@ public class Combination {
     }
 
     // 2. subsets2
+    // 90
     // 给定一个可能具有重复数字的列表，返回其所有可能的子集
     public class Subsets2Solution {
         List<List<Integer>> results;
@@ -91,7 +93,7 @@ public class Combination {
             if (nums == null) {
                 return results;
             }
-            if (nums.length == 0) { // 添加空子集
+            if (nums.length == 0) {
                 results.add(new ArrayList<Integer>());
                 return results;
             }
@@ -103,13 +105,13 @@ public class Combination {
             return results;
         }
         private void dfs(int[] nums, int startIndex, List<Integer> subset) {
-            results.add(new ArrayList<Integer>(subset));
+            results.add(new ArrayList<Integer>(subset)); // 一上来就添加，一开始会添加空子集
 
             // 把剩余的所有元素依次添加到不同的subset里
             for (int i = startIndex; i <= nums.length; i++) {
                 // 如果有重复元素，本层只取第一个数
                 // [1,2,2']只取[1,2]
-                if (i != startIndex && nums[i] == nums[startIndex]) {
+                if (i != startIndex && nums[i] == nums[i - 1]) {
                     continue;
                 }
                 subset.add(nums[i]);
@@ -124,6 +126,7 @@ public class Combination {
     }
 
     // 3. Combination Sum
+    // 39
     // 给定一个候选数字的集合candidates和一个目标值target. 找到candidates中所有的和为target的组合.
     // 在同一个组合中,candidates中的某个数字不限次数地出现
     public class CombinationSum1Solution {
@@ -153,7 +156,7 @@ public class Combination {
                     break;
                 }
                 // 去除candidates数组中的重复元素：[1,2,2'] -> [1,2] [1,2']选择第一个
-                if (i != startIndex && candidates[i] == candidates[startIndex]) {
+                if (i != startIndex && candidates[i] == candidates[i - 1]) {
                     continue;
                 }
 
@@ -201,6 +204,7 @@ public class Combination {
     }
 
     // 4. Combination Sum II
+    // 40
     // 给定一个数组 num 和一个整数 target. 找到 num 中所有的数字之和为 target 的组合.
     // 在同一个组合中, num 中的每一个数字仅能被使用一次.
     public class CombinationSum2Solution {
@@ -234,7 +238,7 @@ public class Combination {
                 if (candidates[i] > target) {
                     break;
                 }
-                if (i != startIndex && candidates[i] == candidates[startIndex]) { // 去除重复元素 [1,2,2']只有[1,2]没有[1,2']
+                if (i != startIndex && candidates[i] == candidates[i-1]) { // 去除重复元素 [1,2,2']只有[1,2]没有[1,2']
                     continue;
                 }
                 combination.add(candidates[i]);
@@ -245,6 +249,7 @@ public class Combination {
     }
 
     // 5. 分割回文串 · Palindrome Partitioning
+    // 131
     // 给定字符串s, 需要将它分割成一些子串, 使得每个子串都是回文串.
     // 返回所有分割方案的子串
     public class PalindromPartitionSolution {

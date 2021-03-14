@@ -37,8 +37,8 @@ public class LinkedList {
             }
             ListNode next = head.next;
             // 姑且相信递归可以把后面的翻转都搞定，并且找到最后的节点（也就是新表的头）
-            // 一直向上传递，但newHead没有再改变了
-            ListNode newHead = reverseRecursion(next);
+            // 一直向上传递，每次递归都会处理链表的当前部分，但newHead没有改变（对于链表来说head是不会变的，只是在后面接上新的数）
+            ListNode newHead = reverseRecursion(next); // 处理完成了以next为头部节点的链表，并返回翻转后的新的head
             next.next = head;
             head.next = null;
             return newHead;
@@ -291,6 +291,7 @@ public class LinkedList {
     }
 
     // 5. Intersection of Two Linked Lists
+    // 160
     // 找到两个单链表最开始的交叉节点
     // Input:
     // 1->2->3->4->5->6->7->8->9->10->11->12->13->null

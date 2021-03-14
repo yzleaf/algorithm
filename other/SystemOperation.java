@@ -1,6 +1,8 @@
 package other;
 
 import java.util.*;
+import java.util.concurrent.Semaphore;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class SystemOperation {
     // 1. read characters from file multiple calls
@@ -142,4 +144,128 @@ public class SystemOperation {
         }
     }
 
+    // 日志速率限制器
+    // 359
+    //
+    public class LoggerSolution1 {
+        // 方法1 HashMap: 信息->时间戳，更新时间戳
+        // 时间O(1) 空间O(M) M为消息数量（这种方法没有垃圾回收，即删除旧的过期信息）
+        private Map<String, Integer> msgInfo;
+        public LoggerSolution1() {
+            msgInfo = new HashMap<>();
+        }
+
+        public boolean shouldPrintMessage(int timestamp, String message) {
+            // .1 之前没有日志内容，可直接输出
+            if (!msgInfo.containsKey(message)) {
+                msgInfo.put(message, timestamp);
+                return true;
+            }
+
+            // .2 之前有日之内容，判断是否超过10的间隔
+            int oldTimestamp = msgInfo.get(message);
+            if (timestamp - oldTimestamp >= 10) {
+                msgInfo.put(message, timestamp);
+                return true;
+            } else { // 这种情况不更新时间戳（因为要以输出true的时间为标准）
+                return false;
+            }
+        }
+    }
+
+    public class LoggerSolution2 {
+        // 方法2 队列: 信息->时间戳，更新时间戳
+        // 时间O(1) 空间O(M) M为消息数量（这种方法没有垃圾回收）
+        class Pair<String, Integer> {
+            String msg;
+            Integer timestamp;
+            Pair(String msg, Integer timestamp) {
+                this.msg = msg;
+                this.timestamp = timestamp;
+            }
+        }
+        private Queue<Pair<String, Integer>> msgInfo;
+        private Set<String> msgSet; // 是否包含这个消息
+
+        public LoggerSolution2() {
+            msgInfo = new LinkedList<>();
+            msgSet = new HashSet<>();
+        }
+
+        public boolean shouldPrintMessage(int timestamp, String message) {
+            // .1 清理过期元素
+            while (!msgInfo.isEmpty()) {
+                Pair head = msgInfo.peek();
+                if (timestamp - (int)head.timestamp >= 10 ) { // 这个时间戳已经无效了
+                    msgInfo.poll();
+                    msgSet.remove(head.msg);
+                } else { // 因为按时间顺序，所以第一个时间戳有效的话其他也是有效的，可以直接退出
+                         // 如果题目不是按时间顺序输入的话，可以用最小堆(PriorityQueue)
+                    break;
+                }
+            }
+
+            // .2 加入新元素
+            if (!msgSet.contains(message)) {
+                msgInfo.offer(new Pair<String, Integer>(message, timestamp));
+                msgSet.add(message);
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+    }
+
+    // The Dining Philosophers
+    // 1226
+    // 5个哲学家，5把叉子，必须同时拿起两边的叉子才能进食，设计算法保证总有哲学家不挨饿
+    public class DiningPhilosophers {
+        // 考察如何避免死锁（5个哲学家没人都拿起左手边/右手边的叉子时）
+        // 所以最多只允许4个哲学家去持有叉子，可保证至少有1个哲学家能吃上意大利面（拥有2把叉子）
+
+        // 1个Fork视为1个ReentrantLock，5个叉子即5个ReentrantLock，将其都放入数组中
+        private final ReentrantLock[] lockList = { new ReentrantLock(),
+                                                   new ReentrantLock(),
+                                                   new ReentrantLock(),
+                                                   new ReentrantLock(),
+                                                   new ReentrantLock() };
+
+        // 限制 最多只有4个哲学家去持有叉子
+        private Semaphore eatLimit = new Semaphore(4);
+
+        public DiningPhilosophers() {
+        }
+
+        // call the run() method of any runnable to execute its code
+        public void wantsToEat(int philosopher,
+                               Runnable pickLeftFork,
+                               Runnable pickRightFork,
+                               Runnable eat,
+                               Runnable putLeftFork,
+                               Runnable putRightFork) throws InterruptedException {
+            int leftFork = (philosopher + 1) % 5; // 左手边叉子编号
+            int rightFork = philosopher; // 右手边叉子编号
+
+            eatLimit.acquire(); // 限制人数（-1）
+
+            lockList[leftFork].lock(); // 拿起左手边的叉子（上锁）
+            lockList[rightFork].lock(); // 拿起右手边的叉子（上锁）
+
+            pickLeftFork.run(); // 拿起左边的叉子 的具体执行
+            pickRightFork.run(); // 拿起右边的叉子 的具体执行
+
+            eat.run(); // 吃意大利面 的具体执行
+
+            putLeftFork.run(); // 放下左边的叉子 的具体执行
+            putRightFork.run(); // 放下右边的叉子 的具体执行
+
+            lockList[leftFork].unlock(); // 放下左手边的叉子（解锁）
+            lockList[rightFork].unlock(); // 放下右手边的叉子（解锁）
+
+            eatLimit.release(); // 限制人数释放（+1）
+
+        }
+
+    }
 }

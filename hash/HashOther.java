@@ -25,12 +25,7 @@ public class HashOther {
                 String s = String.valueOf(arr);
 
                 // 所有拥有相同字母的string排序后就一致了
-
-//                if (!map.containsKey(s)) {
-//                    // 如果没有包括这个排序的string 需要新建
-//                    map.put(s, new ArrayList<String>());
-//                }
-                map.putIfAbsent(s, new ArrayList<String>());
+                map.putIfAbsent(s, new ArrayList<String>()); // 如果没有包括这个排序的string 需要新建
                 // 找到String对应的value并且添加当前字符串（拥有相同的排序string，即乱序字符串）
                 map.get(s).add(strs[i]);
             }
@@ -61,10 +56,8 @@ public class HashOther {
                 }
 
                 int hash = getHash(count);
-//                if (!map.containsKey(hash)) { // 没包含，要新建
-//                    map.put(hash, new ArrayList<String>());
-//                }
-                map.putIfAbsent(hash, new ArrayList<String>());
+
+                map.putIfAbsent(hash, new ArrayList<String>()); // 没包含，要新建
                 map.get(hash).add(str);
             }
 

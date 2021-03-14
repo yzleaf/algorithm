@@ -12,7 +12,7 @@ public class Heap {
         // 遍历效率太低。换个角度思考，如果我们只生成丑数，且生成n个
         // 不难发现生成丑数的规律：如果已知丑数ugly，那么ugly * 2，ugly * 3和ugly * 5也都是丑数
         // 既然求第n小的丑数，可以采用最小堆来解决。每次弹出堆中最小的丑数，然后检查它分别乘以2、3和 5后的数是否生成过，如果是第一次生成，那么就放入堆中。第n个弹出的数即为第n小的丑数。
-        public int nthUglyNumber(int n) {
+        public int nthUglyNumber(int n) { // 第n小
             Queue<Long> minheap = new PriorityQueue<>(); // 默认最小堆
             Set<Long> seen = new HashSet<>(); // 当前丑数是否生成过
 
@@ -355,7 +355,7 @@ public class Heap {
                     numOfElements++;
                     return;
                 }
-                else if (maxHeap.peek() > minHeap.peek()) { // 为了保证右边的元素比左边大
+                else if (maxHeap.peek() > minHeap.peek()) { // 为了保证右边（最小堆：放大的数）的元素比左边（最大堆：放小的数）大
                     Integer maxHeapRoot = maxHeap.poll();
                     Integer minHeapRoot = minHeap.poll();
                     maxHeap.offer(minHeapRoot);

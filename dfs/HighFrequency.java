@@ -4,6 +4,7 @@ import java.util.*;
 
 public class HighFrequency {
     // 1. 电话号码的字母组合 · Letter Combinations of a Phone Number
+    // 17
     // 输入一系列数字串，得到所有它可能代表的字母
     public class LetterCombinationPhoneNumberSolution {
         List<String> result;
@@ -16,29 +17,29 @@ public class HighFrequency {
                 return result;
             }
 
-            dfs(0, digits.length(), "", digits);
+            dfs(digits, 0, "");
 
             return result;
         }
 
-        // length总长度
         // str当前的字符串内容
-        private void dfs(int index, int length, String str, String digits) {
+        private void dfs(String digits, int startIndex, String str) {
 
-            if (index == length) { // index超出了length范围返回
+            if (startIndex == digits.length()) { // index超出了length范围返回
                 result.add(str);
                 return;
             }
 
-            int num = digits.charAt(index) - '0'; // 得到当前的数字
+            int num = digits.charAt(startIndex) - '0'; // 得到当前的数字
             for (char c : phone[num].toCharArray()) { // 这个数字对应的每一个字母
-                dfs(index + 1, length, str + c, digits);
+                dfs(digits, startIndex + 1, str + c);
             }
             // 增加的c会不断被替换，所以不用想list一样add和remove操作
         }
     }
 
     // 2. 因式分解 · Factorization
+    // 254
     // 一个非负数可以被视为其因数的乘积。编写一个函数来返回整数 n 的因数所有可能组合
     // 输入：8
     // 输出： [[2,2,2],[2,4]]

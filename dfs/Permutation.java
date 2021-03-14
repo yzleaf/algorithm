@@ -5,6 +5,7 @@ import java.util.*;
 public class Permutation {
 
     // 1. 全排列 · Permutations
+    // 46
     // 给定一个数字列表，返回其所有可能的排列
     // 假设没有重复数字
     public class Permute1Solution {
@@ -45,6 +46,7 @@ public class Permutation {
     }
 
     // 2. 带重复元素的排列 · Permutations II
+    // 47
     // 输入：[1,2,2]
     // 输出：
     // [
@@ -97,6 +99,7 @@ public class Permutation {
     }
 
     // 3. N-Queens
+    // 51
     // n个皇后放置在n*n的棋盘上，皇后彼此之间不能相互攻击
     // 给定一个整数n，返回所有不同的n皇后问题的解决方案
     // 每个解决方案包含一个明确的n皇后放置布局，其中“Q”和“.”分别表示一个皇后和一个空位置。
