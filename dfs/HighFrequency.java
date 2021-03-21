@@ -154,6 +154,7 @@ public class HighFrequency {
 
             return result;
         }
+
         private void dfs(List<String> curWords, int size) {
             if (curWords.size() == size) { // 单词长度和单词数量一致为结果，否则就无法行和列都相同了
                 result.add(new ArrayList<>(curWords));
@@ -179,6 +180,7 @@ public class HighFrequency {
                 curWords.remove(curWords.size() - 1);
             }
         }
+
         // 得到 前缀->该前缀对应的所有单词
         private void getPrefixes(String[] words) {
             for (String word : words) {
@@ -198,6 +200,7 @@ public class HighFrequency {
     // A solution is "cats and dog", "cat sand dog".
     public class WordBreakSolution {
         List<String> result;
+
         public List<String> wordBreak(String s, List<String> wordDict) {
             result = new ArrayList<>();
             if (s == null || s.length() == 0 || wordDict == null || wordDict.size() == 0) {
@@ -233,6 +236,7 @@ public class HighFrequency {
             }
         }
     }
+
     public class WordBreakSolution2DP {
         List<String> result = new ArrayList<>();
         Map<Integer, List<Integer>> hash = new HashMap<>(); // i往后是否能够拆分及拆分位置(起始位置->可以拆成单词终止位置)，要保证后面的都可以拆分
@@ -248,7 +252,7 @@ public class HighFrequency {
                 for (int j = i + 1; j <= n; ++j) {
                     if (dict.contains(s.substring(i, j))) { // 从i开始到j-1的单词
                         if (j == n || hash.get(j).size() > 0) { // j已经结束或者j后面还可以拆分
-                                                                // 如果j后面不能拆分，那这个位置也就没有意义了
+                            // 如果j后面不能拆分，那这个位置也就没有意义了
                             hash.get(i).add(j);
                         }
                     }
@@ -258,6 +262,7 @@ public class HighFrequency {
             dfs(s, 0, "");
             return result;
         }
+
         void dfs(String s, int startIndex, String curStr) {
             if (startIndex == s.length()) {
                 result.add(curStr);
@@ -274,4 +279,75 @@ public class HighFrequency {
         }
     }
 
+    // 24点游戏
+    // 你有 4 张写有 1 到 9 数字的牌。你需要判断是否能通过 *，/，+，-，(，) 的运算得到 24。
+    // 679
+    public class Computer24Solution {
+        public boolean compute24(int[] nums) {
+            // 转换成double类型来判断（有除法）
+            double[] numsDouble = new double[nums.length];
+            for (int i = 0; i < nums.length; i ++) {
+                numsDouble[i] = (double)nums[i];
+            }
+            return compute(numsDouble, 4);
+        }
+        // 枚举任意两个数，即i和j，然后将这两个数进行运算，每次将当前的num[i]替换成两数运算后的新数字，并将数字规模减一
+        // 每次搜索完成后，需要将num[i]和num[j]还原。
+        public boolean compute(double[] nums, int n) {
+            if (n == 1) { // 还剩一个数，判断是否为24
+                if (Math.abs(nums[0] - 24) < 1e-6) {
+                    return true;
+                }
+            }
+
+            for (int i = 0; i < n; i ++) { // 取第一个数
+                for (int j = i + 1; j < n; j++) { // 取第二个数 （两层for循环已经可以把所有情况都遍历过了），因为有一个总数n，所以哪怕在这一层没有取到第一个数，在下一层dfs也会取到
+                    double a = nums[i];
+                    double b = nums[j];
+                    nums[j] = nums[n - 1]; // 把这个已经用完的第j个数替换成最后一个数（在后续DFS中就抹掉最后一个数了）
+
+                    nums[i] = a + b;
+                    if (compute(nums, n - 1)) {
+                        return true;
+                    }
+
+                    nums[i] = a - b;
+                    if (compute(nums, n - 1)) {
+                        return true;
+                    }
+
+                    nums[i] = b - a;
+                    if (compute(nums, n - 1)) {
+                        return true;
+                    }
+
+                    nums[i] = a * b;
+                    if (compute(nums, n - 1)) {
+                        return true;
+                    }
+
+                    // a / b or b / a
+                    if (b != 0) {
+                        nums[i] = a / b;
+                        if (compute(nums, n - 1)) {
+                            return true;
+                        }
+                    }
+
+                    if (a != 0) {
+                        nums[i] = b / a;
+                        if (compute(nums, n - 1)) {
+                            return true;
+                        }
+                    }
+
+                    // 回溯，要把这两个数还原
+                    nums[i] = a;
+                    nums[j] = b;
+                }
+            }
+
+            return false;
+        }
+    }
 }

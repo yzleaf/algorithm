@@ -185,4 +185,42 @@ public class StringProblems {
             return loadBalancers.get(rand.nextInt(m));
         }
     }
+
+    // 6 字符串解码
+    // 394
+    // 编码规则为: k[encoded_string]，表示其中方括号内部的 encoded_string 正好重复 k 次。注意 k 保证为正整数。
+    // 输入：s = "3[a2[c]]"
+    // 输出："accaccacc"
+    public class DecodeStringSolution {
+        public String decodeString(String s) {
+            StringBuilder res = new StringBuilder();
+            int number = 0;
+            Stack<String> stackStr = new Stack<>();
+            Stack<Integer> stackNum = new Stack<>();
+
+            for (char c : s.toCharArray()) {
+                if (c == '[') { // 遇到左括号，把之前存的临时数据添加进栈里
+                    stackStr.push(res.toString());
+                    stackNum.push(number);
+                    // 存完需要新建和置0
+                    res = new StringBuilder();
+                    number = 0;
+                } else if (c == ']') { // 计算当前层的结果
+                    StringBuilder temp = new StringBuilder();
+                    int curCount = stackNum.pop();
+                    for (int i = 0; i < curCount; i ++) { // 添加n次当前的String
+                        temp.append(res.toString());
+                    }
+                    res = new StringBuilder(stackStr.pop() + temp.toString()); // 加上之前存进stack里的字符串构成新的字符串
+
+                } else if (c <= '9' && c >= '0') { // 数字 存临时变量
+                    number = number * 10 + c - '0';
+                } else { // 字母 存临时变量
+                    res.append(c);
+                }
+            }
+
+            return res.toString();
+        }
+    }
 }

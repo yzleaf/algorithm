@@ -25,11 +25,11 @@ public class SystemOperation {
         int head = 0, tail = 0;
 
         public int read(char[] buf, int n) {
-            int i = 0;
+            int i = 0; // 已经读取过的个数
             while (i < n) {
                 if (head == tail) { // queue空
                     head = 0;
-                    tail = read4(buffer); // 读取4个数，tail自动改，返回的是剩余个数
+                    tail = read4(buffer); // 读取4个数，tail自动改，返回的是实际读取的个数
                     if (tail == 0) { // 没有数了
                         break;
                     }
