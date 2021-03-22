@@ -204,4 +204,59 @@ public class HighFrequency {
         }
         // 用dp思想来理解就是，保存了从当前点开始到底的最大sum
     }
+
+    // 7. 从前序与中序遍历序列构造二叉树
+    // 前序遍历 preorder = [3,9,20,15,7]
+    // 中序遍历 inorder = [9,3,15,20,7]
+    //     3
+    //   / \
+    //  9  20
+    //    /  \
+    //   15   7
+    public class BuildTreeSolution {
+        private Map<Integer, Integer> index;
+
+        public TreeNode buildTree(int[] preorder, int[] inorder) {
+            int n = preorder.length;
+            // 中序遍历的值 -> 所在的位置
+            index = new HashMap<>();
+            for (int i = 0; i < n; i++) {
+                index.put(inorder[i], i);
+            }
+            // 数组从0 -> n-1 整个长度进行不断递归（左闭右闭区间）
+            return myBuildTree(preorder, inorder, 0, n - 1, 0 , n - 1);
+        }
+        // 根据前序遍历得到根节点（第一个），然后在中序遍历中找到根节点的位置，它的左边就是左子树的节点，右边就是右子树的节点
+        // preorder = [3,9,20,15,7], inorder = [9,3,15,20,7]
+        // 首先根据 preorder 找到根节点是3, 然后根据根节点将inorder分成左子树和右子树
+        // 左子树 inorder[9]
+        // 右子树 inorder [15,20,7]
+        // 然后把相应的preorder的数组也加进来
+        // 左子树 preorder[9] inorder[9]
+        // 右子树 preorder[20 15 7]  inorder[15,20,7]
+        private TreeNode myBuildTree(int[] preorder, int[] inorder, int preLeft, int preRight, int inLeft, int inRight) {
+            if (preLeft > preRight) {
+                return null;
+            }
+
+            // 前序遍历第一个点是root，在中序遍历中找到root，就可以把左右子树分开
+            int preRoot = preLeft;
+            int inRoot = index.get(preorder[preRoot]);
+
+            TreeNode root = new TreeNode(preorder[preRoot]); // 构建root节点
+
+            // 左子树 数目
+            int sizeLeft = inRoot - inLeft;
+
+            // 左子树
+            // preorder: 第一个是root，左子树从root+1开始，到加满个数结束
+            // inorder: 左子树从当前的开头开始，到root-1结束
+            root.left = myBuildTree(preorder, inorder, preLeft + 1, preLeft + sizeLeft, inLeft, inRoot - 1);
+            // 右子树
+            // preorder: 第一个是root，右子树从root+左子树长度之后开始，到当前长度结束
+            // inorder: 左子树从root+1开始，到当前的结尾结束
+            root.right = myBuildTree(preorder, inorder, preLeft + sizeLeft + 1, preRight, inRoot + 1, inRight);
+            return root;
+        }
+    }
 }
