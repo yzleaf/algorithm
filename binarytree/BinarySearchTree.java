@@ -162,8 +162,9 @@ public class BinarySearchTree {
             }
 
             lastNode = root;
+            TreeNode right = root.right; // 先保存右子树，否则会被递归left的操作冲掉
             flatten(root.left);
-            flatten(root.right);
+            flatten(right);
         }
 
         // divide and conquer
@@ -184,6 +185,7 @@ public class BinarySearchTree {
                 node.left = null;
             }
 
+            // 返回当前链表的最后一个节点
             if (rightLast != null) { // right不空，right是新链表的最后一个元素
                 return rightLast;
             }
@@ -192,7 +194,7 @@ public class BinarySearchTree {
                 return leftLast;
             }
 
-            return node;
+            return node; // 都为空，才到这个点本身
         }
     }
 

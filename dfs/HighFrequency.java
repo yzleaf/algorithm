@@ -350,4 +350,45 @@ public class HighFrequency {
             return false;
         }
     }
+
+    // 递增子序列
+    // 491
+    // 找到所有该数组的递增子序列，递增子序列的长度至少是 2
+    // 输入：[4, 6, 7, 7]
+    // 输出：[[4, 6], [4, 7], [4, 6, 7], [4, 6, 7, 7], [6, 7], [6, 7, 7], [7,7], [4,7,7]]
+    class IncreaseSubSequencesSolution {
+        List<List<Integer>> results;
+        public List<List<Integer>> findSubsequences(int[] nums) {
+            results = new ArrayList<>();
+
+            dfs(nums, 0, Integer.MIN_VALUE, new ArrayList<Integer>());
+            return results;
+        }
+        // lastNum是上一层加入的最后一个数，当前层加入的只要比这个数大，就是递增
+        private void dfs(int[] nums, int startIndex, int lastNum, List<Integer> subSequence) {
+            if (subSequence.size() >= 2) { // 大于2的序列才能返回
+                results.add(new ArrayList<Integer>(subSequence));
+            }
+
+
+            Set<Integer> hash = new HashSet<>();
+            for (int i = startIndex; i < nums.length; i++) {
+                if (nums[i] < lastNum) { // 比上一个数小，这个序列就是递增序列，直接取消这一层的操作
+                    continue;
+                }
+
+                if (hash.contains(nums[i])) { // 因为序列是乱序的，不能按照常规方法判断nums[i] != nums[i-1]
+                    continue;
+                }
+                hash.add(nums[i]);
+
+                subSequence.add(nums[i]);
+                dfs(nums, i + 1, nums[i], subSequence);
+                subSequence.remove(subSequence.size() - 1);
+            }
+
+        }
+        // 方法2
+    }
+
 }

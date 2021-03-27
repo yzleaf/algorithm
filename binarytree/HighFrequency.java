@@ -259,4 +259,39 @@ public class HighFrequency {
             return root;
         }
     }
+
+    // 8. 二叉树的右视图
+    // 199
+    // 给定一棵二叉树，想象自己站在它的右侧，按照从顶部到底部的顺序，返回从右侧所能看到的节点值。
+    // 输入: [1,2,3,null,5,null,4]
+    // 输出: [1, 3, 4]
+    // 解释:
+    //    1            <---
+    //  /   \
+    // 2     3         <---
+    //  \     \
+    //   5     4       <---
+    public class RightSideViewSolution {
+        // 按照 根结点 -> 右子树 -> 左子树 的顺序访问，就可以保证每层都是最先访问最右边的节点的
+        List<Integer> result;
+        public List<Integer> rightSideView(TreeNode root) {
+            result = new ArrayList<>();
+            dfs(root, 0); // 从根节点第0层开始
+            return result;
+        }
+        private void dfs(TreeNode curr, int depth) {
+            if (curr == null) {
+                return;
+            }
+
+            // 如果当前节点所在深度还没有出现在res里，说明在该深度下当前节点是第一个被访问的节点，因此将当前节点加入res中
+            if (result.size() == depth) {
+                result.add(curr.val);
+            }
+            depth ++;
+            dfs(curr.right, depth);
+            dfs(curr.left, depth);
+        }
+        // 方法2 BFS分层次遍历，取最后一个
+    }
 }
