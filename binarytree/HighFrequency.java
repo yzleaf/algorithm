@@ -294,4 +294,59 @@ public class HighFrequency {
         }
         // 方法2 BFS分层次遍历，取最后一个
     }
+
+    // 对称二叉树
+    // 101
+    // 给定一个二叉树，检查它是否是镜像对称的
+    //     1
+    //    / \
+    //   2   2
+    //  / \ / \
+    // 3  4 4  3
+    public class SymmetricBTSolution {
+        // 方法1 递归
+        // 通过「同步移动」两个指针的方法来遍历这棵树，p指针和 q指针一开始都指向这棵树的根
+        // 随后 p右移时，q左移，p左移时，q右移。
+        // 每次检查当前 p和 q节点的值是否相等，如果相等再判断左右子树是否对称。
+        public boolean isSymmetric(TreeNode root) {
+            return check(root, root);
+        }
+        public boolean check(TreeNode p, TreeNode q) { // 判断是否镜像对称
+            if (p == null && q == null) {
+                return true;
+            }
+
+            if (p == null || q == null) { // 此时p和q不同时为null了
+                return false;
+            }
+
+            return p.val == q.val && check(p.left, q.right) && check(p.right, q.left);
+        }
+
+        // 方法2 迭代
+        // 每次提取两个结点并比较它们的值（队列中每两个连续的结点应该是相等的，而且它们的子树互为镜像）
+        public boolean check2(TreeNode p, TreeNode q) {
+            Queue<TreeNode> queue = new LinkedList<>();
+            queue.offer(p);
+            queue.offer(q);
+            while (!queue.isEmpty()) {
+                p = queue.poll();
+                q = queue.poll();
+                if (p == null && q == null) {
+                    return true;
+                }
+                if (p == null || q == null || p.val != q.val) {
+                    return false;
+                }
+
+                queue.offer(p.left);
+                queue.offer(q.right);
+
+                queue.offer(p.right);
+                queue.offer(q.left);
+            }
+            return true;
+        }
+
+    }
 }
