@@ -391,4 +391,56 @@ public class HighFrequency {
         // 方法2
     }
 
+    // Zuma Game
+    // 488
+    // 球被涂上了红（R）、黄（Y）、蓝（B）、绿（G）和白（W）这么几种颜色，同时你也拥有几个球。
+    // 每一次，从你拥有的球当中拿出一个，插入到当前行当中（包括最左边和最右边）。然后，如果有三个或更多的同色球挨在一起，然后就消除这几个球。一直这么做直到没有更多的球可以消除。
+    // 找到最少的需要插入的球的数量，使得所有的球都可以被删除。如果不能删除所有的球，那么就返回-1。
+    // 输入: "WWRRBBWW", "WRBRW"
+    // 输出: 2
+    // 解释: WWRRBBWW -> WWRR[R]BBWW -> WWBBWW -> WWBB[B]WW -> WWWW -> empty
+    public class ZumaGameSolution {
+        public int findMinStep(String board, String hand) {
+            int count[] = new int[128]; // 记录手上有的各种球的个数
+            for (char c : hand.toCharArray()) {
+                count[c]++;
+            }
+
+            return aux(board, count);
+        }
+        private int aux(String s, int[] count) { // 消除s所需要的最小长度
+            if ("".equals(s)) {
+                return 0;
+            }
+            int result = Integer.MAX_VALUE;
+            for (int i = 0; i < s.length();) { // 依次遍历每一段有相同元素的区间，然后递归到子串
+                int j = i; // j保存起点
+                while (i < s.length() && s.charAt(i) == s.charAt(j)) { // 得到j->i这段区间
+                    i ++;
+                }
+
+                int needed = 3 - (i - j); // 需要几个球能够消掉这段区间
+                if (count[s.charAt(j)] >= needed) { // 手上的球足够消掉当前区间的球，可进入下一层子串递归
+                    int used = needed <= 0 ? 0 : needed; // 区间本身长度超过3，就不需要手上的球加入来消除了
+                    count[s.charAt(j)] -= used; // 用掉了这些球
+
+                    int subResult = aux(s.substring(0, j) + s.substring(i), count); // 消除j->i当前段以后进入子串递归
+                    if (subResult >= 0) {
+                        result = Math.min(result, used + subResult);
+                    }
+
+                    count[s.charAt(j)] += used; // 还原用掉的球
+                }
+            }
+
+            return result == Integer.MAX_VALUE ? -1 : result;
+        }
+    }
+    // 测试用例一："WWRRGGRRWWRRGGRRWW", "GG"
+    // 无论怎么插入，都无法完全消除，结果应是-1。
+    // 测试用例二："RRWWRRBBRR", "WB"
+    // "R(B)RWWRRBBRR" -> "R(B)RWW(W)RRBBRR" -> ""
+    // 结果应是2。
+    // 这两个测试用例用这种方法过不了，用例1可以不断地判断当前串是否能消来做，用例2不知道怎么做
+
 }
