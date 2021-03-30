@@ -443,4 +443,77 @@ public class HighFrequency {
     // 结果应是2。
     // 这两个测试用例用这种方法过不了，用例1可以不断地判断当前串是否能消来做，用例2不知道怎么做
 
+    // 删除无效的括号
+    // 301
+    // 给你一个由若干括号和字母组成的字符串 s ，删除最小数量的无效括号，使得输入的字符串有效。
+    // 输入: "(a)())()"
+    // 输出: ["(a)()()", "(a())()"]
+    public class RemoveInvalidParenthesesSolution {
+        private int length;
+        private char[] sChar;
+        private Set<String> validExpressions; // 用hash表去重（删除括号后可能存在的重复情况）
+
+        public List<String> removeInvalidParentheses(String s) {
+            length = s.length();
+            sChar = s.toCharArray();
+            validExpressions = new HashSet<>();
+
+            // 1. 遍历计算多余的左右括号，因为")("是不符合要求的，所以需要用下面的遍历方法，不能直接分别计算括号的个数
+            int leftRemove = 0;
+            int rightRemove = 0;
+            for (char c : sChar) {
+                if (c == '(') {
+                    leftRemove ++;
+                } else if (c == ')') { // 遇到右括号要判断前面是否有左括号
+                    if (leftRemove > 0) { // 抵消左括号
+                        leftRemove --;
+                    } else {
+                        rightRemove ++;
+                    }
+                }
+            }
+
+            // 2. 回溯尝试每一种删除操作
+            StringBuilder path = new StringBuilder();
+            dfs(0, 0, 0, leftRemove, rightRemove, path);
+
+            return new ArrayList<>(validExpressions);
+        }
+        // index当前遍历到的下标
+        // left,right当前已经遍历的左右括号数量
+        // leftRemove, rightRemove还需要移除的括号数量
+        private void dfs(int index, int left, int right, int leftRemove, int rightRemove, StringBuilder path) {
+            if (index == length) { // 所有字符处理完毕
+                if (leftRemove == 0 && rightRemove == 0) {
+                    validExpressions.add(path.toString()); // 添加路径
+                }
+                return;
+            }
+
+            char currC = sChar[index];
+            // 可能操作1，删除当前遍历的字符（只能删除括号）
+            if (currC == '(' && leftRemove > 0) {
+                // 有左括号可以删，（如果leftRemove=0没有左括号可以删，就进不了这个递归，必须保留这个左括号了）
+                dfs(index + 1, left, right, leftRemove - 1, rightRemove, path);
+            }
+            if (currC == ')' && rightRemove > 0) {
+                // 有右括号可以删
+                dfs(index + 1, left, right, leftRemove, rightRemove - 1, path);
+            }
+
+            // 可能操作2，保留当前遍历的字符
+            path.append(currC);
+            if (currC != '(' && currC != ')') { // 不是括号，直接下一层
+                dfs(index + 1, left, right, leftRemove, rightRemove, path);
+            } else if (currC == '(') { // 保留左括号
+                dfs(index + 1, left + 1, right, leftRemove, rightRemove, path);
+            } else { // 保留右括号
+                if (right < left) { // 只有右括号少的情况下括号才有效，可以保留，否则会出现")("的情况
+                    dfs(index + 1, left, right + 1, leftRemove, rightRemove, path);
+                }
+            }
+            path.deleteCharAt(path.length() - 1); // 删除刚加进来的字符
+        }
+    }
+
 }
