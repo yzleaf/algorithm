@@ -516,4 +516,51 @@ public class HighFrequency {
         }
     }
 
+    // 大礼包
+    // 638
+    // 输入: [2,3,4], [[1,1,0,4],[2,2,1,9]], [1,2,1]
+    // 输出: 11
+    // 解释: A，B，C的价格分别为¥2，¥3，¥4.
+    // 你可以用¥4购买1A和1B，也可以用¥9购买2A，2B和1C。
+    // 你需要买1A，2B和1C，所以你付了¥4买了1A和1B（大礼包1），以及¥3购买1B， ¥4购买1C。
+    // 你不可以购买超出待购清单的物品，尽管购买大礼包2更加便宜。
+    public class ShoppingOffersSolution {
+        Map<List<Integer>, Integer> hash = new HashMap<>(); // 优化1，hash记录当前needs的价格
+
+        public int shoppingOffers(List<Integer> price, List<List<Integer>> special, List<Integer> needs) {
+            return dfs(price, special, needs);
+        }
+        private int dfs(List<Integer> price, List<List<Integer>> special, List<Integer> needs) {
+            if (hash.containsKey(needs)) { // 优化1，hash存在当前needs的价格，直接返回
+                return hash.get(needs);
+            }
+
+            int result = 0;
+
+            // .1 不用大礼包，单独购买需要花多少钱
+            for (int i = 0; i < needs.size(); i++) {
+                result += price.get(i) * needs.get(i);
+            }
+            // .2 使用大礼包
+            for (List<Integer> item : special) {
+                List<Integer> newNeeds = new ArrayList<>(needs); // 因为newNeeds可能会更改前两个后第三个break；所以要新建一个变量（因为存在很多item）
+                int j;
+                for (j = 0; j < needs.size(); j++) {
+                    int diff = newNeeds.get(j) - item.get(j); // 所需要的 和 礼包包含的当前商品数量
+                    if (diff < 0) {
+                        break;
+                    }
+                    newNeeds.set(j, diff); // 剩余数量
+                }
+
+                if (j == needs.size()) { // 大礼包中每个数量都满足了
+                    result = Math.min(result, item.get(j) + dfs(price, special, newNeeds)); // 大礼包价格 + 后续递归的其他
+                }
+            }
+
+            hash.put(needs, result); // 优化1
+
+            return result;
+        }
+    }
 }
