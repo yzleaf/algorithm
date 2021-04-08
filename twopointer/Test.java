@@ -55,14 +55,6 @@ public class Test {
 
 //        String s = null;
 //        try {
-//            FileReader file = new FileReader("D:/test.txt");
-//            BufferedReader buffer = new BufferedReader(file);
-//
-//            while ((s = buffer.readLine()) != null) {
-//                System.out.println(s);
-//            }
-//
-//            buffer.close();
 //
 //        } catch (Exception e) {
 //            e.printStackTrace();
