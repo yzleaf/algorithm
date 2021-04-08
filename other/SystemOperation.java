@@ -268,4 +268,9 @@ public class SystemOperation {
         }
 
     }
+
+    // 读取网络文件
+    public class ReadInternetSolution {
+
+    }
 }

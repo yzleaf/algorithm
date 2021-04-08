@@ -1,59 +1,83 @@
 package twopointer;
 
+import java.io.*;
+import java.net.*;
 import java.util.*;
 
 public class Test {
 
-    public static void main(String[] args) {
+    private static final String ADDR = "http://bholt.org/ssh/short.txt";
 
-//        // Q1
-//        int[] test = new int[]{1,2,3,4,5};
-//        Solution solution = new Solution();
-//        int[] res = solution.twoSum(test,5);
-//
-////        for (int i = 0; i<res.length; i++) {
-////            System.out.println(res[i]);
-////        }
-//
-//        // Q2
-//        boolean resSquare = solution.squareSum(6);
-////        System.out.println(resSquare);
-//
-//        // Q3
-//        String testVowels = "leetcode";
-//        String resVowels = solution.reverseVowels(testVowels);
-////        System.out.println(resVowels);
-//
-//        // Q4
-//        String palindrome = "abcdeeba";
-//        boolean resPal = solution.validPalindrome(palindrome);
-////        System.out.println(resPal);
-//
-//        // Q5
-//        int[] s1 = new int[]{1,4,5,6,0,0,0};
-//        int[] s2 = new int[]{2,3,8};
-//        int[] resMerge = solution.merge(s1, 4, s2, 3);
-////        for (int i = 0; i<resMerge.length; i++) {
-////            System.out.println(resMerge[i]);
-////        }
-//
-//        // Q7
-//        String s7 = "abpcplea";
-//        List<String> d = Arrays.asList("ale","apple","monkey","plea");
-//        String s7Res = solution.findLongestWord(s7, d);
-//        System.out.println(s7Res);
-        List<String> list = new ArrayList<>();
-        list.add("abe");
-        list.add("bca");
-        list.add("abdu");
+    public static void main(String[] args) throws IOException {
 
-        System.out.println(list);
-        System.out.println("------");
-        Collections.sort(list);
-        System.out.println(list);
+//        List<String> list = new ArrayList<>();
+//        list.add("abe");
+//        list.add("bca");
+//        list.add("abdu");
+//
+//        System.out.println(list);
+//        System.out.println("------");
+//        Collections.sort(list);
+//        System.out.println(list);
+//
+//        int[] a = new int[]{1,2,3};
+//        System.out.println(a);
 
-        int[] a = new int[]{1,2,3};
-        System.out.println(a);
+//        URL url = new URL(ADDR);
+//        BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream()));
+//        String s;
+//        while ((s = reader.readLine()) != null) {
+//            System.out.println(s);
+//        }
+//        reader.close();
+        String addr = "http://bholt.org/ssh/short.txt";
+        System.out.println(readURL(addr));
+
+        //System.out.println(readDevice("D:/test.txt"));
+    }
+
+    public static String readURL(String addr) throws IOException {
+        URL url = new URL(addr);
+        BufferedReader buffer = new BufferedReader(new InputStreamReader(url.openConnection().getInputStream())); // url.openStream()
+
+        StringBuffer strRes = new StringBuffer();
+        String readLineStr = null;
+        while ((readLineStr = buffer.readLine()) != null) {
+            strRes.append(readLineStr).append("\r\n"); // 换行
+        }
+
+        buffer.close();
+
+        return  strRes.toString();
+    }
+
+    public static String readDevice(String addr) throws IOException {
+
+//        String s = null;
+//        try {
+//            FileReader file = new FileReader("D:/test.txt");
+//            BufferedReader buffer = new BufferedReader(file);
+//
+//            while ((s = buffer.readLine()) != null) {
+//                System.out.println(s);
+//            }
+//
+//            buffer.close();
+//
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+        BufferedReader buffer = new BufferedReader(new FileReader(addr));
+
+        StringBuffer strRes = new StringBuffer();
+        String readLineStr = null;
+        while ((readLineStr = buffer.readLine()) != null) {
+            strRes.append(readLineStr).append("\r\n"); // 换行
+        }
+
+        buffer.close();
+
+        return strRes.toString();
 
     }
 }
