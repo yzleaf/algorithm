@@ -23,13 +23,6 @@ public class Test {
 //        int[] a = new int[]{1,2,3};
 //        System.out.println(a);
 
-//        URL url = new URL(ADDR);
-//        BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream()));
-//        String s;
-//        while ((s = reader.readLine()) != null) {
-//            System.out.println(s);
-//        }
-//        reader.close();
         String addr = "http://bholt.org/ssh/short.txt";
         System.out.println(readURL(addr));
 
@@ -53,7 +46,6 @@ public class Test {
 
     public static String readDevice(String addr) throws IOException {
 
-//        String s = null;
 //        try {
 //
 //        } catch (Exception e) {
