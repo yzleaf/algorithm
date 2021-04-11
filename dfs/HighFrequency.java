@@ -563,4 +563,109 @@ public class HighFrequency {
             return result;
         }
     }
+
+    // 优美的排列
+    // 526
+    // 假设有从1到N的N个整数，如果从这N个数字中成功构造出一个数组，使得数组的第i位 (1 <= i <= N) 满足如下两个条件中的一个，我们就称这个数组为一个优美的排列。
+    // 条件：第i位的数字能被i整除 || i能被第i位上的数字整除
+    public class CountArrangementSolution {
+        // 方法1 回溯
+        int count = 0;
+        boolean[] visited;
+        public int countArrangement(int N) {
+            visited = new boolean[N + 1];
+            permutation(N, 1);
+            return count;
+        }
+        private void permutation(int num, int index) {
+            if (index > num) {
+                count ++;
+            }
+            for (int i = 1; i <= num; i++) { // 遍历所有值 1->N
+                if (visited[i] != true && (index % i == 0 || i % index == 0)) { // i这个值在index位置位置的可能性
+                    visited[i] = true;
+                    permutation(num, index + 1);
+                    visited[i] = false;
+                }
+            }
+        }
+        // 时间复杂度：O(k) k是有效排列的数目
+
+        // 方法2 遍历
+        int count2 = 0;
+        public int countArrangement2(int N) {
+            int[] nums = new int[N];
+            for (int i = 1; i <= N; i++) {
+                nums[i - 1] = i;
+            }
+
+            permute(nums, 0);
+            return count2;
+        }
+        public void permute(int[] nums, int index) {
+            if (index == nums.length) {
+                count2 ++;
+            }
+            for (int i = index; i < nums.length; i++) { // index位置的数依次与后面的数交换，每次固定index这个位置的数
+                swap(nums, i, index);
+                if (nums[index] % (index + 1) == 0 || (index + 1) % nums[index] == 0) {
+                    permute(nums, index + 1);
+                }
+                swap(nums, i, index);
+            }
+        }
+        public void swap(int[] nums, int x, int y) {
+            int temp = nums[x];
+            nums[x] = nums[y];
+            nums[y] = temp;
+        }
+    }
+
+    // 矩阵中的最长递增路径
+    // 329
+    // 给定一个 m x n 整数矩阵 matrix ，找出其中最长递增路径的长度。
+    // 对于每个单元格，你可以往上，下，左，右四个方向移动
+    public class LongestIncreasingPathSolution {
+
+        private int row, col;
+        // 记忆化深度优先
+        public int longestIncreasingPath(int[][] matrix) {
+            if (matrix == null || matrix.length == 0 || matrix[0].length == 0) {
+                return 0;
+            }
+            row = matrix.length;
+            col = matrix[0].length;
+            int[][] memo = new int[row][col]; // 记录以当前位置为起点的最长递增路径
+            int result = 0;
+            for (int i  = 0; i < row; i++) {
+                for (int j = 0; j < col; j++) {
+                    result = Math.max(result, dfs(matrix, i, j, memo));
+                }
+            }
+
+            return result;
+        }
+        private int dfs(int[][] matrix, int currRow, int currCol, int[][] memo) {
+            // .1 结果!=0，说明该单元格的结果已经计算过，则直接从缓存中读取结果
+            if (memo[currRow][currCol] != 0) {
+                return memo[currRow][currCol];
+            }
+
+            // .2 计算最长递增路径
+            memo[currRow][currCol] ++; // 先设置为1(即从0自加为1)，如果周围元素都比它小的话，以它为起点的最长递增序列只能为1
+            int[] dx = {1, -1, 0, 0};
+            int[] dy = {0, 0, 1, -1};
+            for (int i = 0; i < 4; i++) {
+                int newRow = currRow + dx[i];
+                int newCol = currCol + dy[i];
+                // 以格子A为起点的最长递增路径的长度 = 周围大于A的值的格子中最大的最长路径 + 1
+                if (newRow < row && newRow >= 0 && newCol < col && newCol >= 0 // 不越界
+                    && matrix[newRow][newCol] > matrix[currRow][currCol]) { // 周围点比curr的点大
+                    memo[currRow][currCol] = Math.max(memo[currRow][currCol], dfs(matrix, newRow, newCol, memo) + 1);
+                }
+            }
+
+            return memo[currRow][currCol];
+        }
+    }
 }

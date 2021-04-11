@@ -101,4 +101,40 @@ public class GraphDFS {
             return expansions;
         }
     }
+
+    // 重新安排行程
+    // 332
+    // 给定一个机票的字符串二维数组 [from, to]，子数组中的两个成员分别表示飞机出发和降落的机场地点，对该行程进行重新规划排序。
+    // 所有这些机票都属于一个从 JFK 出发的先生，所以该行程必须从 JFK 开始。
+    public class FindItinerarySolution {
+        // 欧拉通路，题目给出的测试例肯定会构成这个通路，我们只用找出即可
+
+        // 由于题目中说必然存在一条有效路径(至少是半欧拉图)，所以算法不需要回溯（加入到结果集里的元素不需要删除）
+        // 整个图最多存在一个死胡同(出度和入度相差1），且这个死胡同一定是最后一个访问到的，否则无法完成一笔画。
+        // DFS的调用其实是一个拆边的过程（既每次递归调用删除一条边，所有子递归都返回后，再将当前节点加入结果集保证了结果集的逆序输出），一定是递归到这个死胡同（没有子递归可以调用）后递归函数开始返回。所以死胡同是第一个加入结果集的元素。
+
+        Map<String, PriorityQueue<String>> hash = new HashMap<String, PriorityQueue<String>>(); // 出发 -> 可到达的所有点
+        List<String> itinerary = new LinkedList<>();
+
+        public List<String> findItinerary(List<List<String>> tickets) {
+
+            for (List<String> ticket : tickets) {
+                String src = ticket.get(0); // 出发地
+                String dst = ticket.get(1); // 目的地
+                hash.putIfAbsent(src, new PriorityQueue<String>()); // 目的地构成的最小堆（按字典序排列）
+                hash.get(src).offer(dst);
+            }
+
+            dfs("JFK");
+            Collections.reverse(itinerary); // 先添加进去的是死胡同，最后应该逆序
+            return itinerary;
+        }
+        private void dfs(String curr) {
+            while (hash.containsKey(curr) && hash.get(curr).size() > 0) { // 还存在路径
+                String temp = hash.get(curr).poll(); // poll出来（表示已经用了这张票了，需要删除）
+                dfs(temp);
+            }
+            itinerary.add(curr); // 当curr这个点没有新的dst可以前往的时候，它就是终点，可以添加进数组
+        }
+    }
 }
