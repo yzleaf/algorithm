@@ -668,4 +668,41 @@ public class HighFrequency {
             return memo[currRow][currCol];
         }
     }
+
+    // 员工的重要性
+    // 690
+    // 给定一个保存员工信息的数据结构，它包含了员工 唯一的 id ，重要度 和 直系下属的 id
+    // 输入一个公司的所有员工信息，以及单个员工 id ，返回这个员工和他所有下属（不仅仅是直系下属，还有下属的下属）的重要度之和
+    // 输入：[[1, 5, [2, 3]], [2, 3, []], [3, 3, []]], 1
+    // 输出：11
+    // 解释：
+    // 员工 1 自身的重要度是 5 ，他有两个直系下属 2 和 3 ，而且 2 和 3 的重要度均为 3。因此员工 1 的总重要度是 5 + 3 + 3 = 11 。
+    public class EmpImportanceSolution {
+        class Employee {
+            public int id;
+            public int importance;
+            public List<Integer> subordinates;
+        };
+        Map<Integer, Employee> empHash; // 员工ID -> 员工
+        public int getImportance(List<Employee> employees, int id) {
+            empHash = new HashMap<>();
+            for (Employee e : employees) {
+                empHash.put(e.id, e);
+            }
+            return dfs(id);
+        }
+        private int dfs(int id) {
+            Employee curr = empHash.get(id);
+            int sum = curr.importance;
+            List<Integer> subOrs = curr.subordinates;
+            for (Integer subOr : subOrs) {
+                sum += dfs(subOr);
+            }
+
+            return sum;
+        }
+    }
+
+    //
+
 }

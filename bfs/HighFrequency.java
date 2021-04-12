@@ -4,6 +4,7 @@ import java.util.*;
 
 public class HighFrequency {
     // 1. 被围绕的区域 · Surrounded Regions
+    // 130
     // 给一个二维的矩阵，包含 'X' 和 'O', 找到所有被 'X' 围绕的区域，并用 'X' 替换其中所有的 'O'
     // 输入:
     //  X X X X
@@ -25,7 +26,7 @@ public class HighFrequency {
                 return;
             }
 
-            // 标记边界
+            // 标记边界以及边界能联通的地方
             for (int i = 0; i < row; i++) {
                 bfs(board, i, 0); // 左边
                 bfs(board, i, col - 1); // 右边
@@ -76,6 +77,20 @@ public class HighFrequency {
                     }
                 }
             } // while
+        }
+        // 方法2 dfs
+        public void dfs(char[][] board, int x, int y) {
+            int row = board.length;
+            int col = board[0].length;
+
+            if (x < 0 || x >= row || y < 0 || y >= col || board[x][y] != 'O') {
+                return;
+            }
+            board[x][y] = 'W';
+            dfs(board, x + 1, y);
+            dfs(board, x - 1, y);
+            dfs(board, x, y + 1);
+            dfs(board, x, y - 1);
         }
     }
 
