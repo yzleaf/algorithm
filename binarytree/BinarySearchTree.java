@@ -1,5 +1,7 @@
 package binarytree;
 
+import java.util.*;
+
 import datastructure.*;
 
 public class BinarySearchTree {
@@ -228,4 +230,112 @@ public class BinarySearchTree {
             travel(cur.left);
         }
     }
+
+    // 不同的二叉搜索树
+    // 96
+    // 给定一个整数 n，求以 1 ... n 为节点组成的二叉搜索树有多少种？
+    // 输入: 3
+    // 输出: 5
+    // 解释: 给定 n = 3, 一共有 5 种不同结构的二叉搜索树:
+    //   1         3     3      2      1
+    //    \       /     /      / \      \
+    //     3     2     1      1   3      2
+    //    /     /       \                 \
+    //   2     1         2                 3
+    public class DifferentBST {
+        // G(n): n个节点的BST个数
+        // f(i): 以i为根节点的BST个数
+        // 当i为根节点时，其BST左子树节点个数为i-1个，右子树节点为n-i，总个数f(i) = G(i−1) * G(n−i)
+        // G(n) = f(1) + f(2) + ... + f(n)
+        //      = G(0) * G(n-1) + G(1) * G(n-2) + ... + G(n-1) * G(0)
+        public int numTrees(int n) {
+            int[] dp = new int[n+1];
+            dp[0] = 1; // 0个节点当作空树（1个树）
+            dp[1] = 1;
+
+            for (int i = 2; i <= n; i++) { // i个节点的BST个数
+                for (int j = 0; j <= i - 1; j++) { // 计算左子树j个点和右子树i-j-1个点（扣除了i这个根节点）
+                    dp[i] += dp[j] * dp[i-j-1];
+                }
+            }
+            // 只需要管个数即可，因为个数定了，根节点的大小也是确定的（因为输入1->n）
+
+            return dp[n];
+        }
+    }
+
+    // 不同的二叉搜索树II
+    // 95
+    // 给定一个整数 n，生成所有由 1 ... n 为节点所组成的 二叉搜索树 。
+    // 输入：3
+    // 输出：
+    // [
+    //  [1,null,3,2],
+    //  [3,2,null,1],
+    //  [3,1,null,null,2],
+    //  [2,1,3],
+    //  [1,null,2,null,3]
+    // ]
+    public class DifferentBST2 {
+        public List<TreeNode> generateTrees(int n) {
+            List<TreeNode> result = new ArrayList<>();
+            if (n == 0) {
+                return result;
+            }
+            return getAns(1, n); // 从1->n
+        }
+        // 返回当前层从start到end的所有BST
+        private List<TreeNode> getAns(int start, int end) {
+            // 返回的是不同根节点的list
+            List<TreeNode> result = new ArrayList<>();
+
+            // .1 没有数字，null加入结果
+            if (start > end) {
+                result.add(null);
+                return result;
+            }
+
+            // .2 有至少1个数，把每个数字i都作为根节点遍历
+            for (int i = start; i <= end; i++) {
+                List<TreeNode> leftTrees = getAns(start, i - 1); // 得到所有可能的左子树
+                List<TreeNode> rightTrees = getAns(i + 1, end); // 得到所有可能的右子树
+
+                // 从左子树集合中选出一棵左子树，从右子树集合中选出一棵右子树，拼接到根节点上
+                // 每次都是把下一层的所有root节点取出来放在左子树和右子树的位置
+                for (TreeNode left : leftTrees) {
+                    for (TreeNode right : rightTrees) {
+                        TreeNode currTree = new TreeNode(i);
+                        currTree.left = left;
+                        currTree.right = right;
+                        result.add(currTree);
+                    }
+                }
+            }
+
+            return result;
+        }
+    }
+
+    // 将有序数组转换为二叉搜索树
+    // 108
+    // 给你一个整数数组nums ，其中元素已经按升序排列，请你将其转换为一棵高度平衡二叉搜索树。
+    public class SortedArrayToBSTSolution {
+        public TreeNode sortedArrayToBST(int[] nums) {
+            return helper(nums, 0, nums.length - 1);
+        }
+        private TreeNode helper(int[] nums, int start, int end) {
+            if (start > end) {
+                return null;
+            }
+
+            // 取中点作为根节点
+            int mid = start + (end - start) / 2;
+            TreeNode curr = new TreeNode(nums[mid]);
+            curr.left = helper(nums, start, mid - 1);
+            curr.right = helper(nums, mid + 1, end);
+
+            return curr;
+        }
+    }
+
 }
