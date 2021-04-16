@@ -367,4 +367,120 @@ public class HighFrequency {
             return hasPathSum(root.left, sumNext) || hasPathSum(root.right, sumNext);
         }
     }
+
+    // 二叉树的直径
+    // 543
+    // 直径长度是任意两个结点路径长度中的最大值。这条路径可能穿过也可能不穿过根结点。
+    public class DiameterOfBinaryTreeSolution {
+        private int result; // 记录每次路径经过的节点数，取最大
+        public int diameterOfBinaryTree(TreeNode root) {
+            result = 1;
+            depth(root);
+            // 直径长度为所有经过的节点数-1
+            return result - 1;
+        }
+
+        // 该节点为root的子树深度
+        private int depth(TreeNode curr) {
+            if (curr == null) {
+                return 0;
+            }
+
+            int left = depth(curr.left); // 左孩子为root的子树深度
+            int right = depth(curr.right);
+            int currDepth = Math.max(left, right) + 1; // curr当前节点为root的深度
+
+            // left + right + 1: 以curr当前节点为起点的路径，经过节点数的最大值（+1是加自己）
+            result = Math.max(result, left + right + 1);
+
+            return currDepth;
+        }
+    }
+
+    // 合并二叉树
+    // 617
+    // 输入:
+    //	Tree 1                     Tree 2
+    //          1                         2
+    //         / \                       / \
+    //        3   2                     1   3
+    //       /                           \   \
+    //      5                             4   7
+    // 输出:
+    //	     3
+    //	    / \
+    //	   4   5
+    //	  / \   \
+    //	 5   4   7
+    public class MergeTreesSolution {
+        public TreeNode mergeTrees(TreeNode root1, TreeNode root2) {
+            if (root1 == null) {
+                return root2;
+            }
+            if (root2 == null) {
+                return root1;
+            }
+            // 上面的判断包括了两者都为null的情况
+
+            TreeNode left = mergeTrees(root1.left, root2.left);
+            TreeNode right = mergeTrees(root1.right, root2.right);
+
+            TreeNode curr = new TreeNode(root1.val + root2.val);
+
+            // 需要把左右子树给接上
+            curr.left = left;
+            curr.right = right;
+
+            return curr;
+        }
+    }
+
+    // 最长同值路径
+    // 687
+    // 找到最长的路径，这个路径中的每个节点具有相同值。
+    // 注意：两个节点之间的路径长度由它们之间的边数表示。
+    // 输入:
+    //
+    //              5
+    //             / \
+    //            4   5
+    //           / \   \
+    //          1   1   5
+    // 输出:2
+    public class LongestUnivaluePath {
+        private int result; // 全局的最长路径
+        public int longestUnivaluePath(TreeNode root) {
+            result = 0;
+            longestPath(root);
+            return result;
+        }
+        private int longestPath(TreeNode curr) {
+            if (curr == null) { // 空节点
+                return 0;
+            }
+            int currMax = 0; // 以当前curr节点为起点的最长同值路径（只能是单边的，因为递归需要返回）
+            int left = longestPath(curr.left);
+            int right = longestPath(curr.right);
+
+            // .1 左子树与root相同
+            if (curr.left != null && curr.left.val == curr.val) {
+                currMax = Math.max(currMax, left + 1);
+            }
+
+            // .2 右子树与root相同
+            if (curr.right != null && curr.right.val == curr.val) {
+                currMax = Math.max(currMax, right + 1);
+            }
+
+            // .3 左子树-root-右子树都相等
+            if (curr.left != null && curr.left.val == curr.val &&
+                curr.right != null && curr.right.val == curr.val) {
+                result = Math.max(result, left + right + 2); // 加上左右两条边
+            }
+
+            result = Math.max(result, currMax); // 比较全局的和单边的
+
+            return currMax;
+        }
+    }
 }
