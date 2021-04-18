@@ -400,7 +400,7 @@ public class HighFrequency {
     // 合并二叉树
     // 617
     // 输入:
-    //	Tree 1                     Tree 2
+    // Tree 1                     Tree 2
     //          1                         2
     //         / \                       / \
     //        3   2                     1   3
@@ -481,6 +481,126 @@ public class HighFrequency {
             result = Math.max(result, currMax); // 比较全局的和单边的
 
             return currMax;
+        }
+    }
+
+    // 输出二叉树
+    // 655
+    // 在一个 m*n 的二维字符串数组中输出二叉树
+    // 输入:
+    //     1
+    //    / \
+    //   2   3
+    //    \
+    //     4
+    // 输出:
+    // [["", "", "", "1", "", "", ""],
+    //  ["", "2", "", "", "", "3", ""],
+    //  ["", "", "4", "", "", "", ""]]
+    public class PrintTreeSolution {
+        private List<List<String>> result;
+        public List<List<String>> printTree(TreeNode root) {
+            int height = getHeight(root);
+            int length = (1 << height) - 1; // 2^h - 1
+
+            result = new ArrayList<>();
+            // 将res全部置为“ ”
+            for (int i = 0; i < height; i++) {
+                List<String> arr = new ArrayList<>();
+                for (int j = 0; j < length; j++) {
+                    arr.add("");
+                }
+                result.add(arr);
+            }
+
+            // 填充数字
+            fill(root, 0, 0, length - 1);
+
+            return result;
+        }
+        // 第i行，左边界l，右边界r
+        // 实际上相当于是一个二分，在左子树去寻找相应的位置，满足根节点在区域中间，左孩子在左边的中间，右孩子在右边的中间
+        private void fill(TreeNode curr, int i, int l, int r) {
+            if (curr == null) {
+                return;
+            }
+            int mid = l + (r - l) / 2;
+
+            result.get(i).set(mid, Integer.toString(curr.val)); // 第i行的mid设置为当前值
+
+            fill(curr.left, i + 1, l, mid - 1); // i+1行
+            fill(curr.right, i + 1, mid + 1, r);
+        }
+        private int getHeight(TreeNode curr) {
+            if (curr == null) {
+                return 0;
+            }
+            return Math.max(getHeight(curr.left), getHeight(curr.right)) + 1;
+        }
+    }
+
+    // 完全二叉树的节点个数
+    // 222
+    // 完全二叉树 的根节点 root ，求出该树的节点个数
+    public class CountNodesSolution {
+        // 暴力法，但是没有考虑完全二叉树的性质
+        // public int countNodes(TreeNode root) {
+        //     if (root == null){
+        //         return 0;
+        //     }
+        //     return countNodes(root.left) + countNodes(root.right) + 1;
+        // }
+
+        // 完全二叉树是一棵空树或者它的叶子节点只出在最后两层，若最后一层不满则叶子节点只在最左侧。
+        public int countNodes(TreeNode root) {
+            if (root == null) {
+                return 0;
+            }
+
+            int left = countLevel(root.left); // 左子树的高度
+            int right = countLevel(root.right); // 右子树的高度
+            if (left == right) { // 左子树一定是满二叉树，因为节点已经填充到右子树了
+                                 // 左子树的节点直接得到2^left - 1
+                                 // 再对右子树递归统计
+                return countNodes(root.right) + (1 << left) - 1 + 1; // +1是这个root节点
+            } else { // left != right, 此时最后一层不满，但倒数第二层已经满了，可以直接得到右子树的节点个数
+                     // 再对左子树递归统计
+                return countNodes(root.left) + (1 << right) - 1 + 1;
+            }
+            // 时间复杂度：T(n) = T(n/2) + logn 使用主定理的特殊情况，可以求得时间复杂度是O(logn * logn)
+        }
+        private int countLevel(TreeNode curr) { // 不用递归，因为是完全二叉树，可以更快
+            int level = 0;
+            while (curr != null) {
+                level ++;
+                curr = curr.left;
+            }
+            return level;
+        }
+    }
+
+    // 修剪二叉搜索树
+    // 669
+    // 给你二叉搜索树的根节点 root ，同时给定最小边界low 和最大边界 high。通过修剪二叉搜索树，使得所有节点的值在[low, high]中
+    class TrimBSTSolution {
+        public TreeNode trimBST(TreeNode root, int low, int high) {
+            if (root == null) {
+                return null;
+            }
+
+            if (root.val < low) { // BST, root比low小,把左孩子连同root全部裁掉
+                root = root.right;
+                // 裁掉之后继续看右孩子的剪裁情况 剪裁后重新赋值给root
+                root = trimBST(root, low, high);
+            } else if (root.val > high) { // BST, 如果数字比high大, 就把右孩子连同root全部裁掉.
+                root = root.left;
+                // 裁掉之后继续看左节点的剪裁情况
+                root = trimBST(root, low, high);
+            } else { // 如果数字在区间内,就去裁剪左右子节点
+                root.left = trimBST(root.left, low, high);
+                root.right = trimBST(root.right, low, high);
+            }
+            return root;
         }
     }
 }
