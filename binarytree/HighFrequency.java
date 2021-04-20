@@ -603,4 +603,80 @@ public class HighFrequency {
             return root;
         }
     }
+
+    // 打家劫舍 III
+    // 337
+    // 如果两个直接相连的房子在同一天晚上被打劫，房屋将自动报警。
+    // 计算在不触动警报的情况下，小偷一晚能够盗取的最高金额
+    // 输入: [3,4,5,1,3,null,1]
+    //
+    //     3
+    //    / \
+    //   4   5
+    //  / \   \
+    // 1   3   1
+    // 输出: 9 解释:小偷一晚能够盗取的最高金额 4 + 5 = 9.
+    public class RobSolution {
+        // 方法1 递归+Hash
+        // 二叉树只有左右两个孩子，一个爷爷最多 2 个儿子，4 个孙子
+        // 相邻的不能偷
+        // 4个孙子偷的钱 + 爷爷的钱 VS 两个儿子偷的钱 哪个组合钱多，就当做当前节点能偷的最大钱数
+        Map<TreeNode, Integer> hash; // 以当前节点为root能偷到的最大钱数（这个节点可能偷也可能不偷）
+        public int rob(TreeNode root) {
+            hash = new HashMap<>();
+            return robInternal(root);
+        }
+        private int robInternal(TreeNode curr) {
+            if (curr == null) {
+                return 0;
+            }
+            if (hash.containsKey(curr)) {
+                return hash.get(curr);
+            }
+
+            // .1 爷爷+两个孙子
+            int money = curr.val; // 当前节点的钱数
+            if (curr.left != null) { // 当前节点左边的两个孙子
+                money += robInternal(curr.left.left) + robInternal(curr.left.right);
+            }
+            if (curr.right != null) { // 当前节点右边的两个孙子
+                money += robInternal(curr.right.left) + robInternal(curr.right.right);
+            }
+
+            // .2 只有爸爸
+            int result = robInternal(curr.left) + robInternal(curr.right);
+
+            result = Math.max(result, money);
+            // 每次递归都会做这样的判断，再选择较大的
+
+            hash.put(curr, result);
+            return result;
+        }
+
+        // 方法2
+        // 每个节点选择偷或不偷 result[], 0不偷 1偷
+        // .1 当前节点选择不偷：当前节点能偷到的最大钱数 = 左孩子能偷到的钱 + 右孩子能偷到的钱
+        // .2 当前节点选择偷：当前节点能偷到的最大钱数 = 左孩子选择自己不偷时能得到的钱 + 右孩子选择不偷时能得到的钱 + 当前节点的钱数
+        public int rob2(TreeNode root) {
+            int[] result = robInternal2(root);
+            return Math.max(result[0], result[1]);
+        }
+        private int[] robInternal2(TreeNode curr) { // 当前节点为root能偷到的最大钱
+            int[] result = new int[2];
+            if (curr == null) {
+                return result;
+            }
+
+            int[] left = robInternal2(curr.left); // 左孩子能偷到的最大的钱
+            int[] right = robInternal2(curr.right); // 右孩子能偷到的最大的钱
+
+            // 当前节点不偷，左右孩子拿最多的钱出来（孩子那个点可偷可不偷）
+            result[0] = Math.max(left[0], left[1]) + Math.max(right[0], right[1]);
+
+            // 当前节点偷，左右孩子不偷
+            result[1] = left[0] + right[0] + curr.val;
+
+            return result;
+        }
+    }
 }
