@@ -172,4 +172,78 @@ public class BFSOther {
             return words;
         }
     }
+
+    // 752 open the lock
+    // 锁的初始数字为 '0000'，每个拨轮可以自由旋转变化1
+    // 列表 deadends 是会被锁定无法再转，target 是最终数字
+    // 返回最小旋转次数
+    class openLockS {
+        public int openLock(String[] deadends, String target) {
+
+            Set<String> deadendSet = new HashSet<>();
+            for (String s : deadends) {
+                deadendSet.add(s);
+            }
+
+            Set<String> visited = new HashSet<>();
+            int step = 0;
+
+            Queue<String> q = new LinkedList<>();
+            q.offer("0000");
+            visited.add("0000");
+
+            while (!q.isEmpty()){
+                int size = q.size();
+                for (int i = 0; i < size; i++) {
+                    String curr = q.poll();
+                    if (deadendSet.contains(curr)) {
+                        continue;
+                    }
+                    if (curr.equals(target)) {
+                        return step;
+                    }
+
+                    for (int j = 0; j < 4; j++) {
+                        String nextUp = plusOne(curr, j); // 任意一位+1
+                        if (!visited.contains(nextUp)) {
+                            visited.add(nextUp);
+                            q.offer(nextUp);
+                        }
+                        String nextDown = minusOne(curr, j); // 任意一位-1
+                        if (!visited.contains(nextDown)) {
+                            visited.add(nextDown);
+                            q.offer(nextDown);
+                        }
+
+                    }
+                }
+
+                step ++;
+            }
+
+            return -1; // 解不了锁
+
+        }
+
+        private String plusOne(String s, int position) {
+            char[] charArr = s.toCharArray();
+            if (charArr[position] == '9') {
+                charArr[position] = '0';
+            } else {
+                charArr[position] += 1;
+            }
+
+            return charArr.toString();
+        }
+        private String minusOne(String s, int position) {
+            char[] charArr = s.toCharArray();
+            if (charArr[position] == '0') {
+                charArr[position] = '9';
+            } else {
+                charArr[position] -= 1;
+            }
+
+            return charArr.toString();
+        }
+    }
 }
