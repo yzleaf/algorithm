@@ -220,7 +220,6 @@ public class BFSOther {
 
                 step ++;
             }
-
             return -1; // 解不了锁
         }
 
