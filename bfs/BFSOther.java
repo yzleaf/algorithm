@@ -222,7 +222,6 @@ public class BFSOther {
             }
 
             return -1; // 解不了锁
-
         }
 
         private String plusOne(String s, int position) {
