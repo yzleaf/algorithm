@@ -82,6 +82,7 @@ public class HashOther {
     }
 
     // 2. Longest Consecutive Sequence
+    // 128
     // 给定一个未排序的整数数组，找出最长连续序列的长度（每个相差1）
     // 输入 : [100, 4, 200, 1, 3, 2]
     // 输出 : 4
