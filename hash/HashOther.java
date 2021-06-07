@@ -115,7 +115,6 @@ public class HashOther {
                     longest = Math.max(longest, up - down - 1); // 最后跳出循环后的数up+1 down-1，所以个数为up-down-1
                 }
             }
-
             return longest;
         }
     }
