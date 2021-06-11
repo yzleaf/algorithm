@@ -287,4 +287,41 @@ public class FanTanDP {
         }
     }
 
+    // 1696 Jump Game VI
+    // 最多可以往前跳k步，但你不能跳出数组的边界
+    // 返回你能得到的 最大得分
+    public class JumpGameVISolution {
+        // dp存当前得到的最大值（前面的k个dp数里取最大值 + nums[i]）
+        // 但是如果用for循环遍历前面的k个数，会一直重复计算。考虑用滑动窗口最大值来记录（239）
+        public int maxResult(int[] nums, int k) {
+            int n = nums.length;
+            int[] dp = new int[n];
+            // 初始化dp数组，因为nums可能存在负值
+            for (int i = 0; i < n; i++) {
+                dp[i] = Integer.MIN_VALUE;
+            }
+
+            dp[0] = nums[0]; // 第一个数只能在开始没的选
+
+            Deque<Integer> deque = new LinkedList<>(); // 滑动窗口存从大到小的至多k个数
+            deque.offerLast(0);
+
+            for (int i = 1; i < n; i++) {
+                dp[i] = dp[deque.peekFirst()] + nums[i]; // 前k个dp里的最大index
+
+                // 剔除队尾小的数，因为不可能会取到他们了
+                while (!deque.isEmpty() && dp[i] >= dp[deque.peekLast()]) {
+                    deque.pollLast();
+                }
+                deque.offerLast(i);
+
+                // 判断队首是否在windows内，不在就要剔除
+                if (deque.peekFirst() <= i - k) {
+                    deque.pollFirst();
+                }
+            }
+
+            return dp[n-1];
+        }
+    }
 }

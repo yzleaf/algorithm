@@ -489,4 +489,43 @@ public class Heap {
         // 起始数区间是[0][0] - [n][m]，二分查找中间的数mid排多少位
         // 从左下角开始，目标值更大->往右找，目标值更小->往上找
     }
+
+    // 239. 滑动窗口最大值
+    // 整数数组nums，有一个大小为k的滑动窗口从数组的最左侧移动到数组的最右侧。
+    // 滑动窗口每次只向右移动一位，返回滑动窗口中的最大值
+    public class maxSlidingWindowS {
+        // 方法1 用最大堆记(value, index)，每次向右滑都添加进堆，如果当前堆里最大数的index不在窗口内就不断poll
+        // 时间nlogn（元素单调递增，所有元素都在heap里）
+        // 空间n
+
+        // 方法2 双向队列，让数据从大到小排列。每次滑动窗口，新数从队尾last进入，把队尾小于它的数挤掉；队首的数是最大的，判断是不是在窗口内
+        // 队列里存的是index
+        // 时间n
+        // 空间k
+        public int[] maxSlidingWindow(int[] nums, int k) {
+            int n = nums.length;
+            int[] result = new int[n - k + 1];
+            Deque<Integer> deque = new LinkedList<>();
+
+            for (int i = 0; i < n; i++) {
+                while (!deque.isEmpty() && nums[deque.peekLast()] <= nums[i]) { // 队尾的数值如果小的话要丢掉
+                    deque.pollLast();
+                }
+                deque.offerLast(i);
+
+                // 判断队首是否在windows里
+                if (deque.peekFirst() <= i - k) {
+                    deque.pollFirst();
+                }
+
+                // 开头k个值窗口占满了才开始保存
+                if (i >= k - 1) {
+                    result[i - k + 1] = nums[deque.peekFirst()];
+                }
+            }
+
+            return result;
+        }
+    }
+
 }
