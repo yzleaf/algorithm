@@ -1,5 +1,8 @@
 package dynamicprogram;
 
+import java.util.Deque;
+import java.util.LinkedList;
+
 public class CoordinateDP {
     // 1. Minimum Path Sum
     // 给定一个只含非负整数的m*n网格，找到一条从左上角到右下角的可以使数字和最小的路径
@@ -202,6 +205,88 @@ public class CoordinateDP {
                 }
             }
             return steps[A.length - 1];
+        }
+    }
+
+    // 1696 Jump Game VI
+    // 最多可以往前跳k步，但你不能跳出数组的边界
+    // 返回你能得到的 最大得分
+    public class JumpGame6Solution {
+        // dp存当前得到的最大值（前面的k个dp数里取最大值 + nums[i]）
+        // 但是如果用for循环遍历前面的k个数，会一直重复计算。考虑用滑动窗口最大值来记录（239）
+        public int maxResult(int[] nums, int k) {
+            int n = nums.length;
+            int[] dp = new int[n];
+            // 初始化dp数组，因为nums可能存在负值
+            for (int i = 0; i < n; i++) {
+                dp[i] = Integer.MIN_VALUE;
+            }
+
+            dp[0] = nums[0]; // 第一个数只能在开始没的选
+
+            Deque<Integer> deque = new LinkedList<>(); // 滑动窗口存从大到小的至多k个数
+            deque.offerLast(0);
+
+            for (int i = 1; i < n; i++) {
+                dp[i] = dp[deque.peekFirst()] + nums[i]; // 前k个dp里的最大index
+
+                // 剔除队尾小的数，因为不可能会取到他们了
+                while (!deque.isEmpty() && dp[i] >= dp[deque.peekLast()]) {
+                    deque.pollLast();
+                }
+                deque.offerLast(i);
+
+                // 判断队首是否在windows内，不在就要剔除
+                if (deque.peekFirst() <= i - k) {
+                    deque.pollFirst();
+                }
+            }
+
+            return dp[n-1];
+        }
+    }
+
+    // 1690. Stone Game VII
+    // 有 n 块石子排成一排。每个玩家的回合中，可以移除最左边的石头或最右边的石头，并获得剩余石头值之和的得分。
+    // 先手玩家（肯定赢）最大化差值，后手玩家最小化差值，返回两个玩家得分的差值
+    public class stoneGame7Solution {
+        public int stoneGameVII(int[] stones) {
+            int n = stones.length;
+
+            // sum[i][j]：表示从i到j的石头价值总和
+            int sum[][] = new int[n][n];
+            for (int i = 0; i < n; i++) {
+                for (int j = i; j < n; j++) {
+                    if (i == j) {
+                        sum[i][j] = stones[i];
+                    } else {
+                        sum[i][j] = sum[i][j-1] + stones[j];
+                    }
+                }
+            }
+
+            // 不管先手还是后手，总是在max relative score:(我total score - 对手total score)（对于后手来说，因为肯定输，所以输的少一点也是max负数）
+            // -> max(我current score - (对手剩下游戏total score - 我剩下游戏total score))
+            // -> max(我current score - 对手在剩下游戏的relative score)
+
+            // dp[i][j]：表示剩下的石头堆为i到j时，本轮操作以后，我total score与对手total score的最大值(当前玩家不一定是先手Alice)
+            // i = j: dp[i][j] = 0，因为删了就取不到其他值了,A取走它，剩0，B也只有0。0-0=0
+            // i < j:
+            //      i = j-1，剩下2个石头，删掉小的一个，本轮成绩高，另一个没分 -> 分差为：Max(stones[i], stones[j]) - 0
+            //      i < j-1，本轮A从左端或右端删除，取更大的那个 -> 分差为：Max(sum[i+1][j] - dp[i+1][j], sum[i][j-1] - dp[i][j-1])
+            //               左端删：剩下石头中，B比A的total score得分多dp[i+1][j]
+            //               右端删：剩下石头中，B比A的total score得分多dp[i][j-1]
+            int dp[][] = new int[n][n];
+            for (int i = n; i >= 0; i--) { // 因为后面dp的i是从i+1得来的
+                for (int j = i + 1; j < n; j++) { // 因为后面dp的j是从j-1得来的
+                    if (j == i + 1) {
+                        dp[i][j] = Math.max(stones[i], stones[j]);
+                    } else {
+                        dp[i][j] = Math.max(sum[i+1][j] - dp[i+1][j], sum[i][j-1] - dp[i][j-1]);
+                    }
+                }
+            }
+            return dp[0][n-1];
         }
     }
 
