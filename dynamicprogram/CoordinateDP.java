@@ -290,4 +290,35 @@ public class CoordinateDP {
         }
     }
 
+    // 871 Minimum Number of Refueling Stops
+
+    // 每个 station[i] 代表一个加油站，它位于出发位置东面station[i][0]英里处，并且有station[i][1]升汽油。
+    // 最初有 startFuel 升燃料。它每行驶 1 英里就会用掉 1 升汽油
+    // 为了到达目的地，汽车所必要的最低加油次数是多少？如果无法到达目的地，则返回 -1
+    public class MinRefuelStopsSolution {
+        public int minRefuelStops(int target, int startFuel, int[][] stations) {
+            int n = stations.length; // 车站个数
+
+            // dp[i]表示加了i次油能够行驶的最大距离
+            int dp[] = new int[n + 1];
+            dp[0] = startFuel; // 刚开始能够行驶的最远距离
+
+            for (int i = 0; i < n; i++) { // i个车站
+                for (int t = i; t >= 0; t--) { // 加t次油
+                    if (dp[t] >= stations[i][0]) { // 能够到达这个车站
+                        dp[t + 1] = Math.max(stations[i][1] + dp[t], dp[t+1]);
+                    }
+                }
+            }
+
+            for (int i = 0; i < n + 1; i++) {
+                if(dp[i] >= target) { // 到终点了没有油也算
+                    return i;
+                }
+            }
+
+            return -1;
+        }
+    }
+
 }
