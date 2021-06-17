@@ -47,4 +47,38 @@ public class Other {
         }
     }
 
+    // 22. Generate Parentheses
+    // n 代表生成括号的对数，返回有效的括号组合
+    // 输入：n = 3
+    // 输出：["((()))","(()())","(())()","()(())","()()()"]
+    public class GenerateParenthesisSolution {
+        // 左括号的个数大于右括号，再添加是有效的
+        // 不断递归添加括号
+        public List<String> generateParenthesis(int n) {
+            List<String> result = new ArrayList<>();
+            if (n == 0) {
+                return result;
+            }
+            dfs(result, "", 0, 0, n);
+            return result;
+        }
+        private void dfs(List<String> res, String curr, int left, int right, int n) {
+            if (left == n && right == n) {
+                res.add(curr);
+                return;
+            }
+
+            if (left < right) { // 右括号多，不合法，直接返回
+                return;
+            }
+
+            if (left < n) {
+                dfs(res, curr + "(", left + 1, right, n);
+            }
+            if (right < n) {
+                dfs(res, curr + ")", left, right + 1, n);
+            }
+        }
+    }
+
 }
