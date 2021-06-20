@@ -53,6 +53,7 @@ public class Other {
         public int kInversePairs(int n, int k) {
             int[][] dp = new int[n+1][k+1];
             int M = 1000000007;
+
             dp[1][0] = 1;
             for (int i = 2; i < n+1; i++) {
                 dp[i][0] = 1;
@@ -65,6 +66,7 @@ public class Other {
                     dp[i][j] = dp[i][j] >= 0 ? dp[i][j]%M : (dp[i][j] + M);
                 }
             }
+
             return dp[n][k];
         }
     }
