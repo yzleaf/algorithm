@@ -65,7 +65,6 @@ public class Other {
                     dp[i][j] = dp[i][j] >= 0 ? dp[i][j]%M : (dp[i][j] + M);
                 }
             }
-
             return dp[n][k];
         }
     }
