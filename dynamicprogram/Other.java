@@ -37,4 +37,36 @@ public class Other {
             return count;
         }
     }
+
+    // 629. K Inverse Pairs Array
+    // 找出所有包含从1到n的数字，且恰好拥有k个逆序对的不同的数组的个数。
+    // 逆序对：对于数组的第i个和第j个元素，如果满i < j且 a[i] > a[j]
+    public class KInversePairsSolution {
+        // f(i,j) 表示从1-i有j个逆序对的，不同数组个数
+        // f(i,j) = f(i-1,j) + f(i-1,j-1) + ... + f(i-1,j-(i-1))    1式
+        //    第i个元素: 放最后   放倒数第2个           放第1个
+        // 用j-1替换上式j得：
+        // f(i,j-1) = f(i-1,j-1) + f(i-1,j-2) + ... + f(i-1,j-i)    2式
+
+        // 1式-2式得： f(i,j) = f(i-1,j) + f(i,j-1) - f(i-1,j-i)
+        // f(i,0)=1, f(i,j)=0 when j<0
+        public int kInversePairs(int n, int k) {
+            int[][] dp = new int[n+1][k+1];
+            int M = 1000000007;
+            dp[1][0] = 1;
+            for (int i = 2; i < n+1; i++) {
+                dp[i][0] = 1;
+                for (int j = 1; j < k+1; j++) {
+                    if (j >= i) {
+                        dp[i][j] = dp[i-1][j] + dp[i][j-1] - dp[i-1][j-i];
+                    } else {
+                        dp[i][j] = dp[i-1][j] + dp[i][j-1] - 0;
+                    }
+                    dp[i][j] = dp[i][j] >= 0 ? dp[i][j]%M : (dp[i][j] + M);
+                }
+            }
+
+            return dp[n][k];
+        }
+    }
 }
