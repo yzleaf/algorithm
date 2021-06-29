@@ -169,6 +169,7 @@ public class BinarySearchPosition {
     // 6. Search in Rotated Sorted Array
     // 33
     // 给定一个目标值进行搜索，如果在数组中找到目标值返回数组中的索引位置，否则返回-1
+    // 没有重复元素，不存在start==mid的情况
     public class SearchRotatedSortedArraySolution {
         // 方法1 先找到最小点，再来一次二分
         // 方法2 直接二分分类讨论
@@ -210,6 +211,54 @@ public class BinarySearchPosition {
             }
 
             return -1;
+        }
+    }
+
+    // 81. 搜索旋转排序数组 II
+    // 判断给定的目标值是否存在于数组中。如果 nums 中存在这个目标值 target ，则返回 true ，否则返回 false
+    // 有重复元素，可能存在start==mid的情况
+    public class SearchRotatedSortedArraySolution2 {
+        public boolean search(int[] nums, int target) {
+            if (nums == null || nums.length == 0) {
+                return false;
+            }
+
+            int start = 0, end = nums.length - 1;
+            while (start + 1 < end) {
+                int mid = start + (end - start) / 2;
+                if (nums[mid] == target) {
+                    return true;
+                }
+
+                // start == mid
+                // 10111和11101这种。此种情况下 nums[start] == nums[mid]，分不清到底是前面有序还是后面有序
+                // 此时 start++ 即可。相当于去掉一个重复的干扰项。
+                if (nums[start] == nums[mid]) {
+                    start ++;
+                    continue;
+                }
+
+                if (nums[start] < nums[mid]) { // left part
+                    if (nums[start] <= target && target <= nums[mid]) {
+                        end = mid;
+                    } else {
+                        start = mid;
+                    }
+                } else { // >= right part
+                    if (nums[mid] <= target && target <= nums[end]) {
+                        start = mid;
+                    } else {
+                        start = mid;
+                    }
+                }
+            }
+
+            // 跳出循环后还是得做这个判断
+            if (nums[start] == target || nums[end] == target) {
+                return true;
+            } else {
+                return false;
+            }
         }
     }
 }
