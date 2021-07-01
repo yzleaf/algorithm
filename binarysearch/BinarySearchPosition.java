@@ -248,7 +248,7 @@ public class BinarySearchPosition {
                     if (nums[mid] <= target && target <= nums[end]) {
                         start = mid;
                     } else {
-                        start = mid;
+                        end = mid;
                     }
                 }
             }

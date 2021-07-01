@@ -186,11 +186,14 @@ public class Array {
                         findKth(A, 0, B, 0, n/2) +
                         findKth(A, 0, B, 0, n/2 + 1)
                 ) / 2.0;
+            } else {
+                return findKth(A, 0, B, 0, n/2 + 1); // 奇数长度，中位数为第n/2 + 1个数
             }
 
-            return findKth(A, 0, B, 0, n/2 + 1); // 奇数长度，中位数为第n/2 + 1个数
+
         }
         // find kth number of two sorted array
+        // 第k个数，不是下标为k的数，所以后面返回的要-1
         private int findKth(int[] A, int startOfA, int[] B, int startOfB, int k) {
             if (startOfA >= A.length) {
                 return B[startOfB + k - 1];
@@ -199,10 +202,11 @@ public class Array {
                 return A[startOfA + k - 1];
             }
 
-            if (k == 1) {
+            if (k == 1) { // 第一个数->取最小的
                 return Math.min(A[startOfA], B[startOfB]);
             }
 
+            // 比较两个数组k/2的大小，看删除哪部分的数
             int halfKthA = startOfA + k/2 - 1 < A.length ?
                            A[startOfA + k/2 - 1] :
                            Integer.MAX_VALUE;
