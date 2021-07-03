@@ -158,6 +158,7 @@ public class BinarySearchPosition {
                 }
             }
 
+            // 前面直接return mid，到这一步只有可能是边缘的情况
             if (A[start] > A[end]) {
                 return start;
             } else {
