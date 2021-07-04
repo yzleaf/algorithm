@@ -39,10 +39,46 @@ public class HighFrequency {
         }
     }
 
-    // 4. Median of Two Sorted Arrays
-    public class MedianSortedArrays {
-        public double findMedianSortedArrays(int[] nums1, int[] nums2) {
+    // 以下是答案二分法的题目
 
+    // 875. 爱吃香蕉的珂珂
+    // N堆香蕉，第i堆中有piles[i]根香蕉
+    // 返回她可以在H小时内吃掉所有香蕉的最小速度 K
+    // 输入: piles = [3,6,7,11], H = 8
+    // 输出: 4 （1 + 2 + 2 + 3小时）
+    public class MinEatingSpeedSolution {
+        public int minEatingSpeed(int[] piles, int h) {
+            // K速度能吃完，K-1, K-2...都不不能吃完，K+1，K+2...都能吃完
+            // 二分查找问题变为第一个能吃完的速度K
+            int start = 0;
+            int end = 1_000_000_000;
+            while (start + 1 < end) {
+                int midSpeed = (start + end) / 2;
+                if (possible(piles, h, midSpeed)) { // 能吃完
+                    end = midSpeed;
+                } else {
+                    start = midSpeed;
+                }
+            }
+
+            if (possible(piles, h, start)) {
+                return start;
+            } else {
+                return end;
+            }
+
+        }
+        private boolean possible(int[] piles, int h, int k) {
+            int time = 0;
+            for (int num : piles) {
+                time += ((num - 1)/ k + 1);
+            }
+            // 可以简化成return time <= h;
+            if (time <= h) {
+                return true;
+            } else {
+                return false;
+            }
         }
     }
 
