@@ -1,6 +1,6 @@
 package binarysearch;
 
-import com.sun.xml.internal.fastinfoset.tools.XML_SAX_StAX_FI;
+import java.util.*;
 
 public class BinarySearchPosition {
 
@@ -260,6 +260,90 @@ public class BinarySearchPosition {
             } else {
                 return false;
             }
+        }
+    }
+    
+    // 658. Find K Closest Elements
+    // 给定一个排序好的数组 arr ，两个整数 k 和 x ，从数组中找到最靠近 x（两数之差最小）的 k 个数。返回的结果必须要是按升序排好的
+    public class FindCloseSolution {
+        // 方法1
+        // 二分找到小于x的最接近的数，双指针扩展区间成k个
+        public List<Integer> findClosestElements(int[] arr, int k, int x) {
+            List<Integer> result = new ArrayList();
+            int left = findLowerClosest(arr, x);
+            int right = left + 1;
+
+            // left和right开始向两边扩展
+            // 注意区间边界，left和right过了边界就要看另一个方向
+            while (right - left <= k) { // 这个小于等于k一定要画图，考虑k=1,k=2的情况
+            // 或者直接用 for (int i = 0; i < k ; i++) 直接保证了k个数
+                if (left == -1) {
+                    right ++;
+                    continue;
+                }
+                if (right == arr.length) {
+                    left --;
+                    continue;
+                }
+                if (x - arr[left] <= arr[right] - x) { // 距离相等时，index小的保留
+                    left --;
+                } else {
+                    right ++;
+                }
+            }
+
+            for (int i = left + 1; i < right; i ++) {
+                result.add(arr[i]);
+            }
+
+            return result;
+        }
+        private int findLowerClosest(int[] arr, int x) {
+            int start = 0, end = arr.length - 1;
+            // 找到第一个小于且最接近x的数
+            while (start + 1 < end) {
+                int mid = start + (end - start) / 2;
+                if (arr[mid] < x) {
+                    start = mid;
+                } else {
+                    end = mid;
+                }
+            }
+            if (arr[end] < x) {
+                return end;
+            }
+            if (arr[start] < x) {
+                return start;
+            }
+            return -1; // 找不到，数组全部大于x，返回的是-1，这样后面的right+1就会是第一个数index=0
+        }
+
+        // 方法2
+        public List<Integer> findClosestElements2(int[] arr, int k, int x) {
+            List<Integer> result = new ArrayList();
+
+            // mid 到 mid+k 有 k+1 个元素
+            // mid更接近的话，mid+k及其往右的元素都不满足
+            // mid+k更接近的话，mid及其往左的元素都不满足
+            int start = 0, end = arr.length - k;
+
+            while (start < end) {
+                int mid = start + (end - start) / 2;
+                // 不用绝对值是因为[1,1,2,2,2,2,2,3,3], 3, 3为测试用例
+                // 如果在四个2的区间，会出错。规避duplicate的情况
+                // Math.abs(arr[mid] - x) <= Math.abs(arr[mid + k] - x)
+                if (x - arr[mid] <= arr[mid + k] - x) { // =时候，取index小的
+                    end = mid;
+                } else {
+                    start = mid + 1;
+                }
+            }
+
+
+            for (int i = start; i < start + k; i++) {
+                result.add(arr[i]);
+            }
+            return result;
         }
     }
 }
