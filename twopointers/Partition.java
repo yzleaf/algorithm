@@ -289,6 +289,7 @@ public class Partition {
                     swap(nums, left, mid);
                     left ++;
                     mid ++; // 因为从左往右扫，mid扫过的，现在交换过来的数肯定为1，所以可以继续往后走一位
+                            // 如果这里mid不加。一个例子，刚开始mid和left坐标相等，对应数值相等都为0，只有left往后走，后面会把当前的mid 0和left的其他数交换
                 } else if (nums[mid] == 2) {
                     swap(nums, mid, right);
                     right --;
