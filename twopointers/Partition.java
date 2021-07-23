@@ -126,14 +126,14 @@ public class Partition {
         // 模板
         private int partition3(int[] nums, int start, int end, int k) {
             if (start >= end) {
-                return nums[k];
+                return nums[k]; // nums[start]也是可以的
             }
 
             int left = start, right = end;
             int pivot = nums[(start + end) / 2];
 
             while (left <= right) {
-                while (left <= right && nums[left] < pivot) { // 如果用nums<=pivot，整个数组元素相等时候，不交换，最后一直递归
+                while (left <= right && nums[left] < pivot) { // 如果用nums<=pivot，整个数组元素相等时候，左指针会一直走到最后，不平衡
                     left++;
                 }
                 while (left <= right && nums[right] > pivot) {
@@ -152,7 +152,7 @@ public class Partition {
             if (k >= left) { // 在右半边
                 return partition(nums, left, end, k);
             }
-            return nums[k]; // k在right和left之间，k位置一定是最后所在的位置
+            return nums[k]; // k在right和left之间，k位置一定是最后所在的位置（相遇的时候是相等的数）
         }
     }
 
