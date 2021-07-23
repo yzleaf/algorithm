@@ -1,5 +1,7 @@
 package twopointers;
 
+import java.util.*;
+
 public class Partition {
     // 1. Partition Array
     // 给出一个整数数组 nums 和一个整数 k。划分数组使得 所有小于k的元素移到左边，所有大于等于k的元素移到右边
@@ -154,6 +156,99 @@ public class Partition {
             }
             return nums[k]; // k在right和left之间，k位置一定是最后所在的位置（相遇的时候是相等的数）
         }
+    }
+
+    // 347. Top K Frequent Elements
+    // 找到数组中出现频率最高的k个数
+    public class TopKFreqSolution {
+        // 方法1 堆
+        public int[] topKFrequent1(int[] nums, int k) {
+            Map<Integer, Integer> numCount = new HashMap<>();
+            for (int num : nums) {
+                numCount.put(num, numCount.getOrDefault(num, 0) + 1);
+            }
+
+            // 第一个数是number，第二个数是出现频率
+            PriorityQueue<int[]> minHeap = new PriorityQueue<>(new Comparator<int[]>() {
+                @Override
+                public int compare(int[] o1, int[] o2) {
+                    return o1[1] - o2[1];
+                }
+            });
+
+            for (Map.Entry<Integer, Integer> entry : numCount.entrySet()) {
+                int num = entry.getKey();
+                int count = entry.getValue();
+                minHeap.offer(new int[] {num, count});
+                if (minHeap.size() > k) {
+                    minHeap.poll();
+                }
+            }
+
+            int[] result = new int[k];
+            for (int i = 0; i < k; i++) {
+                result[i] = minHeap.poll()[0];
+            }
+
+            return result;
+        }
+
+        // 方法2 双指针partition，类似于K Largest
+        public int[] topKFrequent2(int[] nums, int k) {
+            Map<Integer, Integer> numCount = new HashMap<>();
+            for (int num : nums) {
+                numCount.put(num, numCount.getOrDefault(num, 0) + 1);
+            }
+
+            List<int[]> values = new ArrayList<>();
+            for (Map.Entry<Integer, Integer> entry : numCount.entrySet()) {
+                int num = entry.getKey();
+                int count = entry.getValue();
+                values.add(new int[]{num, count});
+            }
+
+            int len = values.size();
+            int index = partition(values, 0, len - 1, len - k);
+
+            int[] result = new int[k];
+            for (int i = 0; i < k; i ++) {
+                result[i] = values.get(i + index)[0];
+            }
+
+            return result;
+        }
+        private int partition(List<int[]> values, int start, int end, int index) {
+            if (start >= end) {
+                return index;
+            }
+
+            int left = start;
+            int right = end;
+            int pivot = values.get((left + right) / 2)[1];
+
+            while (left <= right) {
+                while (left <= right && values.get(left)[1] < pivot) {
+                    left ++;
+                }
+                while (left <= right && values.get(right)[1] > pivot) {
+                    right --;
+                }
+                if (left <= right) {
+                    Collections.swap(values, left, right);
+                    left ++;
+                    right --;
+                }
+            }
+
+            if (index <= right) {
+                return partition(values, start, right, index);
+            }
+            if (index >= left) {
+                return partition(values, left, end, index);
+            }
+            return index;
+        }
+
     }
 
     // 3. Partition Array by Odd and Even
