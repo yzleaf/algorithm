@@ -96,4 +96,33 @@ public class OppositeDirectionPointers {
         }
     }
 
+    // 42. Trapping Rain Water
+    // 按此排列的柱子，下雨之后能接多少雨水
+    class TrapRainWaterSolution {
+        public int trap(int[] height) {
+            if (height == null || height.length < 3) {
+                return 0;
+            }
+
+            int result = 0;
+            int leftMax = 0; // 左指针左边最大的柱子
+            int rightMax = 0; // 右指针右边最大的柱子
+            int left = 0, right = height.length - 1;
+
+            while (left < right) {
+                leftMax = Math.max(leftMax, height[left]);
+                rightMax = Math.max(rightMax, height[right]);
+                if (leftMax < rightMax) { // leftMax小的时候，我们应该看左指针，因为不管从左指针到右边的中间有什么样的柱子，左指针对应的最大值一定小于leftMax；
+                                          // 如果在这种情况下看右指针，我们无法确定从右指针到中间会不会有更高的柱子，所以不知道右指针这一列对应的雨水可以接多高
+                    result += leftMax - height[left];
+                    left ++;
+                } else {
+                    result += rightMax - height[right];
+                    right --;
+                }
+            }
+            return result;
+        }
+    }
+
 }

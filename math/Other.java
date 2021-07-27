@@ -115,6 +115,7 @@ public class Other {
             int carry = 0;
             int[] num3 = new int[len1 + len2]; // 两个3位数相乘最大为6位数
 
+            // 总长度是i+j+1，所以不要误会后面num3[i]的位置
             for (int i = len1 - 1; i >= 0; i--) {
                 carry = 0; // 被乘数每一轮遍历到新的位，进位应该清零
                 for (int j = len2 - 1; j >= 0; j--) {
