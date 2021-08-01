@@ -81,4 +81,63 @@ public class Other {
         }
     }
 
+    // 1012. 至少有 1 位重复的数字
+    // 给定正整数 N，返回小于等于 N 且具有至少 1 位重复数字的正整数的个数
+    // 3562
+    // 找每一位各不相同的，最后再用总数减它
+    // 第一种情况，总共只有1，2,3位。固定第一位，剩下的九个数排列
+    // 4th 3th 2th 1th total
+    //            1-9 9xA(9,0)
+    //        1-9 0-9 9xA(9,1)
+    //    1-9 0-9 0-9 9xA(9,2)
+    // 第二种情况，有4位。必须先确认比N小，再确认有没有重复
+    // 4th 3th 2th 1th total
+    //1-2 0-9 0-9 0-9 2xA(9,3)
+    // 3  0-4 0-9 0-9 5xA(8,2)
+    // 3   5  0-5 0-9 6xA(7,1)
+    // 3   5   6  0-1 2xA(6,0)
+    // 3   5   6   2  1
+    public class NumDuplicateSolution {
+        public int numDupDigitsAtMostN(int n) {
+            // 把整数变成每一位的数字
+            List<Integer> digits = new ArrayList<>();
+            for (int x = n+1; x > 0; x /= 10) {
+                digits.add(0,x % 10); // 在第0位不断加入高位的数
+            }
+
+            int res = 0, len = digits.size();
+            // 1. 总位数小于n的位数（第一种情况）
+            for (int i = 1; i < len; i ++) {
+                res += 9 * A(9, i - 1);
+            }
+
+            // 2. 与n位数相等
+            // 计算相同前缀情况下，后面的数据可以有多少种排法
+            HashSet<Integer> seen = new HashSet<>();
+            for (int i = 0; i < len; i ++) {
+                // 第一位不能从0开始，所以i=0时j要从1开始
+                // 在前缀确定和原数据一样的情况下，当前位还要保证比原始数据小
+                for (int j = i > 0 ? 0 : 1; j < digits.get(i); j ++) {
+                    if (!seen.contains(j)) { // 有相同的数字就重复了，不符合条件
+                        res += A(9-i, len-i-1);
+                    }
+                }
+                if (seen.contains(digits.get(i))) { // 在前缀中出现了相同的数，不用再往下了
+                    break;
+                }
+                seen.add(digits.get(i)); // 原始数据中的前缀
+            }
+            return n - res;
+        }
+        private int A(int n, int m) {
+            return fact(n) / fact(n-m);
+        }
+        private int fact(int n) {
+            if (n == 1 || n == 0) {
+                return 1;
+            }
+            return fact(n-1) * n;
+        }
+    }
+
 }
