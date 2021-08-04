@@ -278,8 +278,9 @@ public class LinkedList {
             fast = head.next;
             slow = head;
 
+            // while (slow != null && fast != null && fast.next != null) 另一种判断方式，但是要保证走两步的指针有地儿可以走
             while (fast != slow) {
-                if (fast == null || slow == null) {
+                if (fast == null || slow == null || fast.next == null) {
                     return false;
                 }
                 fast = fast.next.next;

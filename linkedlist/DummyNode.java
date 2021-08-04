@@ -35,7 +35,7 @@ public class DummyNode {
             }
 
             // 合并两部分链表
-            right.next = null;
+            right.next = null; // ！！！记得赋值，否则会出现环
             left.next = rightDummy.next;
 
             return leftDummy.next;
@@ -49,6 +49,8 @@ public class DummyNode {
         public ListNode mergeTwoLists(ListNode l1, ListNode l2) {
             ListNode dummy = new ListNode(0);
             ListNode lastNode = dummy;
+            // lastNode一开始和dummy是一样的，当它.next指向一个ListNode时，dummy也同步变化
+            // 之后lastNode往后走，它就跟dummy不同了，之后它会一直变，dummy就是在最开头
 
             while (l1 != null && l2 != null) {
                 if (l1.val < l2.val) {
