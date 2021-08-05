@@ -355,5 +355,56 @@ public class LinkedList {
             return a;
         }
     }
+    
+    // 234. Palindrome Linked List
+    // 判断链表是不是回文
+    // 复制到数组里空间复杂度为O(n)，要用O(1)的方法
+    public class IsPalindromeSolution {
+        public boolean isPalindrome(ListNode head) {
+            boolean result = true;
+
+            // 1. 利用快慢指针找到中点
+            ListNode firstHalfEnd = findFirstHalfEnd(head);
+
+            // 2. 翻转后半部分
+            ListNode secondHalfHead = reverse(firstHalfEnd.next);
+
+            // 3. 比对
+            ListNode p1 = head, p2 = secondHalfHead;
+            while (p2 != null) {
+                if (p1.val != p2.val) {
+                    result = false;
+                    break;
+                }
+                p1 = p1.next;
+                p2 = p2.next;
+            }
+
+            // 4. 还原后半部分链表
+            secondHalfHead = reverse(secondHalfHead);
+
+            return result;
+
+        }
+        private ListNode findFirstHalfEnd(ListNode head) {
+            ListNode fast = head, slow = head;
+            while (fast.next != null && fast.next.next != null) { // 注意后两个next都要判断
+                slow = slow.next;
+                fast = fast.next.next;
+            }
+            return slow;
+        }
+        private ListNode reverse(ListNode head) {
+            ListNode pre = null;
+            ListNode curr = head;
+            while (curr != null) {
+                ListNode next = curr.next;
+                curr.next = pre;
+                pre = curr;
+                curr = next;
+            }
+            return pre; // 跳出循环的额时候curr是null，要返回pre
+        }
+    }
 
 }
