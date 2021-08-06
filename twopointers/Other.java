@@ -23,11 +23,13 @@ public class Other {
                 this.end = end;
             }
         }
+
+        final int UP = 1;
+        final int DOWN = 0;
+
         // 将起飞时间和降落时间放到同一个数组中, 标识出是起飞还是降落时间, 然后对数组排序.
         // 遍历数组即可, 碰到起飞计数器加一, 碰到降落计数器减一. 维护最大值作为答案.
         public int countOfAirplanes(List<Interval> airplanes) {
-            final int UP = 1;
-            final int DOWN = 0;
 
             // 数组第一维表示起飞/降落时间，第二维表示起飞还是降落
             int[][] timeFlag = new int[airplanes.size() * 2][2];
