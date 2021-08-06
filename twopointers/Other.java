@@ -30,7 +30,7 @@ public class Other {
         // 将起飞时间和降落时间放到同一个数组中, 标识出是起飞还是降落时间, 然后对数组排序.
         // 遍历数组即可, 碰到起飞计数器加一, 碰到降落计数器减一. 维护最大值作为答案.
         public int countOfAirplanes(List<Interval> airplanes) {
-            // 数组第一维表示起飞/降落时间，第二维表示起飞还是降落
+            // 1. 数组第一维表示起飞/降落时间，第二维表示起飞还是降落
             int[][] timeFlag = new int[airplanes.size() * 2][2];
             for (int i = 0; i < timeFlag.length; i += 2) {
                 timeFlag[i][0] = airplanes.get(i/2).flag;
@@ -39,7 +39,7 @@ public class Other {
                 timeFlag[i+1][1] = DOWN;
             }
 
-            // 排序
+            // 2. 从小到大时间，以及降落优先的顺序 排序
             Arrays.sort(timeFlag, new Comparator<int[]>() {
                 @Override
                 public int compare(int[] o1, int[] o2) {
@@ -51,7 +51,7 @@ public class Other {
                 }
             });
 
-            // 按顺序统计
+            // 3. 按顺序统计
             int count = 0, res = 1;
             for (int[] num : timeFlag) {
                 if (num[1] == UP) {
