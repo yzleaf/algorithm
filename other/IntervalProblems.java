@@ -107,7 +107,7 @@ public class IntervalProblems {
 
             return result;
         }
-        // 方法2
+        // 方法2，考虑到原始区间【不重叠】且【有序】
         public int[][] insert(int[][] intervals, int[] newInterval) {
             List<int[]> res = new ArrayList<>();
             int len = intervals.length;
