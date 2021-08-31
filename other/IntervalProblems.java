@@ -78,6 +78,7 @@ public class IntervalProblems {
     }
 
     // 3. 插入区间 · Insert Interval
+    // 57
     // 给出一个无重叠的按照区间起始端点排序的区间列表。
     // 在列表中插入一个新的区间，你要确保列表中的区间仍然有序且不重叠（如果有必要的话，可以合并区间）
     // 输入: (2, 5) into [(1,2), (5,9)]
@@ -105,6 +106,34 @@ public class IntervalProblems {
             }
 
             return result;
+        }
+        // 方法2
+        public int[][] insert(int[][] intervals, int[] newInterval) {
+            List<int[]> res = new ArrayList<>();
+            int len = intervals.length;
+            int i = 0;
+            // 1. 所有区间都在newInterval的左边
+            while (i < len && intervals[i][1] < newInterval[0]) {
+                res.add(intervals[i]);
+                i ++;
+            }
+
+            // 2. 和newInterval有重叠
+            // 此时[i][1]已经 >= newInterval[0]了
+            while (i < len && intervals[i][0] <= newInterval[1]) { // 保证有重叠
+                newInterval[0] = Math.min(intervals[i][0], newInterval[0]);
+                newInterval[1] = Math.max(intervals[i][1], newInterval[1]);
+                i ++;
+            }
+            res.add(newInterval); // 更新重叠的区间，最后只添加一次！！！
+
+            // 3. 所有区间都在newInterval的右边
+            while (i < len && intervals[i][0] > newInterval[1]) {
+                res.add(intervals[i]);
+                i ++;
+            }
+
+            return res.toArray(new int[0][0]);
         }
     }
 
