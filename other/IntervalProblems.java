@@ -137,4 +137,74 @@ public class IntervalProblems {
         }
     }
 
+    // 986. Interval List Intersections
+    // 两个数组，求相交区间
+    // Input: firstList = [[0,2],[5,10],[13,23],[24,25]], secondList = [[1,5],[8,12],[15,24],[25,26]]
+    // Output: [[1,2],[5,5],[8,10],[15,23],[24,24],[25,25]]
+    public class IntervalIntersectionSolution {
+        // 双指针指向两个数组
+        // 每次判断相交区间后，每次比较抛去endpoint靠前的数组
+        public int[][] intervalIntersection(int[][] firstList, int[][] secondList) {
+
+            List<int[]> res = new ArrayList<>();
+            int i = 0, j = 0;
+            while (i < firstList.length && j < secondList.length) {
+
+                // 相交区间的左右端点
+                int intersectLeft = Math.max(firstList[i][0], secondList[j][0]);
+                int intersectRight = Math.min(firstList[i][1], secondList[j][1]);
+
+                // 需要考虑相等，单独一个点
+                if (intersectLeft <= intersectRight) {
+                    res.add(new int[]{intersectLeft, intersectRight});
+                }
+
+                // endpoint靠前的先抛去
+                if (firstList[i][1] < secondList[j][1]) {
+                    i ++;
+                } else {
+                    j ++;
+                }
+            }
+
+            return res.toArray(new int[res.size()][]);
+        }
+    }
+
+    // 5. Longest Palindromic Substring
+    // 返回最长的回文子串
+    public class LongestPalindromeSolution {
+
+        public String longestPalindrome(String s) {
+
+            int start = 0, end = 0;
+            // 每次都以当前点为中心，不断向两边走，看是否相等
+            for (int i = 0; i < s.length(); i ++) {
+                int lenFromCurr = lenFromCenter(s, i, i); // 当前点为中心
+                int lenFromCurrAndNext = lenFromCenter(s, i, i+1); // 当前点和隔壁点为中心
+                int len = Math.max(lenFromCurr, lenFromCurrAndNext);
+                if (len > end - start) {
+                    start = i - (len - 1) / 2;
+                    end = i + len / 2;
+                }
+            }
+            return s.substring(start, end + 1);
+        }
+
+        // 返回以当前中心点向两边走的回文串的长度
+        private int lenFromCenter(String s, int centerLeft, int centerRight) {
+            int left = centerLeft;
+            int right = centerRight;
+            while (left >= 0 && right <= s.length() - 1) {
+                if (s.charAt(left) == s.charAt(right)) {
+                    left --;
+                    right ++;
+                } else {
+                    break;
+                }
+            }
+            // 跳出循环的时候left和right都往两边多走了一步
+            return right - left - 1; // 返回回文串总长度
+        }
+    }
 }

@@ -66,4 +66,74 @@ public class Other {
             return res;
         }
     }
+
+    // 253. Meeting Rooms II
+    // Given an array of meeting time intervals intervals where intervals[i] = [starti, endi]
+    // return the minimum number of conference rooms required.
+    // Input: intervals = [[0,30],[5,10],[15,20]]
+    // Output: 2
+    public class MeetingRooms2Solution {
+        // 方法1，类似于上一题计算飞机数量，变换思维方式
+        class TimeStatus {
+            public int time;
+            public int status; // 1表示会议开始，-1表示会议结束
+
+            public TimeStatus(int time, int status) {
+                this.time = time;
+                this.status = status;
+            }
+        }
+
+        public int minMeetingRooms(int[][] intervals) {
+
+            List<TimeStatus> timeSta = new ArrayList<>(); // 建立 时间-状态 对应表
+            for (int[] interval : intervals) {
+                timeSta.add(new TimeStatus(interval[0], 1));
+                timeSta.add(new TimeStatus(interval[1], -1));
+            }
+
+            Collections.sort(timeSta, new Comparator<TimeStatus>(){
+                public int compare(TimeStatus o1, TimeStatus o2) {
+                    if (o1.time != o2.time) {
+                        return o1.time - o2.time;
+                    } else {
+                        return o1.status - o2.status;
+                    }
+                }
+            });
+
+            int cur = 0;
+            int res = 0;
+            for (int i = 0; i < timeSta.size(); i ++) {
+                if (timeSta.get(i).status == 1) {
+                    cur ++;
+                } else {
+                    cur --;
+                }
+                res = Math.max(res, cur);
+            }
+
+            return res;
+        }
+
+        // 方法2
+        // 利用最小堆
+        public int minMeetingRooms2(int[][] intervals) {
+            // 按开始时间排序
+            Arrays.sort(intervals, (o1, o2) -> o1[0] - o2[0]);
+            // 最小堆记录结束时间
+            Queue<Integer> minHeapEndTime = new PriorityQueue<>();
+
+            minHeapEndTime.offer(intervals[0][1]);
+            for (int i = 1; i < intervals.length; i ++) {
+                if (intervals[i][0] >= minHeapEndTime.peek()) { // 跟最早结束的时间比较！！！
+                    minHeapEndTime.poll(); // 旧的要删掉，因为被替代了
+                }
+
+                minHeapEndTime.offer(intervals[i][1]);
+            }
+
+            return minHeapEndTime.size();
+        }
+    }
 }
