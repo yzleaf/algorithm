@@ -178,11 +178,9 @@ public class SameDirectionPointers {
                     need[s.charAt(left)] ++;
                     left ++;
                     count ++;
-
                 }
                 right ++;
             }
-
             return size == Integer.MAX_VALUE ? "" : s.substring(start, start + size);
         }
     }
