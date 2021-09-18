@@ -125,4 +125,34 @@ public class OppositeDirectionPointers {
         }
     }
 
+    // 11. Container With Most Water
+    // 两个柱子之间容纳的最大水区域
+    public class ContainWaterSolution {
+        public int maxArea(int[] height) {
+
+            if (height == null || height.length <= 1) {
+                return 0;
+            }
+
+            int left = 0, right = height.length - 1;
+            int res = 0;
+
+            while (left < right) {
+                // 当前区域容纳的面积为小的那个高度*长度
+                int currArea = Math.min(height[left], height[right]) * (right - left);
+                res = Math.max(res, currArea);
+
+                // 把小的那个高度向内移动。
+                // 因为如果移高的那个，随着长度变小，面积肯定变小（因为面积是小的高度*长度）
+                if (height[left] < height[right]) {
+                    left ++;
+                } else {
+                    right --;
+                }
+            }
+
+            return res;
+        }
+    }
+
 }

@@ -491,4 +491,41 @@ public class Partition {
             sort(colors, left, end, colorMid + 1, colorTo);
         }
     }
+
+    // 345. Reverse Vowels of a String
+    // 交换String里的元音字母
+    // Input: s = "hello"
+    // Output: "holle"
+    public class ReverseVowelsSolution {
+        public String reverseVowels(String s) {
+            if (s == null || s.length() == 0) {
+                return null;
+            }
+
+            int left = 0, right = s.length() - 1;
+            Set<Character> hashVowels = new HashSet<>(Arrays.asList('a','e','i','o','u','A','E','I','O','U'));
+            char[] charArr = s.toCharArray();
+
+            while(left <= right) {
+                while (left <= right && !hashVowels.contains(charArr[left])) { // left <= right判断条件！！！
+                    left ++;
+                }
+                while (left <= right && !hashVowels.contains(charArr[right])) {
+                    right --;
+                }
+                if (left <= right) {
+                    swap(charArr, left, right);
+                    left ++;
+                    right --; // 换完以后要变指针！！！
+                }
+            }
+            return String.valueOf(charArr);
+        }
+        private char[] swap(char[] charArr, int i, int j) {
+            char temp = charArr[i];
+            charArr[i] = charArr[j];
+            charArr[j] = temp;
+            return charArr;
+        }
+    }
 }

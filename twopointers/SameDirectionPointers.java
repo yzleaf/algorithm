@@ -98,4 +98,38 @@ public class SameDirectionPointers {
         }
     }
 
+    // 3. Longest Substring Without Repeating Characters
+    // 返回最长substring，没有重复字母
+    public class LongestSubStringSolution {
+        public int lengthOfLongestSubstring(String s) {
+            if (s == null || s.length() == 0) {
+                return 0;
+            }
+
+            int left = 0, right = 1;
+            Set<Character> letter = new HashSet<>();
+            letter.add(s.charAt(left));
+
+            int res = 1;
+            int currMaxLen = 1;
+
+            while (left <= right && right < s.length()) {
+                if (letter.contains(s.charAt(right))) {
+                    // 右指针所指新的数据 之前出现过
+                    // left指针右移，之前的数据减少
+                    letter.remove(s.charAt(left));
+                    left ++;
+                    currMaxLen --;
+                } else {
+                    // 右指针所指新的数据 之前出现过
+                    // right指针右移，数据增加
+                    letter.add(s.charAt(right));
+                    right ++;
+                    currMaxLen ++;
+                }
+                res = Math.max(res, currMaxLen);
+            }
+            return res;
+        }
+    }
 }
