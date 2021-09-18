@@ -132,4 +132,58 @@ public class SameDirectionPointers {
             return res;
         }
     }
+
+    // 76. Minimum Window Substring
+    // 求s串最小sub array，要包含t串所有字符
+    public class MinWindowSolution {
+        public String minWindow(String s, String t) {
+
+            if (s == null || s.length() == 0 || t == null || t.length() == 0){
+                return "";
+            }
+
+            // ASCII表总长128
+            int[] need = new int[128];
+            // 需要这些字母的个数
+            for (int i = 0; i < t.length(); i ++) {
+                need[t.charAt(i)] ++;
+            }
+
+            // 左右指针
+            int left = 0, right = 0;
+            // size记录窗口大小，count是需求的字符个数，start是最小覆盖串开始的index
+            int size = Integer.MAX_VALUE, count = t.length(), start = 0;
+            // count为0的时候说明s正好包含了所有需要的字符
+
+            // 遍历原始所有字符串
+            while (right < s.length()) {
+                char c = s.charAt(right);
+                if (need[c] > 0) { // 需要字符c，如果不需要的话这个need[c]会变为负值，就不用进入count--了
+                    count --;
+                }
+                need[c] --; // 当前字符加入窗口
+
+                if (count == 0) { // s的窗口中包含了所有需要的字符。在这个嵌套中不断缩小左指针
+                    while (left < right && need[s.charAt(left)] < 0) { // 不需要的字符，释放，不断缩小窗口
+                        need[s.charAt(left)] ++;
+                        left ++;
+                    }
+
+                    if (right - left + 1 < size) {
+                        size = right - left + 1;
+                        start = left;
+                    }
+
+                    // left向右移动，现有窗口下一次就不满足了，需要重新开始
+                    need[s.charAt(left)] ++;
+                    left ++;
+                    count ++;
+
+                }
+                right ++;
+            }
+
+            return size == Integer.MAX_VALUE ? "" : s.substring(start, start + size);
+        }
+    }
 }
