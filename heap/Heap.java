@@ -494,12 +494,14 @@ public class Heap {
     // 整数数组nums，有一个大小为k的滑动窗口从数组的最左侧移动到数组的最右侧。
     // 滑动窗口每次只向右移动一位，返回滑动窗口中的最大值
     public class maxSlidingWindowS {
-        // 方法1 用最大堆记(value, index)，每次向右滑都添加进堆，如果当前堆里最大数的index不在窗口内就不断poll
+        // 方法1 用最大堆记(value, index)，每次向右滑都添加新元素进堆，如果当前堆里最大数的index不在窗口内就不断poll直到最大值的index在窗口内
         // 时间nlogn（元素单调递增，所有元素都在heap里）
         // 空间n
 
         // 方法2 双向队列，让数据从大到小排列。每次滑动窗口，新数从队尾last进入，把队尾小于它的数挤掉；队首的数是最大的，判断是不是在窗口内
-        // 队列里存的是index
+        // 双向队列里存的是index（还没有被移除的下标）
+        // 在队列中，这些下标按照从小到大的顺序被存储，并且它们在数组nums中对应的值是严格单调递减的。（所以队首index对应的元素肯定是最大的）
+        // 因为如果队列中有两个相邻的下标，它们对应的值相等或者递增，那么令前者为i，后者为j，即 nums[i] <= nums[j] 在上一步中应该被移除，这就产生了矛盾。
         // 时间n
         // 空间k
         public int[] maxSlidingWindow(int[] nums, int k) {
@@ -508,13 +510,13 @@ public class Heap {
             Deque<Integer> deque = new LinkedList<>();
 
             for (int i = 0; i < n; i++) {
-                while (!deque.isEmpty() && nums[deque.peekLast()] <= nums[i]) { // 队尾的数值如果小的话要丢掉
+                while (!deque.isEmpty() && nums[deque.peekLast()] <= nums[i]) { // 队尾的数值如果小的话要丢掉，直到数值大于它
                     deque.pollLast();
                 }
                 deque.offerLast(i);
 
-                // 判断队首是否在windows里
-                if (deque.peekFirst() <= i - k) {
+                // 判断队首是否在windows里（画图确认index范围）
+                while (deque.peekFirst() < i - k + 1) {
                     deque.pollFirst();
                 }
 
