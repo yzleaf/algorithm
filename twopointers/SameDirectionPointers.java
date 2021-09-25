@@ -184,4 +184,36 @@ public class SameDirectionPointers {
             return size == Integer.MAX_VALUE ? "" : s.substring(start, start + size);
         }
     }
+
+    // 713 乘积小于K的子数组
+    // 给定一个正整数数组nums和整数k
+    // 找出该数组内乘积小于 k 的连续的子数组的个数
+    public class NumSubarrayProductLessThanKSolution {
+        public int numSubarrayProductLessThanK(int[] nums, int k) {
+            if (nums == null || k <= 1) {
+                return 0;
+            }
+
+            int left = 0;
+            int curProduct = 1;
+            int res = 0;
+
+            // 外层用right往后遍历一遍数组
+            for (int right = 0; right < nums.length; right ++) {
+
+                curProduct *= nums[right];
+
+                // 对于当前的right，右移left的位置直到乘积<k
+                while (curProduct >= k) {
+                    curProduct /= nums[left];
+                    left ++;
+                }
+
+                // 对于当前以right为结束点的subarray个数，总共有
+                res += right - left + 1;
+
+            }
+            return res;
+        }
+    }
 }
