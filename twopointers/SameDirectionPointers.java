@@ -211,7 +211,6 @@ public class SameDirectionPointers {
 
                 // 对于当前以right为结束点的subarray个数，总共有
                 res += right - left + 1;
-
             }
             return res;
         }
