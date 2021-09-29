@@ -136,4 +136,35 @@ public class Other {
             return minHeapEndTime.size();
         }
     }
+
+    // 238. Product of Array Except Self
+    // 返回不包括当前元素的数组其他元素之积
+    // 不能用除法（可能当前数为0）
+    class ProductExceptSelfSolution {
+        public int[] productExceptSelf(int[] nums) {
+
+            int len = nums.length;
+
+            int[] left = new int[len]; // 存放nums[i]左边的所有元素积
+            int[] right = new int[len]; // 存放nums[i]右边的所有元素积
+            int[] res = new int[len];
+
+            left[0] = 1;
+            for (int i = 1; i < len; i ++) {
+                left[i] = left[i-1] * nums[i-1];
+            }
+
+            right[len - 1] = 1;
+            for (int i = len - 2; i >= 0; i --) {
+                right[i] = right[i+1] * nums[i+1];
+            }
+
+            for (int i = 0; i < len; i ++) {
+                res[i] = left[i] * right[i];
+            }
+
+            return res;
+        }
+        // 优化：用输出数组代替left[]，一个变量不断计算right[]中的每一个元素
+    }
 }
