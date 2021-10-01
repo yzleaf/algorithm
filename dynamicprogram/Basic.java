@@ -152,4 +152,29 @@ public class Basic {
 
     // 3. 最长连续序列 · Longest Consecutive Sequence
 
+    // 1143. Longest Common Subsequence
+    // 返回两个String的最长公共子序列
+    public class LCSSolution {
+        public int longestCommonSubsequence(String text1, String text2) {
+
+            int m = text1.length();
+            int n = text2.length();
+
+            // dp[i][j]表示 text1从0到i-1和text2从0刀j-1的longest common subsequence
+            // 多设置一位是为了让dp[0][j]和dp[i][0]表示空串
+            int[][] dp = new int[m + 1][n + 1];
+            for (int i = 1; i <= m; i ++) {
+                for (int j = 1; j <= n; j ++) {
+                    if (text1.charAt(i - 1) == text2.charAt(j - 1)) { // 最后一位相同，lcs增加一位
+                        dp[i][j] = dp[i - 1][j - 1] + 1;
+                    } else { // 最后一位不同，取相邻更大的那一个
+                        dp[i][j] = Math.max(dp[i - 1][j], dp[i][j - 1]);
+                    }
+                }
+            }
+
+            return dp[m][n];
+        }
+    }
+
 }
