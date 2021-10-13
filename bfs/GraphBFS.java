@@ -177,6 +177,7 @@ public class GraphBFS {
                     } else { // 如果不存在，inDegree设置为1
                         inDegree.put(neighbor, 1);
                     }
+                    // inDegree.putIfAbsent(neighbor, inDegree.getOrDefault(neighbor, 0) + 1);
                 }
             }
 
@@ -304,7 +305,7 @@ public class GraphBFS {
                 return order;
             }
 
-            return new int[0];
+            return new int[0]; // int[]{} 需要是int数组，但是里面没有元素
         }
     }
 
