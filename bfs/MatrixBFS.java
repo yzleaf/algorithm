@@ -303,4 +303,74 @@ public class MatrixBFS {
             return grid[coor.x][coor.y] == EMPTY;
         }
     }
+
+    // 773 Sliding Puzzle
+    // 2*3 拼图，每次移动一个格子，使其排列成123450的形状
+    public class SlidingPuzzleSolution {
+        // BFS，找到每次可以移动到0的所有情况
+
+        public int slidingPuzzle(int[][] board) {
+
+            // 把matrix转为String
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < board.length; i ++) {
+                for (int j = 0; j < board[0].length; j ++) {
+                    sb.append(board[i][j]);
+                }
+            }
+            String initial = sb.toString();
+            String target = "123450"; // 最终位置
+
+            // 0在不同位置，其他可以变动的数的位置
+            int[][] swapIndex= new int[][]{{1,3}, {0,2,4}, {1,5},
+                    {0,4}, {1,3,5}, {2,4}};
+
+            Queue<String> queue = new LinkedList<>();
+            queue.offer(initial);
+
+            Set<String> visited = new HashSet<>();
+            visited.add(initial);
+
+            int res = 0;
+            while (!queue.isEmpty()) {
+
+                int size = queue.size();
+                for (int i = 0; i < size; i ++) {
+                    String curr = queue.poll();
+                    if (curr.equals(target)) {
+                        return res;
+                    }
+
+                    int idx = -1;
+                    for (int index = 0; index < curr.length(); index ++) {
+                        if (curr.charAt(index) == '0') {
+                            idx = index;
+                            break;
+                        }
+                    }
+
+                    // 遍历可能存在的换数方式
+                    int[] swap = swapIndex[idx];
+                    for (int index = 0; index < swap.length; index ++) {
+                        String next = swapChar(curr, idx, swap[index]);
+                        if (!visited.contains(next)) {
+                            queue.offer(next);
+                            visited.add(next);
+                        }
+                    }
+                }
+                res ++;
+            }
+
+            return -1;
+
+        }
+        private String swapChar(String curr, int idx, int swapIdx) {
+            StringBuilder sb = new StringBuilder(curr);
+            sb.setCharAt(idx, curr.charAt(swapIdx)); // 0的位置换成数组中可以移动的数
+            sb.setCharAt(swapIdx, curr.charAt(idx)); // 换成0
+
+            return sb.toString();
+        }
+    }
 }
