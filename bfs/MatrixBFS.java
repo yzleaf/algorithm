@@ -101,7 +101,7 @@ public class MatrixBFS {
 
             // initialize the queue & count people
             int people = 0;
-            Queue<Coordinate> queue = new LinkedList<Coordinate>();
+            Queue<Coordinate> queue = new LinkedList<>();
             for (int i = 0; i < row; i++) {
                 for (int j = 0; j < column; j++) {
                     if (grid[i][j] == PEOPLE) {
@@ -176,7 +176,7 @@ public class MatrixBFS {
                 return -1;
             }
 
-            Queue<Coordinate> queue = new LinkedList<Coordinate>();
+            Queue<Coordinate> queue = new LinkedList<>();
 
             int row = grid.length, column = grid[0].length;
             queue.offer(source);
@@ -222,7 +222,7 @@ public class MatrixBFS {
     // 4. Build Post Office II
     // 给出一个二维的网格，每一格可以代表墙2 ，房子1，以及空0。在网格中找到一个位置去建立邮局，使得所有的房子到邮局的距离和是最小的
     // 返回所有房子到邮局的最小距离和，如果没有地方建立邮局，则返回-1
-    public class PostOffice {
+    public class PostOfficeII {
 
         public final int EMPTY = 0;
         public final int HOUSE = 1;
