@@ -12,8 +12,8 @@ public class TraverseBinaryTree {
 
         // .1 Non-recursion
         public List<Integer> preorderTraversal(TreeNode root) {
-            Stack<TreeNode> stack = new Stack<TreeNode>();
-            List<Integer> preorder = new ArrayList<Integer>();
+            Stack<TreeNode> stack = new Stack<>();
+            List<Integer> preorder = new ArrayList<>();
 
             if (root == null) {
                 return preorder;
@@ -36,7 +36,7 @@ public class TraverseBinaryTree {
 
         // .2 Traverse
         public ArrayList<Integer> preorderTraversalTra(TreeNode root) {
-            ArrayList<Integer> result = new ArrayList<Integer>();
+            ArrayList<Integer> result = new ArrayList<>();
             traverse(root, result);
             return result;
         }
@@ -52,7 +52,7 @@ public class TraverseBinaryTree {
 
         // .3 Divide & Conquer
         public ArrayList<Integer> preorderTraversalDC(TreeNode root) {
-            ArrayList<Integer> result = new ArrayList<Integer>();
+            ArrayList<Integer> result = new ArrayList<>();
             if (root == null) { // null or leaf
                 return result;
             }
@@ -73,8 +73,8 @@ public class TraverseBinaryTree {
     // 94
     public class InOrder {
         public List<Integer> inorderTraversal(TreeNode root) {
-            Stack<TreeNode> stack = new Stack<TreeNode>();
-            List<Integer> inorder = new ArrayList<Integer>();
+            Stack<TreeNode> stack = new Stack<>();
+            List<Integer> inorder = new ArrayList<>();
 
             while (root != null) { // 左子树全部进栈
                 stack.push(root);
@@ -101,9 +101,9 @@ public class TraverseBinaryTree {
     // 145
     public class PostOrder {
         public List<Integer> postorderTraversal(TreeNode root) {
-            Stack<TreeNode> stack = new Stack<TreeNode>();
-            Set<TreeNode> checkedSet = new HashSet<TreeNode>();
-            List<Integer> result = new ArrayList<Integer>();
+            Stack<TreeNode> stack = new Stack<>();
+            Set<TreeNode> checkedSet = new HashSet<>();
+            List<Integer> result = new ArrayList<>();
 
             if (root != null) {
                 stack.push(root);
