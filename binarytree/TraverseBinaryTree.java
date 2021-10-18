@@ -99,6 +99,7 @@ public class TraverseBinaryTree {
 
     // 3. Postorder 左右根
     // 145
+    // 非递归方式的三种通用型
     public class PostOrder {
         public List<Integer> postorderTraversal(TreeNode root) {
             Stack<TreeNode> stack = new Stack<>();
