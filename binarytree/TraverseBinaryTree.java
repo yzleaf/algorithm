@@ -100,6 +100,7 @@ public class TraverseBinaryTree {
     // 3. Postorder 左右根
     // 145
     // 非递归方式的三种通用型
+    // 用颜色标记法理解 https://leetcode-cn.com/problems/binary-tree-inorder-traversal/solution/yan-se-biao-ji-fa-yi-chong-tong-yong-qie-jian-ming/
     public class PostOrder {
         public List<Integer> postorderTraversal(TreeNode root) {
             Stack<TreeNode> stack = new Stack<>();
