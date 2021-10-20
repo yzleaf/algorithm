@@ -178,5 +178,58 @@ public class BinaryTreeOther {
 
     }
 
+    // 270 Closest Binary Search Tree Value
+    // 给一棵非空二叉搜索树以及一个target值，找到在BST中最接近给定值的节点值
+    class ClosestValueSolution {
+
+        public int closestValue(TreeNode root, double target) {
+
+            TreeNode lower = lowerBound(root, target);
+            TreeNode upper = upperBound(root, target);
+            if (lower == null) {
+                return upper.val;
+            }
+            if (upper == null) {
+                return lower.val;
+            }
+
+            if (upper.val - target < target - lower.val) {
+                return upper.val;
+            } else {
+                return lower.val;
+            }
+        }
+        // 小于target的最大的数
+        private TreeNode lowerBound(TreeNode root, double target) {
+            if (root == null) {
+                return null;
+            }
+
+            TreeNode curr = null;
+            if (root.val >= target) {
+                curr = lowerBound(root.left, target);
+                return curr;
+            } else {
+                curr = lowerBound(root.right, target);
+                return curr != null ? curr : root;
+
+            }
+        }
+        // 大于或者等于target的最小的数（！！！记住要等于）
+        private TreeNode upperBound(TreeNode root, double target) {
+            if (root == null) {
+                return null;
+            }
+
+            TreeNode curr = null;
+            if (root.val < target) {
+                curr = upperBound(root.right, target);
+                return curr;
+            } else {
+                curr = upperBound(root.left, target);
+                return curr != null ? curr : root;
+            }
+        }
+    }
 
 }
