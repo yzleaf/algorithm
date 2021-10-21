@@ -181,7 +181,7 @@ public class BinaryTreeOther {
     // 270 Closest Binary Search Tree Value
     // 给一棵非空二叉搜索树以及一个target值，找到在BST中最接近给定值的节点值
     class ClosestValueSolution {
-
+        // 方法1 找到上下边界，再判断更接近的
         public int closestValue(TreeNode root, double target) {
 
             TreeNode lower = lowerBound(root, target);
@@ -229,6 +229,19 @@ public class BinaryTreeOther {
                 curr = upperBound(root.left, target);
                 return curr != null ? curr : root;
             }
+        }
+
+        // 方法2 直接递归判断
+        public int closestValue2(TreeNode root, double target) {
+            int closest = root.val;
+            int curr = root.val;
+            while (root != null) {
+                curr = root.val;
+                closest = Math.abs(curr - target) < Math.abs(closest - target) ? curr : closest;
+                // target < root 只能向左子树找（因为右子树只会让差距更大），反之亦然
+                root = target < root.val ? root.left : root.right;
+            }
+            return closest;
         }
     }
 
