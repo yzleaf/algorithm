@@ -72,7 +72,8 @@ public class BinarySearchTree {
     // 426
     // 将一个二叉查找树按照中序遍历转换成双向链表
     public class BSTDoublyListSolution {
-
+        // 方法1 分治
+        // 方法2似乎更好理解一点
         class ResultType {
             DoublyListNode first, last;
             // 当前双向链表的第一个节点，最后一个节点
@@ -122,6 +123,45 @@ public class BinarySearchTree {
             }
 
             return result;
+        }
+
+        // 方法2 Traverse
+        TreeNode first = null; // smallest
+        TreeNode last = null; // largest
+
+        public TreeNode treeToDoublyList(TreeNode root) {
+            if (root == null) {
+                return null;
+            }
+
+            inorder(root);
+
+            // 最后，把前后节点连上
+            first.left = last;
+            last.right = first;
+
+            return first;
+        }
+        private void inorder(TreeNode curr) {
+            if (curr == null) {
+                return;
+            }
+
+            inorder(curr.left);
+            // 左边处理完，左边的最后一个节点
+
+            if (last != null) {
+                last.right = curr;
+                curr.left = last;
+            } else {
+                first = curr;
+            }
+            last = curr;
+            // 根处理完，把根设为最后一个节点
+
+            inorder(curr.right);
+            // 右边处理完
+
         }
     }
 
