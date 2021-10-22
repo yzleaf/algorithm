@@ -140,4 +140,79 @@ public class Other {
         }
     }
 
+    // 827. Making A Large Island
+    // 把一个0改成1，求最大的岛屿面积
+    public class LargestIslandSolution {
+        int[][] grid;
+        int[] dx = {1, 0, 0, -1};
+        int[] dy = {0, 1, -1, 0};
+        int row;
+        int col;
+
+        public int largestIsland(int[][] grid) {
+            this.grid = grid;
+            this.row = grid.length;
+            this.col = grid[0].length;
+
+            int res = 0;
+
+            // 1. 标记联通岛屿为不同的序号（2，3，4...）并求面积
+            int index = 2;
+            int area[] = new int[row * col + 2];
+            for (int i = 0; i < row; i ++) {
+                for (int j = 0; j < col; j ++) {
+                    if (grid[i][j] == 1) {
+                        area[index] = dfs(i, j, index);
+                        res = Math.max(res, area[index]); // 记录最大的面积
+
+                        index ++;
+                    }
+                }
+            }
+
+            // 2. 改0为1，遍历周围四个方向的岛屿的序号，把面积sum
+            for (int i = 0; i < row; i ++) {
+                for (int j = 0; j < col; j ++) {
+                    if (grid[i][j] == 0) {
+                        // 把周围四个方向的index所代表的的面积加起来
+                        // 因为周围有可能是同一个岛屿，避免多次相加，所以用Hash
+                        Set<Integer> island = new HashSet<>();
+                        for (int[] next : neighbor(i, j)) {
+                            if (grid[next[0]][next[1]] > 1) {
+                                island.add(grid[next[0]][next[1]]);
+                            }
+                        }
+                        int currArea = 1;
+                        for (Integer num : island) {
+                            currArea += area[num];
+                        }
+                        res = Math.max(res, currArea);
+                    }
+                }
+            }
+
+            return res;
+        }
+        private int dfs(int i, int j, int index) {
+            int area = 1;
+            grid[i][j] = index;
+            for (int[] next : neighbor(i, j)) {
+                if (grid[next[0]][next[1]] == 1) {
+                    area += dfs(next[0], next[1], index);
+                }
+            }
+            return area;
+        }
+        private List<int[]> neighbor(int i, int j) {
+            List<int[]> next = new ArrayList<>();
+            for (int k = 0; k < 4; k ++) {
+                int nextX = i + dx[k];
+                int nextY = j + dy[k];
+                if (nextX >= 0 && nextX < row && nextY >= 0 && nextY < col) {
+                    next.add(new int[]{nextX, nextY});
+                }
+            }
+            return next;
+        }
+    }
 }
