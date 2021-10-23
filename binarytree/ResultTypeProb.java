@@ -119,18 +119,18 @@ public class ResultTypeProb {
                 return root;
             }
 
-            // Divide 分别在左右子树中找A, B
+            // Divide 分别在左右子树中找A, B这两个node
             TreeNode left = lowestCommonAncestor(root.left, node1, node2);
             TreeNode right = lowestCommonAncestor(root.right, node1, node2);
 
             // Conquer
-            if (left != null && right != null) {
+            if (left != null && right != null) { // left和right各自都能找到A或B
                 return root;
             }
-            if (left != null && right == null) { // left有，right空，得返回left的东西（left其实是之前返回的node1或者2）
+            if (left != null && right == null) { // left有A或B，right空，得返回left的东西（left其实是之前返回的node1或者2）
                 return left;
             }
-            if (right != null && left == null) { // left空
+            if (right != null && left == null) { // right有A或B
                 return right;
             }
 
