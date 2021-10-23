@@ -150,6 +150,9 @@ public class HighFrequency {
             }
             // for (int i = Collections.min(hash.keySet()); i <= Collections.max(hash.keySet()); i++)
             // 如果用hashMap要这样从小到大遍历
+
+            // 定义个以minCol和maxCol
+            // 可以不用treeMap每次排序，直接hashMap从minCol开始取到maxCol就可以了
             return result;
         }
     }
