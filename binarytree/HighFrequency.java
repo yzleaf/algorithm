@@ -285,6 +285,7 @@ public class HighFrequency {
                 return;
             }
 
+            // 每一层depth只可能看到一个点
             // 如果当前节点所在深度还没有出现在res里，说明在该深度下当前节点是第一个被访问的节点，因此将当前节点加入res中
             if (result.size() == depth) {
                 result.add(curr.val);
