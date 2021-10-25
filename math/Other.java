@@ -2,6 +2,8 @@ package math;
 
 import datastructure.*;
 
+import java.util.*;
+
 public class Other {
     // 1. big integer addition
     // 415
@@ -169,4 +171,46 @@ public class Other {
         }
     }
 
+    // 31. Next Permutation
+    // 找到下一个比当前数大的数（且距离最近），如果没有next的话直接反转输出
+    // 1238 5 764 -> 1238 6 457
+    class NextPermutationSolution {
+        // 1. 从后往前找到上升的nums[i],nums[j]，此时[j,end]肯定降序
+        // 2. 从后往前找到比nums[i]大的nums[k]，此时[j,end]肯定降序
+        // 3. 交换k和i，此时[j,end]肯定降序（因为k是从后往前第一个大于i的）
+        // 4. 反转[j,end]使其升序
+        // 1如果找不到上升的pair，就意味着数组是降序（没有next），此时直接跳到4反转输出
+        public void nextPermutation(int[] nums) {
+            if (nums == null || nums.length == 0) {
+                return;
+            }
+
+            int len = nums.length;
+            int i = len - 2, k = len - 1;
+            while (i >= 0) {
+                if (nums[i] < nums[i + 1]) {
+                    break;
+                }
+                i --;
+            }
+
+            if (i >= 0) { // 有上升的pair
+                while (nums[i] >= nums[k]) { // 从后往前找到比i大的k，交换
+                    k --;
+                }
+                swap(nums, i ,k);
+            }
+
+            // 从[j, end]翻转
+            for (int j = i + 1, end = len - 1; j < end; j ++, end --) {
+                swap(nums, j, end);
+            }
+
+        }
+        private void swap(int[] nums, int i, int j) {
+            int temp = nums[i];
+            nums[i] = nums[j];
+            nums[j] = temp;
+        }
+    }
 }

@@ -45,7 +45,7 @@ public class Other {
                 @Override
                 public int compare(int[] o1, int[] o2) {
                     if (o1[0] == o2[0]) { // 如果时间相等，降落优先于起飞
-                        return o1[1] - o2[1];
+                        return o1[1] - o2[1]; // DOWN是0，UP是1
                     } else { //  按时间从小到大排序
                         return o1[0] - o2[0];
                     }
