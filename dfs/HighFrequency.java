@@ -81,6 +81,7 @@ public class HighFrequency {
     }
 
     // 3. 添加运算符 · add operators
+    // 282
     // 给定一个仅包含数字 0 - 9 的字符串和一个目标值
     // 返回在数字之间添加了 二元 运算符(不是一元)+, - 或 * 之后所有能得到目标值的情况
     public class AddOperatorsSolution {
@@ -106,7 +107,7 @@ public class HighFrequency {
                 if (startIndex == 0) { // 第一个数不能为标点
                     dfs(num, target, i + 1, "" + curNum, curNum, curNum);
                 } else {
-                    // 如果是*，需要将当前结果减去上一次已经计算过的facotr（还原回去）
+                    // 如果是*，需要将当前结果减去上一次已经计算过的factor（还原回去）
                     dfs(num, target, i + 1, curStr + "*" + curNum,
                             curCalResult - lastFactor + lastFactor * curNum, lastFactor * curNum);
                     dfs(num, target, i + 1, curStr + "+" + curNum, curCalResult + curNum, curNum);
