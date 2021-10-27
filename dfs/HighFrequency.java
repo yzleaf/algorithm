@@ -86,14 +86,18 @@ public class HighFrequency {
     // 返回在数字之间添加了 二元 运算符(不是一元)+, - 或 * 之后所有能得到目标值的情况
     public class AddOperatorsSolution {
         List<String> result;
+        String num;
+        int target;
 
         public List<String> addOperators(String num, int target) {
-            result = new ArrayList<>();
-            dfs(num, target, 0, "", 0, 0);
+            this.result = new ArrayList<>();
+            this.num = num;
+            this.target = target;
+            dfs(0, "", 0, 0);
             return result;
         }
 
-        private void dfs(String num, int target, int startIndex, String curStr, long curCalResult, long lastFactor) {
+        private void dfs(int startIndex, String curStr, long curCalResult, long lastFactor) {
             if (startIndex == num.length()) { // 遍历结束
                 if (curCalResult == target) { // 计算结果相等就添加
                     result.add(curStr);
@@ -102,19 +106,19 @@ public class HighFrequency {
             }
 
             for (int i = startIndex; i < num.length(); i++) {
-                long curNum = Long.parseLong(num.substring(startIndex, i)); // 依次将string里的字符不断增加长度遍历，转成long
-
-                if (startIndex == 0) { // 第一个数不能为标点
-                    dfs(num, target, i + 1, "" + curNum, curNum, curNum);
+                long nextNum = Long.parseLong(num.substring(startIndex, i + 1)); // 依次将string里的字符不断增加长度遍历，转成long
+                                                                                 // substring不包括结束下标
+                if (startIndex == 0) { // 第一个数不能为标点，curStr为""
+                    dfs(i + 1, "" + nextNum, nextNum, nextNum);
                 } else {
                     // 如果是*，需要将当前结果减去上一次已经计算过的factor（还原回去）
-                    dfs(num, target, i + 1, curStr + "*" + curNum,
-                            curCalResult - lastFactor + lastFactor * curNum, lastFactor * curNum);
-                    dfs(num, target, i + 1, curStr + "+" + curNum, curCalResult + curNum, curNum);
-                    dfs(num, target, i + 1, curStr + "-" + curNum, curCalResult - curNum, -curNum);
+                    dfs(i + 1, curStr + "*" + nextNum,
+                               curCalResult - lastFactor + lastFactor * nextNum, lastFactor * nextNum);
+                    dfs(i + 1, curStr + "+" + nextNum, curCalResult + nextNum, nextNum);
+                    dfs(i + 1, curStr + "-" + nextNum, curCalResult - nextNum, -nextNum);
                 }
 
-                if (curNum == 0) { // 1006这种情况，遍历到第一个0时，在前面的代码会添加这个0进dfs
+                if (nextNum == 0) { // 1006这种情况，遍历到第一个0时，在前面的代码会添加这个0进dfs
                     // 但是在当前层不会再继续往后遍历了（即没有00或者006的情况出现）
                     // break出循环，不执行之后的分类操作
                     break;

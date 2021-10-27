@@ -141,4 +141,33 @@ public class Subarray {
             return result;
         }
     }
+
+    // 523. Continuous Subarray Sum
+    // 找到连续的subarray（长度大于2），和为输入k的倍数
+    public class SubarraySumKSolution {
+        public boolean checkSubarraySum(int[] nums, int k) {
+            // 前缀和，差为subarray的和
+            // 差为k的倍数，表示各自除以k的余数相等
+            // 用Map记录余数对应的下标，只要index之差大于2就是答案
+            Map<Integer, Integer> remainderIndex = new HashMap<>();
+
+            int preSum = 0;
+            remainderIndex.put(0, - 1);
+            for (int i = 0; i < nums.length; i ++) {
+                preSum += nums[i];
+                int remainder = preSum % k;
+                if (!remainderIndex.containsKey(remainder)) {
+                    remainderIndex.put(remainder, i);
+                } else { // 包括这个余数，直接计算index之差
+                    int preIndex = remainderIndex.get(remainder);
+                    if (i - preIndex >= 2) {
+                        return true;
+                    }
+                }
+
+            }
+
+            return false;
+        }
+    }
 }
