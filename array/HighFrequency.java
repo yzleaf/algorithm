@@ -41,4 +41,63 @@ public class HighFrequency {
             return true;
         }
     }
+
+    // 65. Valid Number
+    // 字符串模拟题
+    // Valid: ["2", "0089", "-0.1", "+3.14", "4.", "-.9", "2e10", "-90E3", "3e+7", "+6e-1", "53.5e93", "-123.456e789"]
+    // Invalid: ["abc", "1a", "1e", "e3", "99e2.5", "--6", "-+3", "95a54e53"]
+    class IsNumberSolution {
+        public boolean isNumber(String s) {
+            // 按e/E分开，左侧是整数/浮点，右侧整数
+            // 判断是整数或者浮点数
+            //    +/-只能出现在开头
+            //    .最多出现一次
+            //    至少有一个digit
+            int n = s.length();
+            char[] arr = s.toCharArray();
+            int eIndex = -1;
+            for (int i = 0; i < n; i ++) {
+                if (arr[i] == 'e' || arr[i] == 'E') {
+                    if (eIndex == -1) {
+                        eIndex = i;
+                    } else { //  != -1，之前出现过了e/E记录了index
+                        return false;
+                    }
+                }
+            }
+
+            boolean res = true;
+            if (eIndex == -1) {
+                res &= check(arr, 0, n - 1, false);
+            } else { // 有e
+                res &= check(arr, 0, eIndex - 1, false);
+                res &= check(arr, eIndex + 1, n - 1, true); // 右半部分必须为整数
+            }
+
+            return res;
+        }
+        private boolean check(char[] arr, int start, int end, boolean mustInt) {
+            if (start > end) { // 避免 e3 这样的数字出现
+                return false;
+            }
+            boolean seeDigit = false;
+            boolean seeDot = false;
+            if (arr[start] == '+' || arr[start] == '-') {
+                start ++;
+            }
+            for (int i = start; i <= end; i ++) {
+                if (arr[i] == '.') {
+                    if (mustInt || seeDot) {
+                        return false;
+                    }
+                    seeDot = true;
+                } else if (arr[i] >= '0' || arr[i] <= '9') {
+                    seeDigit = true;
+                } else {
+                    return false;
+                }
+            }
+            return seeDigit;
+        }
+    }
 }
