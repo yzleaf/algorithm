@@ -249,10 +249,12 @@ public class HighFrequency {
         public List<String> wordBreak(String s, List<String> dict) {
             int n = s.length();
 
-            for (int i = 0; i < n; ++i) {
+            for (int i = 0; i < n; ++i) { // 之所以这里提前初始化，是后面用了hash.get(j).size()
+                                          // 如果用putIfAbcent()的话那里可能会出错
                 hash.put(i, new ArrayList<>());
             }
 
+            // 要保证后面的单词在list中，所以从后往前开始
             for (int i = n - 1; i >= 0; i--) {
                 for (int j = i + 1; j <= n; ++j) {
                     if (dict.contains(s.substring(i, j))) { // 从i开始到j-1的单词
