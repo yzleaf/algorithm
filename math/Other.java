@@ -147,10 +147,10 @@ public class Other {
 
     // 5. x的n次幂 · Pow(x, n)
     // 50
-    // Time: O(nLogn)
+    // Time: O(logn)
     public class MyPowSolution {
         public double myPow(double x, int n) {
-            long nL = (long)n; // 避免负数情况，minValue取-n会溢出。或者取相反数时改成-(n+1)最后结果再乘以一个x
+            long nL = (long)n; // 避免负数情况，minValue最小的负数取-n会溢出。或者取相反数时改成-(n+1)最后结果再乘以一个x
             if (nL >= 0) {
                 return pow(x, nL);
             } else {
