@@ -221,4 +221,39 @@ public class Array {
             }
         }
     }
+
+    // 41. First Missing Positive
+    // 找到数组中缺失的最小正整数
+    // 要求时间O(n) 空间O(1)
+    class FirstMissingPositiveSolution {
+        public int firstMissingPositive(int[] nums) {
+            // 用原地hash表（数组模拟Hash）
+            // 把每个数，存在对应（数值-1）的index上。最后遍历数组看哪个index缺少这个对应的数
+            int n = nums.length;
+            for (int i = 0; i < n; i ++) {
+                // 用while是交换到当前i位置的数会继续交换下去
+                // 在指定范围内，没有正确的位置才交换
+                // 在正确位置的数不会继续进入while循环，所以整个事件复杂度还是O(n)
+                while (nums[i] > 0 && nums[i] <= n && i != nums[i] - 1) {
+                    if (nums[i] == nums[nums[i] - 1]) { // 避免两个交换的数相等，造成死循环
+                        break;
+                    }
+                    swap(nums, i, nums[i] - 1);
+                }
+            }
+
+            for (int i = 0; i < n; i ++) {
+                if (nums[i] - 1 != i) {
+                    return i + 1;
+                }
+            }
+
+            return n + 1; // 数组中有所有的数，所以返回数组后面的一个数
+        }
+        private void swap(int[] nums, int i, int j) {
+            int temp = nums[i];
+            nums[i] = nums[j];
+            nums[j] = temp;
+        }
+    }
 }
