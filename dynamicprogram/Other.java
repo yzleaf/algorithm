@@ -1,5 +1,7 @@
 package dynamicprogram;
 
+import java.util.*;
+
 public class Other {
     // 795. Number of Subarrays with Bounded Maximum
     // 正整数的数组A，正整数L, R
@@ -71,4 +73,30 @@ public class Other {
         }
     }
 
+    // 139 Word Break
+    // s = "leetcode", wordDict = ["leet","code"]
+    // 判断s能否拆成字典里的string的组合
+    class Solution {
+        public boolean wordBreak(String s, List<String> wordDict) {
+
+            Set<String> hash = new HashSet<>(wordDict);
+
+            // dp[i]表示从[0, i)是否为字典中出现的
+            // dp[i+1]需要判断：dp[i]和(i,i+1)是否出现过
+            boolean[] dp = new boolean[s.length() + 1];
+            dp[0] = true;
+
+            for (int i = 0; i <= s.length(); i ++) {
+                for (int j = 0; j < i; j ++) { // 枚举j这个0-i中间的拆分点
+                    if (dp[j] && hash.contains(s.substring(j, i))) {
+                        dp[i] = true;
+                        break; // 只要有一个j满足就可以直接看下一个i
+                    }
+                }
+            }
+            // 优化：j从后往前遍历，只要[j,i)长度超过Hash中的最长String，就直接break
+
+            return dp[s.length()];
+        }
+    }
 }
