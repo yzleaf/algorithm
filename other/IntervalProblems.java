@@ -39,6 +39,7 @@ public class IntervalProblems {
     }
 
     // 2. 合并区间 · Merge Intervals
+    // 56
     // 给出若干闭合区间，合并所有重叠的部分
     // 输入:  [(1,3),(2,6),(8,10),(15,18)]
     // 输出: [(1,6),(8,10),(15,18)]
@@ -70,6 +71,8 @@ public class IntervalProblems {
                 } else { // last.end >= item.start -> 有交集
                     // 修改已经添加到list中的上一个end
                     last.end = Math.max(last.end, item.end);
+
+                    // 也可以直接result.get(result.size() - 1)获取元素来修改值
                 }
             }
 
