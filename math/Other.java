@@ -13,7 +13,7 @@ public class Other {
             int i = num1.length() - 1;
             int j = num2.length() - 1;
             int carry = 0; // 进位
-            String result = "";
+            StringBuilder sb = new StringBuilder();
 
             while (i >= 0 || j >= 0) {
                 int curSum = carry;
@@ -25,15 +25,15 @@ public class Other {
                     curSum += num2.charAt(j) - '0';
                     j--;
                 }
-                result = curSum % 10 + result; // 当前位的结果拼上之前算出的String
+                sb.append(curSum % 10); // 当前位的结果拼上之前算出的String
                 carry = curSum / 10; // 进位留给下一位
             }
 
             if (carry > 0) {
-                result = "1" + result;
+                sb.append(carry);
             }
 
-            return result;
+            return sb.reverse().toString();
         }
         // 用string builder更快一点, append结果，最后reverse
     }
@@ -213,4 +213,33 @@ public class Other {
             nums[j] = temp;
         }
     }
+
+    // 398. Random Pick Index
+    public class RandomPickSolution {
+        int[] nums;
+
+        public RandomPickSolution(int[] nums) {
+            this.nums = nums;
+        }
+
+        public int pick(int target) {
+
+            Random rand = new Random();
+            int index = -1;
+            int cnt = 0;
+            for (int i = 0; i < nums.length; i ++) {
+                if (nums[i] == target) {
+                    cnt ++;
+                    // 蓄水池采样
+                    // 产生的随机数 < 1/i 则选择它
+                    // 概率为 1/i
+                    if (rand.nextFloat() * cnt <= 1) {
+                        index = i;
+                    }
+                }
+            }
+            return index;
+        }
+    }
+
 }
