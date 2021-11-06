@@ -515,7 +515,6 @@ public class Heap {
             }
             return end;
         }
-
         private int findNotBiggerThanMid(int[][] matrix, int mid, int row, int col) {
             // 以列为单位找，找到每一列最后一个<=mid的数即知道每一列有多少个数<=mid
             // 从左下角开始找
@@ -571,7 +570,6 @@ public class Heap {
                     result[i - k + 1] = nums[deque.peekFirst()];
                 }
             }
-
             return result;
         }
     }
