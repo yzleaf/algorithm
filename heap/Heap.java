@@ -102,11 +102,11 @@ public class Heap {
             ListNode dummy = new ListNode(0); // 构建新的链表
             ListNode tail = dummy;
             while (!minHeap.isEmpty()) {
-                ListNode head = minHeap.poll();
-                tail.next = head;
-                tail = head; // tail往下走到当前head
-                if (head.next != null) {
-                    minHeap.offer(head.next);
+                ListNode curr = minHeap.poll();
+                tail.next = curr;
+                tail = curr; // tail往下走到当前head
+                if (curr.next != null) {
+                    minHeap.offer(curr.next);
                 }
             }
 
@@ -442,6 +442,7 @@ public class Heap {
     }
 
     // 9. Kth Smallest Number in Sorted Matrix
+    // 378
     // 在一个排序矩阵中找从小到大的第 k 个整数
     // 排序矩阵的定义为：每一行递增，每一列也递增
     public class kthSmallestInMatrixSolution {
@@ -463,7 +464,7 @@ public class Heap {
 
             int row = matrix.length;
             int col = matrix[0].length;
-            boolean[][] record = new boolean[row][col];
+            boolean[][] visited = new boolean[row][col];
             PriorityQueue<Pair> minHeap = new PriorityQueue<>(k, (a, b) -> a.val - b.val);
 
             minHeap.offer(new Pair(0, 0, matrix[0][0])); // 添加第一个元素
@@ -474,8 +475,8 @@ public class Heap {
                     int nextX = curr.x + dx[j];
                     int nextY = curr.y + dy[j];
                     Pair next = new Pair(nextX, nextY, 0); // 判断以后再赋值，避免出现越界为空的情况
-                    if (nextX < row && nextY < col && !record[nextX][nextY]) {
-                        record[nextX][nextY] = true;
+                    if (nextX < row && nextY < col && !visited[nextX][nextY]) {
+                        visited[nextX][nextY] = true;
                         next.val = matrix[nextX][nextY];
                         minHeap.offer(next);
                     }
