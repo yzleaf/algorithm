@@ -138,5 +138,51 @@ public class ResultTypeProb {
         }
     }
 
+    // 1644. Lowest Common Ancestor of a Binary Tree II
+    // 同上一题236，差别在与本题可能有node不在tree中，要返回null
+    // 因此，需要遍历整棵树，不能提前返回
+    public class LCA2Solution {
+        private boolean pFound = false;
+        private boolean qFound = false;
+        public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+
+            TreeNode lcaNode = lca(root, p, q);
+            if (pFound && qFound) { // p和q两个点都在tree中可以找到
+                return lcaNode;
+            } else {
+                return null;
+            }
+        }
+        private TreeNode lca(TreeNode root, TreeNode p, TreeNode q) {
+            if (root == null) {
+                return null;
+            }
+
+            TreeNode left = lca(root.left, p, q);
+            TreeNode right = lca(root.right, p, q);
+
+            // 这个要放在divide后面，要不然测试不过？？？
+            if (root == p) {
+                pFound = true;
+                return root;
+            }
+            if (root == q) {
+                qFound = true;
+                return root;
+            }
+
+            if (left == null && right != null) {
+                return right;
+            }
+            if (left != null && right == null) {
+                return left;
+            }
+            if (left != null && right != null) {
+                return root;
+            }
+
+            return null;
+        }
+    }
 
 }
