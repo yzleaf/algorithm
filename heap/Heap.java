@@ -498,22 +498,44 @@ public class Heap {
             int start = matrix[0][0];
             int end = matrix[m - 1][n - 1];
 
-            while (start < end) {
+//            while (start < end) {
+//                // 每次循环都保证第K小的数在start~end之间，当start==end，第k小的数就是start
+//                int mid = start + (end - start) / 2;
+//                // 找二维矩阵中<mid的元素总个数
+//                int count = findNotBiggerThanMid(matrix, mid, m, n);
+//                if (count < k) {
+//                    // 第k小的数在右半部分，且不包含mid
+//                    start = mid + 1;
+//                } else if (count > k) {
+//                    // 第k小的数在左半部分，可能包含mid（下面的=）
+//                    end = mid;
+//                } else {
+//                    end = mid;
+//                }
+//            }
+//            return end;
+
+            while (start + 1 < end) {
                 // 每次循环都保证第K小的数在start~end之间，当start==end，第k小的数就是start
                 int mid = start + (end - start) / 2;
                 // 找二维矩阵中<mid的元素总个数
                 int count = findNotBiggerThanMid(matrix, mid, m, n);
                 if (count < k) {
                     // 第k小的数在右半部分，且不包含mid
-                    start = mid + 1;
-                } else if (count > k) {
-                    // 第k小的数在左半部分，可能包含mid（下面的=）
-                    end = mid;
-                } else {
+                    start = mid;
+                } else { // >=
+                    // 第k小的数在左半部分，可能包含mid
                     end = mid;
                 }
             }
-            return end;
+            // 先看start，如果大于k的话，可能会有相等的元素
+            if (findNotBiggerThanMid(matrix, start, m, n) >= k) {
+                return start;
+            }
+            if (findNotBiggerThanMid(matrix, end, m, n) >= k) {
+                return end;
+            }
+            return 0;
         }
         private int findNotBiggerThanMid(int[][] matrix, int mid, int row, int col) {
             // 以列为单位找，找到每一列最后一个<=mid的数即知道每一列有多少个数<=mid
