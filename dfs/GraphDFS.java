@@ -21,9 +21,9 @@ public class GraphDFS {
             }
 
             // 每个String -> 对应所有变换一个字母的string列表
-            Map<String, List<String>> map = new HashMap<String, List<String>>();
+            Map<String, List<String>> map = new HashMap<>();
             // 每个String -> 离end的距离
-            Map<String, Integer> distance = new HashMap<String, Integer>();
+            Map<String, Integer> distance = new HashMap<>();
 
             dict.add(start);
             dict.add(end);
@@ -60,8 +60,9 @@ public class GraphDFS {
 
         private void bfs(Map<String, List<String>> map, Map<String, Integer> distance,
                          String start, String end, Set<String> dict) {
+            // 记录start到每一个string的距离 -> distance当中
 
-            Queue<String> queue = new LinkedList<String>();
+            Queue<String> queue = new LinkedList<>();
             queue.offer(start);
             distance.put(start, 0);
             for (String s : dict) {
@@ -71,7 +72,7 @@ public class GraphDFS {
             while (!queue.isEmpty()) {
                 String current = queue.poll();
 
-                List<String> nextList = expand(current, dict); // 找到经过一次变换得到的string列表
+                List<String> nextList = nextString(current, dict); // 找到经过一次变换得到的string列表
                 for (String next : nextList) {
                     map.get(next).add(current); // 所有next的列表中都要加入current
                     if (!distance.containsKey(next)) {
@@ -84,8 +85,8 @@ public class GraphDFS {
             } // while
         }
 
-        private List<String> expand(String s, Set<String> dict) { // 经过一次变换得到的string列表
-            List<String> expansions = new ArrayList<String>();
+        private List<String> nextString(String s, Set<String> dict) { // 经过一次变换得到的string列表
+            List<String> expansions = new ArrayList<>();
 
             for (int i = 0; i < s.length(); i++) {
                 for (char ch = 'a'; ch <= 'z'; ch++) {
