@@ -220,6 +220,7 @@ public class MatrixBFS {
     }
 
     // 4. Build Post Office II
+    // 317
     // 给出一个二维的网格，每一格可以代表墙2 ，房子1，以及空0。在网格中找到一个位置去建立邮局，使得所有的房子到邮局的距离和是最小的
     // 返回所有房子到邮局的最小距离和，如果没有地方建立邮局，则返回-1
     public class PostOfficeII {
