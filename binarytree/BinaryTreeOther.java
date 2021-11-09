@@ -245,4 +245,78 @@ public class BinaryTreeOther {
         }
     }
 
+    // 637. Average of Levels in Binary Tree
+    // 计算二叉树 每一层 的平均值
+    // DFS：修改每一次遇到相同level的sum数值
+    // BFS: 每一层的遍历，总和sum/size
+    // 还是优先考虑用BFS做吧
+    public class AverageSolution {
+        // 方法1 BFS
+        public List<Double> averageOfLevels1(TreeNode root) {
+            List<Double> res = new ArrayList<>();
+            if (root == null) {
+                return null;
+            }
+
+            Queue<TreeNode> queue = new LinkedList<>();
+            queue.offer(root); // 要先把根节点加进去！！！
+
+            while (!queue.isEmpty()) {
+                int level = queue.size();
+                double sum = 0;
+                for (int i = 0; i < level; i ++) {
+                    TreeNode curr = queue.poll();
+                    sum += curr.val;
+                    if (curr.left != null) {
+                        queue.offer(curr.left);
+                    }
+                    if (curr.right != null) {
+                        queue.offer(curr.right);
+                    }
+                }
+                res.add(sum / level);
+            }
+            return res;
+        }
+        // 方法2 DFS
+        List<Double> sum; // sum一定要设成Double，因为累加可能会超
+        List<Integer> number;
+        public List<Double> averageOfLevels(TreeNode root) {
+            sum = new ArrayList<>();
+            number = new ArrayList<>();
+            List<Double> res = new ArrayList<>();
+
+            if (root == null) {
+                return res;
+            }
+
+            dfs(root, 0);
+            for (int i = 0; i < sum.size(); i ++) {
+                res.add(sum.get(i) * 1.0 / number.get(i));
+            }
+
+            return res;
+        }
+        private void dfs(TreeNode curr, int level) {
+            if (curr == null) {
+                return;
+            }
+            // 刚进入这一层，需要新建节点，后面才可以set
+            if (sum.size() == level) {
+                sum.add(0 * 1.0);
+                number.add(0);
+            }
+
+            sum.set(level, sum.get(level) + curr.val);
+            number.set(level, number.get(level) + 1);
+
+            if (curr.left != null) {
+                dfs(curr.left, level + 1);
+            }
+            if (curr.right != null) {
+                dfs(curr.right, level + 1);
+            }
+        }
+    }
+
 }
