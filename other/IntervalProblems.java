@@ -4,37 +4,39 @@ import java.util.*;
 
 public class IntervalProblems {
     // 1. missing interval
+    // 163
     // 给定一个排序整数数组，其中元素的取值范围为[lower，upper] (包括边界)
     // 返回其缺少的范围。
     // given [0, 1, 3, 50, 75], lower = 0 and upper = 99
     // return ["2", "4->49", "51->74", "76->99"].
     public class FindMissingRangesSolution {
         public List<String> findMissingRanges(int[] nums, int lower, int upper) {
-            List<String> result = new ArrayList<>();
+            List<String> res = new ArrayList<>();
 
             if (nums.length == 0) {
-                addRange(result, lower, upper);
+                addRange(res, lower, upper);
+                return res;
             }
 
-            addRange(result, lower, nums[0] - 1); // lower -> 第一个数
+            addRange(res, lower, nums[0] - 1); // lower -> 第一个数
 
             for (int i = 1; i < nums.length; i++) { // 前一个值到当前值的空隙
-                addRange(result, nums[i-1] + 1, nums[i] - 1);
+                addRange(res, nums[i-1] + 1, nums[i] - 1);
             }
 
-            addRange(result, nums[nums.length-1] + 1, upper); // 最后一个数 -> upper
+            addRange(res, nums[nums.length-1] + 1, upper); // 最后一个数 -> upper
 
-            return result;
+            return res;
         }
-        private void addRange(List<String> ans, int start, int end) {
+        private void addRange(List<String> res, int start, int end) {
             if (start > end) {
                 return;
             }
             if (start == end) { // 添加这个数本身
-                ans.add(start + "");
+                res.add(start + "");
                 return;
             }
-            ans.add(start + "->" + end);
+            res.add(start + "->" + end);
         }
     }
 
