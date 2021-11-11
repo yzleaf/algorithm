@@ -99,4 +99,39 @@ public class Other {
             return dp[s.length()];
         }
     }
+
+    // 983. Minimum Cost For Tickets
+    // 1天、7天、30天的票价和出行日期的数组，返回花最少的钱能cover所有旅游日子
+    public class MinCostSolution {
+        // dp[i] 表示到第 i 天结束时完成之前所有旅行的最低消费
+        // 第i天不不旅行
+        //     dp[i] = dp[i-1]
+        // 第i天出去旅行，有三种情况
+        //     1.买一天票，之前一天消费dp[i-1]加上，花了dp[i-1] + cost[0]
+        //     2.买七天票，之前8天dp[i-7]加上，在之后的一天买了7天票，正好cover今天，花了dp[i-7] + cost[1]
+        //     3.买三十天票，之前31天dp[i-30]加上，在之后的一天买了30天，正好cover今天，花了dp[i-30] + cost[2]
+        // 取最小值 dp[i] = min(dp[i - 1] + cost[0], dp[i - 7] + cost[1], dp[i - 30] + cost[2])
+        public int mincostTickets(int[] days, int[] costs) {
+            int[] dayTravel = new int[366];
+            int[] dp = new int[366];
+            // 把旅行日子的index置为1
+            for (int d : days) {
+                dayTravel[d] = 1;
+            }
+
+            dp[0] = 0;
+            for (int i = 1; i < dp.length; i ++) {
+                if (dayTravel[i] == 1) { // 今天有旅行
+                    dp[i] = (i >= 1 ? dp[i - 1] : 0) + costs[0]; // 右括号的位置要把前面都包上
+                    dp[i] = Math.min(dp[i], (i >= 7 ? dp[i - 7] : 0) + costs[1]);
+                    dp[i] = Math.min(dp[i], (i >= 30 ? dp[i - 30] : 0) + costs[2]);
+                } else { // 今天没有旅行
+                    dp[i] = dp[i - 1];
+                }
+            }
+
+            return dp[dp.length - 1];
+        }
+    }
+
 }
