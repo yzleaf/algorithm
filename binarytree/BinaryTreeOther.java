@@ -319,4 +319,120 @@ public class BinaryTreeOther {
         }
     }
 
+    // 863. All Nodes Distance K in Binary Tree
+    // 找到离target节点距离为k的所有节点
+    class DistanceKSolution {
+        // 方法1，将树构建成一个无向图，再用BFS从target节点开始往它的邻居找
+        Map<Integer, List<Integer>> hash = new HashMap<>();
+        public List<Integer> distanceK(TreeNode root, TreeNode target, int k) {
+            List<Integer> res = new ArrayList<>();
+            if (root == null || target == null) {
+                return res;
+            }
+
+            // node --- all neighbors
+            constructGraph(root);
+
+            Queue<Integer> queue = new LinkedList<>();
+            queue.offer(target.val);
+            Set<Integer> visited = new HashSet<>();
+            visited.add(target.val);
+
+            int step = 0;
+            while (!queue.isEmpty()) {
+                int size = queue.size();
+                for (int i = 0; i < size; i ++) {
+                    int curr = queue.poll();
+                    if (step == k) {
+                        res.add(curr);
+                    }
+                    for (Integer next : hash.get(curr)) {
+                        if (visited.contains(next)) {
+                            continue;
+                        }
+                        queue.offer(next);
+                        visited.add(next);
+                    }
+                }
+                step ++;
+            }
+
+            return res;
+        }
+        private void constructGraph(TreeNode curr) {
+            if (curr == null) {
+                return;
+            }
+
+            hash.putIfAbsent(curr.val, new ArrayList<>());
+
+            if (curr.left != null) {
+                hash.get(curr.val).add(curr.left.val);
+
+                hash.putIfAbsent(curr.left.val, new ArrayList<>());
+                hash.get(curr.left.val).add(curr.val);
+
+                constructGraph(curr.left);
+            }
+            if (curr.right != null) {
+                hash.get(curr.val).add(curr.right.val);
+
+                hash.putIfAbsent(curr.right.val, new ArrayList<>());
+                hash.get(curr.right.val).add(curr.val);
+
+                constructGraph(curr.right);
+            }
+        }
+
+        // 方法2
+        // 用HashMap记录每个节点的父节点，之后二叉树变成三个方向来寻找：left right parent
+        // 加入一个from的节点，来避免重复操作走回头路
+        Map<Integer, TreeNode> parents = new HashMap<>();
+        List<Integer> res = new ArrayList<>();
+        public List<Integer> distanceK2(TreeNode root, TreeNode target, int k) {
+            // 1. 从root出发，记录每个父节点
+            findParents(root);
+
+            // 2. 从target出发，寻找深度为k的节点
+            findRes(target, null, 0, k);
+
+            return res;
+        }
+        private void findParents(TreeNode curr) {
+            if (curr == null) {
+                return;
+            }
+            if (curr.left != null) {
+                parents.put(curr.left.val, curr);
+                findParents(curr.left);
+            }
+            if (curr.right != null) {
+                parents.put(curr.right.val, curr);
+                findParents(curr.right);
+            }
+        }
+        private void findRes(TreeNode curr, TreeNode from, int depth, int k) {
+            if (curr == null) {
+                return;
+            }
+
+            // 距离为k，加入结果数组
+            if (depth == k) {
+                res.add(curr.val);
+                return;
+            }
+
+            // 往另外三个方向找depth+1
+            if (curr.left != null) {
+                findRes(curr.left, curr, depth + 1, k);
+            }
+            if (curr.right != null) {
+                findRes(curr.right, curr, depth + 1, k);
+            }
+            if (parents.get(curr.val) != from) { // 不等于from，它来自的节点
+                findRes(parents.get(curr.val), curr, depth + 1, k);
+            }
+        }
+    }
+
 }
