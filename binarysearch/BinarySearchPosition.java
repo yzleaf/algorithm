@@ -267,7 +267,7 @@ public class BinarySearchPosition {
     // 给定一个排序好的数组 arr ，两个整数 k 和 x ，从数组中找到最靠近 x（两数之差最小）的 k 个数。返回的结果必须要是按升序排好的
     public class FindCloseSolution {
         // 方法1
-        // 二分找到小于x的最接近的数，双指针扩展区间成k个
+        // 二分找到小于x的最接近的数，双指针左右扩展区间成k个
         public List<Integer> findClosestElements(int[] arr, int k, int x) {
             List<Integer> result = new ArrayList();
             int left = findLowerClosest(arr, x);
@@ -318,7 +318,8 @@ public class BinarySearchPosition {
             return -1; // 找不到，数组全部大于x，返回的是-1，这样后面的right+1就会是第一个数index=0
         }
 
-        // 方法2
+        // 方法2 找到左边界，然后返回mid + k个数
+        // arr[mid]到arr[mid+k]之间有k+1个数，所以我们需要比较边界两个数哪个更接近x
         public List<Integer> findClosestElements2(int[] arr, int k, int x) {
             List<Integer> result = new ArrayList();
 

@@ -407,4 +407,47 @@ public class LinkedList {
         }
     }
 
+    // 708. Insert into a Sorted Circular Linked List
+    // 有序上升的循环链表中插入一个node，要在合适的位置保证有序上升
+    // 1. 如果只是一个null链表，直接添加
+    // 2. 不null，再分三种情况讨论
+    //    2.1 正常情况，在中间插入
+    //    2.2 在链表尾和头之间插入
+    //    2.3 链表都是同样的值
+    public class InsertSolution {
+        public ListNode insert(ListNode head, int insertVal) {
+            if (head == null) {
+                ListNode curr = new ListNode(insertVal);
+                curr.next = curr;
+                return curr;
+            }
+
+            ListNode curr = head;
+            while (true) {
+                if (curr.val < curr.next.val) { // 1. 正常情况
+                    if (curr.val <= insertVal && insertVal <= curr.next.val) {
+                        insertNode(curr, insertVal);
+                        break;
+                    }
+                } else if (curr.val > curr.next.val) { // 2. 到链表的末尾
+                    if (curr.val <= insertVal || insertVal <= curr.next.val) { // 插入值最大或者最小都满足
+                        insertNode(curr, insertVal);
+                        break;
+                    }
+                } else { // 3. 这种情况结合后面的判断 是整个表的数值都相等
+                    if (curr.next == head) {
+                        insertNode(curr, insertVal);
+                        break;
+                    }
+                }
+                curr = curr.next;
+            }
+            return head;
+        }
+        private void insertNode(ListNode curr, int val) {
+            ListNode newNode = new ListNode(val);
+            newNode.next = curr.next;
+            curr.next = newNode;
+        }
+    }
 }
