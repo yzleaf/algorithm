@@ -292,6 +292,8 @@ public class BinarySearchPosition {
                 }
             }
 
+            // 因为要从小到大输出，所以不能在前面添加res，要在这里再添加
+            // 跳出循环的时候left和right其实往外多走了一步（因为上述判断针对的是当前left/right有效则加入数组，再设定left--/right++）
             for (int i = left + 1; i < right; i ++) {
                 result.add(arr[i]);
             }
@@ -339,7 +341,6 @@ public class BinarySearchPosition {
                     start = mid + 1;
                 }
             }
-
 
             for (int i = start; i < start + k; i++) {
                 result.add(arr[i]);

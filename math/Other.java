@@ -242,4 +242,54 @@ public class Other {
         }
     }
 
+    // 29. Divide Two Integers
+    // 不用乘，除号，模，返回两个数的商（舍掉小数位）
+    public class DivideSolution {
+        // 17 / 3：
+
+        // 17 > 3   结果至少为1
+        // 17 > (3 + 3) 结果至少为2
+        // 17 > (6 + 6) 结果至少为4
+        // 17 < (12 + 12) 结果不能超过8 -> 所以应该是4+某个数
+
+        // 17 - (6 + 6) = 5 将这个结果重复上述的过程
+        // 不断递归直到 当前数 < 3
+        public int divide(int dividend, int divisor) {
+            if (divisor == -1 && dividend == Integer.MIN_VALUE) {
+                return Integer.MAX_VALUE;
+            }
+
+            int sign = 1;
+            if ((dividend > 0 && divisor < 0) || (dividend < 0 && divisor > 0)) {
+                sign = -1;
+            }
+
+            long a = dividend; // 要先赋值为long，否则后面再判断会出错
+            long b = divisor;
+            a = (a > 0) ? a : (-a); // 要变化为long避免越界
+            b = (b > 0) ? b : (-b);
+
+            long res = div(a, b);
+
+            if (sign == 1) {
+                return res > Integer.MAX_VALUE ? Integer.MAX_VALUE : (int)res;
+            } else {
+                return res > Integer.MAX_VALUE ? Integer.MIN_VALUE : (int)(-res);
+            }
+        }
+        private long div(long a, long b) {
+            if (a < b) {
+                return 0;
+            }
+            long cnt = 1;
+            long tempb = b;
+            while (tempb + tempb <= a) {
+                cnt += cnt;
+                tempb += tempb;
+            }
+
+            return cnt + div(a - tempb, b);
+        }
+    }
+
 }
