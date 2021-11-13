@@ -402,6 +402,58 @@ public class HighFrequency {
         }
     }
 
+    // 1522. Diameter of N-Ary Tree
+    // 求多叉树的直径
+    // 类似于上一题二叉树的直径
+    public class DiameterSolution {
+        class Node {
+            public int val;
+            public List<Node> children;
+
+            public Node() {
+                children = new ArrayList<Node>();
+            }
+
+            public Node(int _val) {
+                val = _val;
+                children = new ArrayList<Node>();
+            }
+
+            public Node(int _val,ArrayList<Node> _children) {
+                val = _val;
+                children = _children;
+            }
+        }
+
+        int maxDia = 0;
+        public int diameter(Node root) {
+            getD(root);
+            return maxDia - 1;
+        }
+        private int getD(Node curr) {
+            if (curr == null) {
+                return 0;
+            }
+
+            int currMaxDepth = 0;
+            int preMaxDepth = 0;
+            for (Node child : curr.children) {
+                int childDia = getD(child);
+                // 找到最大边，次大边。注意这里一定要用 <= 不要漏了=
+                if (currMaxDepth <= childDia + 1) { // 如果元素比最大值大，同时更新最大值和次大值
+                    preMaxDepth = currMaxDepth;
+                    currMaxDepth = childDia + 1;
+                } else if (preMaxDepth <= childDia + 1) { // 如果元素比最大值小，我们依旧要判断和次大值的关系
+                    preMaxDepth = childDia + 1;
+                }
+            }
+
+            maxDia = Math.max(maxDia, preMaxDepth + currMaxDepth + 1);
+
+            return currMaxDepth;
+        }
+    }
+
     // 合并二叉树
     // 617
     // 输入:
