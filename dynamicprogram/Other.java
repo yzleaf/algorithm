@@ -134,4 +134,66 @@ public class Other {
         }
     }
 
+    // 1216. Valid Palindrome III
+    // 给定字符串，计算最少的删除次数，使之成为回文串
+    // 返回是否能在k步内完成
+    public class ValidPalindrome3Solution {
+        // 方法2 从bottom到top的dp方法
+        public boolean isValidPalindrome2(String s, int k) {
+            int n = s.length();
+            char[] sArr = s.toCharArray();
+
+            // dp[i][j]:从i到j构成回文串需要处理的次数
+            int[][] dp = new int[n][n];
+
+            // dp外层循环从子问题的长度开始，不断增加
+            for (int len = 2; len <= n; len ++) {
+                for (int i = 0, j = len - 1; j < n; i ++, j ++) {
+                    if (sArr[i] == sArr[j]) {
+                        // [0][3] <- [1][2] 可以看出在长度len为2的时候已经得到这个i+1, j-1了
+                        dp[i][j] = dp[i + 1][j - 1];
+                    } else {
+                        // 不相等时，需要多处理1次，跳过一个字符（可能处理左边i，也可能处理右边j）
+                        dp[i][j] = Math.min(dp[i + 1][j], dp[i][j - 1]) + 1;
+                    }
+                }
+            }
+
+            return dp[0][n - 1] <= k;
+        }
+
+        // 方法1 从top到bottom的记忆化递归方法
+        int[][] dp;
+        public boolean isValidPalindrome1(String s, int k) {
+            int n = s.length();
+            dp = new int[n][n];
+            for (int i = 0; i < n; i ++) {
+                for (int j = 0; j < n; j ++) {
+                    dp[i][j] = -1;
+                }
+            }
+            return palindromeCount(s, 0, n - 1) <= k;
+        }
+        // 当前字串为回文串需要处理的个数
+        private int palindromeCount(String s, int i, int j) {
+            if (dp[i][j] != -1) {
+                return dp[i][j]; //  记忆化 递归
+            }
+            if (i >= j) { // 相等的时候只有一个字符，肯定回文，不需要处理
+                return 0;
+            }
+            if (i == j - 1) {
+                return s.charAt(i) == s.charAt(j) ? 0 : 1;
+            }
+
+            // index相差2以上
+            if (s.charAt(i) == s.charAt(j)) {
+                dp[i][j] = palindromeCount(s, i + 1, j - 1);
+            } else {
+                dp[i][j] = Math.min(palindromeCount(s, i + 1, j), palindromeCount(s, i, j - 1)) + 1;
+            }
+
+            return dp[i][j];
+        }
+    }
 }
