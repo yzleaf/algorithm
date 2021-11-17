@@ -215,4 +215,73 @@ public class Other {
             return next;
         }
     }
+
+    // 934. Shortest Bridge
+    // 矩阵中有两个岛（用1表示），建一座最短距离的桥使他们联通
+    public class ShortestBridgeSolution {
+        int m;
+        int n;
+        Queue<int[]> queue;
+
+        public int shortestBridge(int[][] grid) {
+            m = grid.length;
+            n = grid[0].length;
+            queue = new LinkedList<>();
+
+            // 1. dfs找第一个联通的岛屿（把1标记为2）
+            boolean found = false;
+            for (int i = 0; i < m; i ++) {
+                if (found) // 找到就可以退出了
+                    break;
+                for (int j = 0; j < n; j ++) {
+                    if (grid[i][j] == 1) {
+                        dfs(grid, i, j);
+                        found = true;
+                        break;
+                    }
+                }
+            }
+
+            // 2. bfs找第二个岛屿（过程中把0标记为2，之后只要遇到1意味着是另一个岛屿，则return）
+            int step = 0;
+            int[] dx = {1, -1, 0, 0};
+            int[] dy = {0, 0, 1, -1};
+            while (!queue.isEmpty()) {
+                int size = queue.size();
+                for (int i = 0; i < size; i ++) {
+                    int[] curr = queue.poll();
+                    for (int j = 0; j < 4; j ++) {
+                        int nextX = curr[0] + dx[j];
+                        int nextY = curr[1] + dy[j];
+                        if (nextX < 0 || nextX >= m || nextY < 0 || nextY >= m) {
+                            continue;
+                        }
+                        if (grid[nextX][nextY] == 2) { // 当前岛屿不用管
+                            continue;
+                        } else if (grid[nextX][nextY] == 1) { // 找到另一个岛屿了
+                            return step;
+                        } else { // 0
+                            queue.offer(new int[]{nextX, nextY});
+                            grid[nextX][nextY] = 2; // 别忘了标记
+                        }
+                    }
+                }
+                step ++;
+            }
+
+            return -1;
+        }
+        private void dfs(int[][] grid, int i, int j) {
+            if (i < 0 || i >= m || j < 0 || j >= n || grid[i][j] != 1) {
+                return;
+            }
+            grid[i][j] = 2;
+            queue.offer(new int[]{i, j}); // 将这个岛屿经过的所有点都加入队列中
+
+            dfs(grid, i + 1, j);
+            dfs(grid, i - 1, j);
+            dfs(grid, i, j + 1);
+            dfs(grid, i, j - 1);
+        }
+    }
 }
