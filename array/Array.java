@@ -256,4 +256,46 @@ public class Array {
             nums[j] = temp;
         }
     }
+
+    // 932. Beautiful Array
+    // 判断数组是否是Beautiful array
+    // For every 0 <= i < j < n, there is no index k with i < k < j where 2 * nums[k] == nums[i] + nums[j].
+    public class BeautifulArraySolution {
+        // A[]: Beautiful 可以保证 a * A[] + b也是beautiful （因为数组中每个元素都加减乘不影响原来的beautiful关系）
+        // 两个数组合并，如果左边是奇数，右边是偶数，那么新的数组必然满足beautiful（因为2 * y != x + z，因为 奇+偶=奇）
+
+        // 可以用HashMap来存结果，加速多次查找（似乎不是这题的必须）
+        Map<Integer, int[]> hash;
+        public int[] beautifulArray(int n) {
+            hash = new HashMap<>();
+            return constructBeautiful(n);
+        }
+        private int[] constructBeautiful(int n) {
+            if (hash.containsKey(n)) {
+                return hash.get(n);
+            }
+
+            int[] res = new int[n];
+            if (n == 1) {
+                res[0] = 1;
+            } else {
+                int t = 0;
+                // left左边放奇数
+                int[] left = constructBeautiful((n + 1)/ 2); // 奇数多一个，因为中间mid应该为奇
+                for (int leftNum : left) {
+                    res[t] = 2 * leftNum - 1;
+                    t ++;
+                }
+                // right右边放偶数
+                int[] right = constructBeautiful(n / 2);
+                for (int rightNum : right) {
+                    res[t] = 2 * rightNum;
+                    t ++;
+                }
+            }
+
+            hash.put(n, res);
+            return res;
+        }
+    }
 }
