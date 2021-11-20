@@ -292,4 +292,71 @@ public class Other {
         }
     }
 
+    // 681. Next Closest Time
+    // 找到当前给定时间的下一个最近时间（必须由当前时间的数字构成，可重复）
+    public class NextClosestTimeSolution {
+        int ori;
+        int best;
+        // dfs 判断当前四个数可以组成的所有组合
+        public String nextClosestTime(String time) {
+
+            int[] nums = new int[4];
+            nums[0] = time.charAt(0) - '0';
+            nums[1] = time.charAt(1) - '0';
+            nums[2] = time.charAt(3) - '0';
+            nums[3] = time.charAt(4) - '0';
+            ori = toMin(nums[0] * 10 + nums[1], nums[2] * 10 + nums[3]);
+            best = ori;
+
+            dfs(nums, 0, new int[4]);
+
+            int bestH = best / 60;
+            int bestM = best % 60;
+            StringBuilder sb = new StringBuilder();
+            if (bestH < 10) { // 一位数要化成两位才合法
+                sb.append(0);
+            }
+            sb.append(bestH);
+            sb.append(":");
+            if (bestM < 10) {
+                sb.append(0);
+            }
+            sb.append(bestM);
+            return sb.toString();
+        }
+        private void dfs(int[] nums, int start, int[] curr) {
+            if (start == 4) {
+                // 判断当前时间是否合法
+                int currH = curr[0] * 10 + curr[1];
+                int currM = curr[2] * 10 + curr[3];
+                if (currH > 23 || currM > 59) {
+                    return;
+                }
+
+                int currTime = toMin(currH, currM);
+                if (timeDiff(ori, currTime) < timeDiff(ori, best)) {
+                    best = currTime;
+                }
+                return;
+            }
+            for (int i = 0; i < 4; i ++) {
+                int currNum = nums[i];
+                curr[start] = currNum;
+                dfs(nums, start + 1, curr);
+            }
+        }
+        private int toMin(int h, int m) {
+            return h * 60 + m;
+        }
+        private int timeDiff(int t1, int t2) {
+            if (t1 == t2) { // 相等的话相差了24小时
+                return 24 * 60;
+            }
+            if (t2 - t1 > 0) {
+                return t2 - t1;
+            } else {
+                return t2 - t1 + 24 * 60;
+            } // 这句可以和==合并
+        }
+    }
 }

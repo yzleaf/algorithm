@@ -435,4 +435,42 @@ public class BinaryTreeOther {
         }
     }
 
+    // 865. Smallest Subtree with all the Deepest Nodes
+    // 返回第一个包含所有deepest深度node的根节点（LCA）
+    public class subtreeWithAllDeepestSolution {
+        public class NodeHeight {
+            int key;
+            TreeNode value;
+            NodeHeight(int key, TreeNode value) {
+                this.key = key;
+                this.value = value;
+            }
+        }
+        public TreeNode subtreeWithAllDeepest(TreeNode root) {
+            return depth(root).value;
+        }
+
+        // 返回当前树的深度以及之前的最优点（有最深深度的最小公共祖先）
+        public NodeHeight depth(TreeNode curr) {
+            // 空节点的高度为-1，叶子节点为0
+            if (curr == null) {
+                return new NodeHeight(-1, null);
+            }
+
+            NodeHeight left = depth(curr.left);
+            NodeHeight right = depth(curr.right);
+
+            // 如果左右子树depth相等，当前节点即为LCA
+            if (left.key == right.key) {
+                return new NodeHeight(left.key + 1, curr);
+            } else if (left.key < right.key) {
+            // 如果左子树depth<右，应该返回右子树里存储的最优解，以及当前层的高度（右子树的最高高度+1）
+                return new NodeHeight(right.key + 1, right.value);
+            } else {
+            // 如果左子树depth>右，应该返回左子树里存储的最优解，以及当前层的高度（左子树的最高高度+1）
+                return new NodeHeight(left.key + 1, left.value);
+            }
+        }
+    }
+
 }
