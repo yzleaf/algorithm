@@ -179,4 +179,45 @@ public class Matrix {
             return res;
         }
     }
+
+    // 296. Best Meeting Point
+    // 矩阵中1为人的位置，0位空地
+    // 返回meeting place到所有人的曼哈顿距离最小
+    // |x-x1| + |y-y1| + |x-x2| + |y - y2| ... 可以拆分成x部分和y部分俩不相关
+    // 之后再找到1的点的median坐标，median是到各自点距离和最小的
+    // follow up：如果有权重的话w1|x-x1| + w1|y-y1| + w2|x-x2| + w2|y - y2|，应该根据权重找到左边权重和>=右边的拐点作为median
+    class MinTotalDistanceSolution {
+        public int minTotalDistance(int[][] grid) {
+            int m = grid.length;
+            int n = grid[0].length;
+
+            int res = 0;
+
+            List<Integer> row = new ArrayList<>();
+            List<Integer> col = new ArrayList<>();
+            for (int i = 0; i < m; i ++) {
+                for (int j = 0; j < n; j ++) {
+                    if (grid[i][j] == 1) {
+                        row.add(i);
+                        col.add(j);
+                    }
+                }
+            }
+            Collections.sort(row);
+            Collections.sort(col);
+            int mRow = row.get(row.size() / 2);
+            int mCol = col.get(col.size() / 2);
+
+            for (int i = 0; i < m; i ++) {
+                for (int j = 0; j < n; j ++) {
+                    if (grid[i][j] == 1) { // 为1才计算距离
+                        res += Math.abs(mRow - i) + Math.abs(mCol - j);
+                    }
+                }
+            }
+
+            return res;
+        }
+
+    }
 }
