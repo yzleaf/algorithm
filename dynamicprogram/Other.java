@@ -196,4 +196,59 @@ public class Other {
             return dp[i][j];
         }
     }
+
+    // 935. Knight Dialer
+    // 4*3 数字键盘上，数字位置可以有Knight，按日走
+    // Given an integer n, return how many distinct phone numbers of length n we can dial.
+    // 其实就是求n步后有多少种当前位置的走法之和，类似于688
+    public class KnightDialerSolution {
+
+        public int knightDialer(int n) {
+            // dp[k][i][j] 经过k步到达(i,j)的步数
+            // dp[k][i][j] = sum dp[k-1][x][y] （k-1轮所有(x,y)能够到达(i,j)的数加起来）
+            final int MOD = 1000_000_007;
+            int[] dx = {-2, -2, -1, -1, 1, 1, 2, 2};
+            int[] dy = {-1, 1, -2, 2, -2, 2, -1, 1};
+
+            // 在(i,j)的步数，初始位置为1，除去两个不能放置的点
+            int[][] dp0 = new int[4][3];
+            for (int i = 0; i < 4; i ++) {
+                for (int j = 0; j < 3; j ++) {
+                    if (i == 3 && j != 1) {
+                        continue;
+                    }
+                    dp0[i][j] = 1;
+                }
+            }
+
+            for (int step = 1; step < n; step ++) {
+                int[][] dp1 = new int[4][3];
+                for (int i = 0; i < 4; i ++) {
+                    for (int j = 0; j < 3; j ++) {
+                        for (int k = 0; k < 8; k ++) {
+                            int nextX = i + dx[k];
+                            int nextY = j + dy[k];
+                            if (nextX < 0 || nextX >= 4 || nextY < 0 || nextY >= 3) {
+                                continue;
+                            }
+                            if (nextX == 3 && nextY != 1) { // * #不能走
+                                continue;
+                            }
+                            dp1[nextX][nextY] = (dp1[nextX][nextY] + dp0[i][j]) % MOD;
+                        }
+                    }
+                }
+                dp0 = dp1;
+            }
+
+            // 最后一步跳出循环后，把dp0上所有的点的步数加起来
+            int res = 0;
+            for (int i = 0; i < 4; i ++) {
+                for (int j = 0; j < 3; j ++) {
+                    res = (res + dp0[i][j]) % MOD;
+                }
+            }
+            return res;
+        }
+    }
 }
