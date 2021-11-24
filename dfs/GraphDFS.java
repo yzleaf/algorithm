@@ -5,6 +5,7 @@ import java.util.*;
 public class GraphDFS {
 
     // 2. Word Ladder II
+    // 126
     // 给出两个单词（start和end）和一个字典，找出所有从start到end的最短转换序列
     // 输出所有序列
     public class WordLadder2Solution {
@@ -60,7 +61,7 @@ public class GraphDFS {
 
         private void bfs(Map<String, List<String>> map, Map<String, Integer> distance,
                          String start, String end, Set<String> dict) {
-            // 记录start到每一个string的距离 -> distance当中
+            // 记录每一个string到start的距离 -> distance当中
 
             Queue<String> queue = new LinkedList<>();
             queue.offer(start);
@@ -86,20 +87,20 @@ public class GraphDFS {
         }
 
         private List<String> nextString(String s, Set<String> dict) { // 经过一次变换得到的string列表
-            List<String> expansions = new ArrayList<>();
+            List<String> next = new ArrayList<>();
 
             for (int i = 0; i < s.length(); i++) {
                 for (char ch = 'a'; ch <= 'z'; ch++) {
                     if (ch != s.charAt(i)) { // 变换当前字母
                         String expansion = s.substring(0, i) + ch + s.substring(i + 1);
                         if (dict.contains(expansion)) {
-                            expansions.add(expansion);
+                            next.add(expansion);
                         }
                     }
                 } // for char变换
             } // for String 每一位
 
-            return expansions;
+            return next;
         }
     }
 
