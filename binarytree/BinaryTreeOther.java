@@ -473,4 +473,56 @@ public class BinaryTreeOther {
         }
     }
 
+    // 1110. Delete Nodes And Return Forest
+    // 给root和delete数组，需要删除delete数组中的节点
+    // 把树变成森林加入res数组中
+    public class DelNodesSolution {
+        List<TreeNode> res;
+        Set<Integer> hash;
+        public List<TreeNode> delNodes(TreeNode root, int[] to_delete) {
+            res = new ArrayList<>();
+            hash = new HashSet<>();
+            for (int n : to_delete) {
+                hash.add(n);
+            }
+
+            root = process(root);
+
+            // 如果根节点没有被删除，得再添加进数组
+            if (root != null) {
+                res.add(root);
+            }
+
+            return res;
+        }
+
+        // 返回处理好后的tree的root节点
+        private TreeNode process(TreeNode curr) {
+            if (curr == null) {
+                return null;
+            }
+
+            // 先处理左右子树，因为如果先处理根并且删除了的话就没法操作后续左右子树了
+            // 处理完的结果接到当前curr的左右子树上
+            curr.left = process(curr.left);
+            curr.right = process(curr.right);
+
+
+            // 再处理root
+            // 1. 不用删除，直接返回当前的root节点，往上递归接到left或者right上
+            if (!hash.contains(curr.val)) {
+                return curr;
+            }
+
+            // 2. 需要删除
+            // 先把左右子树的根添加到res数组中，返回当前是null
+            if (curr.left != null) {
+                res.add(curr.left);
+            }
+            if (curr.right != null) {
+                res.add(curr.right);
+            }
+            return null;
+        }
+    }
 }
