@@ -124,7 +124,7 @@ public class HashOther {
     public class RangeModuleSolution {
         // [begin, end)
         TreeMap<Integer, Integer> interval;
-        public RangeModule() {
+        public RangeModuleSolution() {
             interval = new TreeMap<>();
         }
 
