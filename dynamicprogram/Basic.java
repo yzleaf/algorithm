@@ -177,4 +177,55 @@ public class Basic {
         }
     }
 
+    // 416. Partition Equal Subset Sum
+    // 数组是否可以分成两部分 使之和相等
+    public class CanPartitionSolution {
+        public boolean canPartition(int[] nums) {
+            // 0 1背包问题
+
+            int len = nums.length;
+            // 两半相等 -> 找出某一段和为sum的一半
+            int sum = 0;
+            for (int n : nums) {
+                sum += n;
+            }
+            if (sum % 2 == 1) { // 奇数，则不存在相等的两半
+                return false;
+            }
+
+            int target = sum / 2;
+
+            // dp[i][j]:在前i个数中，是否可以选出几个数，使得和为j
+            boolean[][] dp = new boolean[len][target + 1];
+
+            // 第一个数，只能填充满自己的大小
+            if (nums[0] <= target) {
+                dp[0][nums[0]] = true;
+            }
+
+            for (int i = 1; i < len; i ++) {
+                for (int j = 0; j < target + 1; j ++) {
+                    // 1. 不选当前nums[i]
+                    dp[i][j] = dp[i - 1][j];
+
+                    // 2. 选了当前nums[i]
+                    //   2.1. 当前数与当前容量相等
+                    if (nums[i] == j) {
+                        dp[i][j] = true;
+                        continue;
+                    }
+                    //   2.2. 当前数<容量
+                    if (nums[i] < j) {
+                        dp[i][j] = dp[i - 1][j - nums[i]] || dp[i - 1][j];
+                    }
+                }
+
+                if (dp[i][target] == true) { // 剪枝，只要某一行达到这个标准，后面都可以只进入1.操作
+                    return true;
+                }
+            }
+
+            return dp[len - 1][target];
+        }
+    }
 }
