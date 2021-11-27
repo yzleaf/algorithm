@@ -118,4 +118,55 @@ public class HashOther {
             return longest;
         }
     }
+
+    // 715. Range Module
+    // 查询，加入，删除[left, right)区间的数
+    public class RangeModuleSolution {
+        // [begin, end)
+        TreeMap<Integer, Integer> interval;
+        public RangeModule() {
+            interval = new TreeMap<>();
+        }
+
+        public void addRange(int left, int right) {
+            // 用Integer属性是因为如果没有小于left的最大数的话会返回null
+            Integer start = interval.floorKey(left);
+            Integer end = interval.floorKey(right);
+            if (start != null && interval.get(start) >= left) {
+                left = start;
+            }
+            if (end != null && interval.get(end) > right) {
+                right = interval.get(end); // 注意要用get(end)
+            }
+            interval.put(left, right);
+            // 删除相交的多余数组
+            // left已经覆盖了原来的start，所以不能删除left
+            interval.subMap(left, false, right, true).clear();
+            // clear是删除
+        }
+
+        public boolean queryRange(int left, int right) {
+            Integer start = interval.floorKey(left);
+            if (start != null && interval.get(start) >= right) {
+                return true;
+            }
+            return false;
+        }
+
+        public void removeRange(int left, int right) {
+            Integer start = interval.floorKey(left);
+            Integer end = interval.floorKey(right);
+
+            // 这里先判断end是因为如果start和end相等的话，先判断start会直接修改了interval里对应的value
+            if (end != null && interval.get(end) > right) {
+                interval.put(right, interval.get(end)); // 注意要用get(end)
+            }
+            if (start != null && interval.get(start) > left) {
+                interval.put(start, left);
+            }
+            // 并不像add中left和right会发生变化，这里不变
+            // 从left开始>=它的，到<right的（不能取等号，因为right是右边开区间）
+            interval.subMap(left, true, right, false).clear();
+        }
+    }
 }
