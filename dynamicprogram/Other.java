@@ -251,4 +251,56 @@ public class Other {
             return res;
         }
     }
+
+    // 10. Regular Expression Matching
+    // .表示任意字母 字母和*表示这个字母出现任意次，看两个字符串是否匹配
+    // s = "aab", p = "c*a*b"
+    // 匹配c*可以表示出现0次 a*表示a出现两次
+    public class IsMatchSolution {
+        public boolean isMatch(String s, String p) {
+
+            // dp[i][j]：s取i个字符，p取j个字符，是否匹配
+            boolean[][] dp = new boolean[s.length() + 1][p.length() + 1];
+
+            // 1. base case
+            dp[0][0] = true;
+            // p取0个字符，s取i个，肯定是false
+            // s取0个字符，p取i个，可能存在a*b*c*这种情况（都为0）
+            for (int j = 1; j <= p.length(); j ++) {
+                if (p.charAt(j - 1) == '*') { // j-1为index
+                    dp[0][j] = dp[0][j - 2];
+                }
+                // 题目已经说了first char不会为*
+            }
+
+            // 2. 中间转移状态
+            for (int i = 1; i <= s.length(); i ++) {
+                for (int j = 1; j <= p.length(); j ++) {
+                    // 2.1 如果当前的char相等，则由上一个状态决定
+                    if (s.charAt(i - 1) == p.charAt(j - 1) || p.charAt(j - 1) == '.') {
+                        dp[i][j] = dp[i - 1][j - 1];
+                    } else if (p.charAt(j - 1) == '*') {
+                        // 2.2 如果当前char不相等，需要考虑当前p是*
+                        // 2.2.1 匹配前一个char，把*当成前面的一个或多个字符
+                        // s: abcddddd
+                        // p: abcd*
+                        // 需要看s中当前d前面的所有字符是否与abcd*匹配
+                        if (p.charAt(j - 2) == s.charAt(i - 1) || p.charAt(j - 2) == '.') {
+                            dp[i][j] = dp[i - 1][j] || dp[i][j - 2];
+                            // [i-1][j]指的是abcdddd与abcd*是否匹配
+                            // [i][j-2]指的是abcd与abcdd*这种情况是匹配的，但是上面一个式子无法满足（abcd与abcdd不匹配）
+                        } else {
+                            // 2.2.2 把*当成0个字符
+                            // s: abcd
+                            // p: abcde*
+                            dp[i][j] = dp[i][j - 2];
+                        }
+                    }
+                }
+            }
+
+            // 3. 结果状态
+            return dp[s.length()][p.length()];
+        }
+    }
 }
