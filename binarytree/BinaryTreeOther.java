@@ -525,4 +525,59 @@ public class BinaryTreeOther {
             return null;
         }
     }
+
+    // 545. Boundary of Binary Tree
+    // 找到二叉树的边界
+    public class BoundaryOfBinaryTreeSolution {
+        List<Integer> res;
+        public List<Integer> boundaryOfBinaryTree(TreeNode root) {
+            res = new ArrayList<>();
+            if (root == null) {
+                return res;
+            }
+
+            res.add(root.val);
+
+            leftBound(root.left); // 除叶子节点以外的左边
+            leaves(root.left);
+            leaves(root.right);
+            rightBound(root.right); // 除叶子节点以外的右边
+
+            return res;
+        }
+        private void leftBound(TreeNode curr) {
+            if (curr == null || (curr.left == null && curr.right == null)) {
+                return;
+            }
+            res.add(curr.val);
+            if (curr.left != null) { // 左右只能选一个，且先选左
+                leftBound(curr.left);
+            } else {
+                leftBound(curr.right);
+            }
+        }
+        private void rightBound(TreeNode curr) {
+            if (curr == null || (curr.left == null && curr.right == null)) {
+                return;
+            }
+            if (curr.right != null) { // 左右只能选一个，且先选右
+                rightBound(curr.right);
+            } else {
+                rightBound(curr.left);
+            }
+            res.add(curr.val);
+        }
+        private void leaves(TreeNode curr) {
+            if (curr == null) {
+                return;
+            }
+            if (curr.left == null && curr.right == null) {
+                res.add(curr.val);
+            }
+            // 最后一层叶子节点，左右都得选，跟上面的bound不一样
+            leaves(curr.left);
+            leaves(curr.right);
+
+        }
+    }
 }
