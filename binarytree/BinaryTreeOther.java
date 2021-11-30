@@ -574,10 +574,11 @@ public class BinaryTreeOther {
             if (curr.left == null && curr.right == null) {
                 res.add(curr.val);
             }
+
             // 最后一层叶子节点，左右都得选，跟上面的bound不一样
             leaves(curr.left);
             leaves(curr.right);
-
         }
     }
+
 }
