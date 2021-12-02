@@ -126,6 +126,7 @@ public class Partition {
             return nums[left];
         }
         // 模板
+        // partition可以不返回任何数，直接设置void
         private int partition3(int[] nums, int start, int end, int k) {
             if (start >= end) {
                 return nums[k]; // nums[start]也是可以的

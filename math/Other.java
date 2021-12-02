@@ -359,4 +359,23 @@ public class Other {
             } // 这句可以和==合并
         }
     }
+
+    // 1344. Angle Between Hands of a Clock
+    // 计算时钟上时针和分针的夹角
+    // 其实就是分别计算时针与分针和0的夹角，再相减
+    public class AngleClockSolution {
+        public double angleClock(int hour, int minutes) {
+
+            // 一小时 时针走360/12度；一分钟 分针走360/60度
+            int oneHourDegree = 30;
+            int oneMinuteDegree = 6;
+
+            // 时针走过的角度要加上分针造成的它的移动
+            double hourDegree = (hour % 12 + minutes / 60.0) * oneHourDegree; // 60.0！！！
+            double minuteDegree = minutes * oneMinuteDegree;
+
+            double diff = Math.abs(hourDegree - minuteDegree);
+            return Math.min(diff, 360 - diff);
+        }
+    }
 }
