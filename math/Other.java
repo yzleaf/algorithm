@@ -308,8 +308,10 @@ public class Other {
             ori = toMin(nums[0] * 10 + nums[1], nums[2] * 10 + nums[3]);
             best = ori;
 
+            // 通过不同组合找到best
             dfs(nums, 0, new int[4]);
 
+            // 根据给定格式输出best
             int bestH = best / 60;
             int bestM = best % 60;
             StringBuilder sb = new StringBuilder();
