@@ -251,7 +251,7 @@ public class HighFrequency {
             int n = s.length();
 
             for (int i = 0; i < n; ++i) { // 之所以这里提前初始化，是后面用了hash.get(j).size()
-                                          // 如果用putIfAbcent()的话那里可能会出错
+                                          // 如果用putIfAbsent()的话那里可能会出错
                 hash.put(i, new ArrayList<>());
             }
 
