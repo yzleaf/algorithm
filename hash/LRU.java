@@ -117,6 +117,7 @@ public class LRU {
         }
 
         private int capacity;
+        // hashMap是当前容量下的key - 节点对应
         private Map<Integer, Node> hash; // key -> Node
         private Node head;
         private Node tail;
