@@ -329,6 +329,7 @@ public class Heap {
     }
 
     // 7. 数据流中位数 · data stream median
+    // 295
     // 数字是不断进入数组的，在每次添加一个新的数进入数组的同时返回当前新数组的中位数
     // 不同于数学的中位数，这里中位数是排序后数组的中间值，如果有数组中有n个数，则中位数为A[(n-1)/2]
     public class DataStreamMedianSolution {
