@@ -46,6 +46,15 @@ public class FanTanDP {
         //    如果nums大于dp数组当前下标对应的值，直接更新至dp数组的下一位（最长子序列+1，新数值进入）
         //    如果nums小于等于dp数组当前下标对应的值，利用二分查找在当前下标之前找到nums应该在的位置并更新至nums值（更新最小结尾数）
         // 返回dp最大的有效index
+
+        // 站在【构造】LIS的角度
+        // [8, 1, 6, 2, 3, 10] 从前往后遍历数组                当前i长度的，最小元素
+        // 8 -> [8]                                     [-, 8, +, +, +, +, +]
+        // 1：因为1<8，所以直接代替8，因为1更小 -> [1]       [-, 1, +, +, +, +, +]
+        // 6：因为6>1，所以可以直接添加在后面 -> [1, 6]      [-, 1, 6, +, +, +, +]
+        // 2：因为2<6，所以直接代替6，因为2更小 -> [1, 2]    [-, 1, 2, +, +, +, +]
+        // 3 -> [1, 2, 3]                               [-, 1, 2, 3, +, +, +]
+        // 10 -> [1, 2, 3, 10]                          [-, 1, 2, 3, 10, +, +]
         public int longestIncreasingSubsequence2(int[] nums) {
             int[] minLast = new int[nums.length + 1]; // 当前长度下最小的尾部元素
             minLast[0] = Integer.MIN_VALUE;
@@ -70,23 +79,21 @@ public class FanTanDP {
             return 0;
         }
         // find the first number >= num 找第一个大于等于的元素替换它
-        private int binarySearch(int[] minLast, int num) {
+        private int binarySearch(int[] minLast, int target) {
             int start = 0, end = minLast.length - 1;
             while (start + 1 < end) {
                 int mid = start + (end - start) / 2;
-                if (minLast[mid] < num) {
-                    start = mid;
-                } else {
+                if (minLast[mid] == target) {
                     end = mid;
+                } else if (minLast[mid] > target) {
+                    end = mid;
+                } else {
+                    start = mid;
                 }
             }
-
-            // 因为nums数组是n+1的，所以start从无穷小开始，所以start踩的位置永远都小于num，这个if其实是不起作用的
-            // 放在这是为了跟模板一致
-            if (minLast[start] == num) { // 先找左边的
+            if (minLast[start] >= target) {
                 return start;
             }
-
             return end;
         }
 
