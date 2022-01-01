@@ -91,6 +91,7 @@ public class FanTanDP {
                     start = mid;
                 }
             }
+
             if (minLast[start] >= target) {
                 return start;
             }
